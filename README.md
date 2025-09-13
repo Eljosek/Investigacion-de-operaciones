@@ -15,8 +15,8 @@ A comprehensive web-based linear programming solver built for university coursew
 
 1. **Clone the repository**:
    ```bash
-   git clone [your-repository-url]
-   cd linear-programming-solver
+   git clone https://github.com/Eljosek/Investigacion-de-operaciones.git
+   cd Investigacion-de-operaciones
    ```
 
 2. **Install dependencies**:

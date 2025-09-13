@@ -85,11 +85,6 @@ def parse_constraint(s):
     
     op = m.group(1)
     
-    parts = re.split(r'(<=|>=|=)', s)
-    lhs = parts[0]  # lado izquierdo
-    rhs = parts[-1]  # lado derecho
-    rhs_val = float(rhs)
-    
     def get_coeff(var, text):
         """Extrae el coeficiente de una variable del texto"""
         t = text.replace(' ', '').lower()  # Normalizar texto
@@ -119,9 +114,27 @@ def parse_constraint(s):
         
         return 0.0  # Variable no encontrada
     
-    # Obtener coeficientes de x e y
-    a = get_coeff('x', lhs)
-    b = get_coeff('y', lhs)
+    parts = re.split(r'(<=|>=|=)', s)
+    lhs = parts[0]  # lado izquierdo
+    rhs = parts[-1]  # lado derecho
+    
+    # Verificar si el lado derecho contiene variables (como x <= y)
+    if 'x' in rhs.lower() or 'y' in rhs.lower():
+        # Mover todo al lado izquierdo: x <= y se convierte en x - y <= 0
+        rhs_val = 0.0
+        # Restar los coeficientes del lado derecho
+        a_rhs = get_coeff('x', rhs)
+        b_rhs = get_coeff('y', rhs)
+        # Los coeficientes finales son: lhs - rhs
+        a_lhs = get_coeff('x', lhs)
+        b_lhs = get_coeff('y', lhs)
+        a = a_lhs - a_rhs
+        b = b_lhs - b_rhs
+    else:
+        rhs_val = float(rhs)
+        # Obtener coeficientes de x e y del lado izquierdo
+        a = get_coeff('x', lhs)
+        b = get_coeff('y', lhs)
     
     return a, b, op, rhs_val
 

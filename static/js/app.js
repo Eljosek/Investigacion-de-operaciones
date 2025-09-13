@@ -124,7 +124,10 @@ function validateConstraintsString(constraints) {
             // Restricción solo con x: x <= c, x >= c
             /^[+-]?\s*\d*\.?\d*\s*x\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/,
             // Restricción solo con y: y <= c, y >= c  
-            /^[+-]?\s*\d*\.?\d*\s*y\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/
+            /^[+-]?\s*\d*\.?\d*\s*y\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/,
+            // Restricciones entre variables: x <= y, y >= x, etc.
+            /^[+-]?\s*\d*\.?\d*\s*x\s*(<=|>=|=|≤|≥)\s*[+-]?\s*\d*\.?\d*\s*y$/,
+            /^[+-]?\s*\d*\.?\d*\s*y\s*(<=|>=|=|≤|≥)\s*[+-]?\s*\d*\.?\d*\s*x$/
         ];
         
         // Verificar si la línea coincide con algún patrón

@@ -1,246 +1,106 @@
-# 📊 Programación Lineal - Método Gráfico
+# Linear Programming Solver - Web Application
 
-Una aplicación web desarrollada en Flask para resolver problemas de programación lineal con dos variables usando el método gráfico. 
+A comprehensive web-based linear programming solver built for university coursework in Operations Research. This application provides both analytical solutions and visual representations of optimization problems.
 
-**Desarrollado por José Herrera para la profesora Bibiana Patricia Arias Villada**  
-**Universidad Tecnológica de Pereira (UTP) - Investigación de Operaciones - 2025**
+## Features
 
-## 🎯 Características
+- **Graphical Method**: Solve 2-variable linear programming problems with visual representation
+- **Interactive Web Interface**: Modern, responsive design with dark mode support
+- **Mathematical Symbol Support**: Accepts standard inequality symbols (≤, ≥) and variable constraints
+- **Real-time Validation**: Input validation with immediate feedback
+- **Dynamic Plotting**: Automatic generation of constraint graphs and feasible regions
+- **Complete Solution Analysis**: Shows optimal point, objective function value, and constraint analysis
 
-- **Interfaz web intuitiva** con formularios fáciles de usar
-- **Visualización gráfica mejorada** de la región factible y punto óptimo
-- **Cálculo automático** de vértices y evaluación de función objetivo
-- **Soporte completo** para símbolos matemáticos (≥, ≤, =)
-- **Rectas que pasan por el origen** correctamente manejadas
-- **Modo oscuro** con persistencia en localStorage
-- **Ejemplos incluidos** para practicar
-- **Diseño responsivo** que funciona en móviles y escritorio
-- **Explicaciones educativas** sobre el método gráfico
-- **Región factible sombreada** con mejor visualización
-- **Soporte para n restricciones** sin límites
+## Quick Start
 
-## 🚀 Instalación y Uso
+1. **Clone the repository**:
+   ```bash
+   git clone [your-repository-url]
+   cd linear-programming-solver
+   ```
 
-### Prerrequisitos
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- Python 3.7 o superior
-- pip (gestor de paquetes de Python)
+3. **Run the application**:
+   ```bash
+   python app.py
+   ```
 
-### Paso 1: Instalar dependencias
+4. **Open your browser** and navigate to `http://localhost:5000`
 
-```bash
-pip install -r requirements.txt
-```
+## Technology Stack
 
-### Paso 2: Ejecutar la aplicación
+- **Backend**: Python 3.x with Flask framework
+- **Mathematical Computing**: NumPy for linear algebra operations
+- **Visualization**: Matplotlib for graph generation
+- **Frontend**: HTML5, CSS3, JavaScript with Bootstrap 5
+- **Styling**: Font Awesome icons, custom CSS with dark mode
 
-```bash
-python app.py
-```
-
-### Paso 3: Abrir en navegador
-
-Abre tu navegador web y ve a: `http://localhost:5000`
-
-## 📁 Estructura del Proyecto
+## Application Structure
 
 ```
-investigacion-de-operaciones/
-│
-├── app.py                 # Aplicación Flask principal
-├── lp_solver.py          # Módulo con funciones de programación lineal
-├── metodo_grafico.py     # Código original (versión terminal)
-├── requirements.txt      # Dependencias de Python
-├── README.md            # Este archivo
-│
-├── templates/           # Plantillas HTML
-│   ├── base.html       # Plantilla base
-│   ├── index.html      # Página principal
-│   ├── results.html    # Página de resultados
-│   ├── examples.html   # Página de ejemplos
-│   └── about.html      # Página informativa
-│
-└── static/             # Archivos estáticos
-    ├── css/
-    │   └── styles.css  # Estilos personalizados
-    ├── js/
-    │   └── app.js      # JavaScript para interactividad
-    └── images/         # Directorio para imágenes
+├── app.py                 # Flask application and routes
+├── lp_solver.py          # Core linear programming algorithms
+├── metodo_grafico.py     # Graphical method implementation
+├── static/
+│   ├── css/styles.css    # Custom styling and dark mode
+│   └── js/app.js         # Frontend validation and interactions
+├── templates/            # HTML templates
+└── requirements.txt      # Python dependencies
 ```
 
-## 🎮 Cómo Usar la Aplicación
+## Usage Example
 
-### 1. Función Objetivo
-Ingresa la función que quieres optimizar:
-- **Maximización:** `maximizar z = 3x + 2y`
-- **Minimización:** `minimizar z = 2x + 3y`
+### Problem Setup:
+- **Objective Function**: Maximize Z = 3x + 2y
+- **Constraints**:
+  - x + y ≤ 4
+  - 2x + y ≤ 6
+  - x ≥ 0, y ≥ 0
 
-### 2. Restricciones
-Ingresa una restricción por línea:
-```
-x + 2y <= 8
-2x + y <= 10
-x ≥ 0
-y ≥ 0
-```
+### Input Format:
+1. Enter objective function: `3x + 2y`
+2. Select "Maximize"
+3. Enter constraints (one per line):
+   ```
+   x + y <= 4
+   2x + y <= 6
+   ```
 
-### 3. Operadores Válidos
-- `<=` o `≤` (menor o igual que)
-- `>=` o `≥` (mayor o igual que)  
-- `=` (igual a)
+The application automatically handles non-negativity constraints.
 
-**¡Ahora soporta símbolos matemáticos reales!**
+## Supported Constraint Formats
 
-### 4. Resolver
-Haz clic en "Resolver Problema" y la aplicación:
-- Graficará las restricciones
-- Mostrará la región factible sombreada
-- Calculará los vértices
-- Encontrará el punto óptimo
-- Mostrará todos los resultados
+- Standard inequalities: `x + y <= 4`, `2x - y >= 1`
+- Mathematical symbols: `x + y ≤ 4`, `2x - y ≥ 1`
+- Variable bounds: `x >= 2`, `y <= 5`
+- Variable relationships: `x <= y`, `y >= x`
+- Equality constraints: `x + y = 3`
 
-## 📚 Ejemplos Incluidos
+## Algorithm Implementation
 
-La aplicación incluye varios ejemplos predefinidos:
+The solver uses the **Graphical Method** for 2-variable linear programming:
 
-### Ejemplo 1: Maximización Básica
-```
-Objetivo: maximizar z = 3x + 2y
-Restricciones:
-x + 2y <= 8
-2x + y <= 10
-x >= 0
-y >= 0
-```
+1. **Constraint Processing**: Parse and validate all constraints
+2. **Intersection Calculation**: Find all constraint intersections
+3. **Feasible Region**: Determine viable solution space
+4. **Corner Point Evaluation**: Test objective function at all vertices
+5. **Optimization**: Identify optimal solution based on maximization/minimization
 
-### Ejemplo 2: Minimización
-```
-Objetivo: minimizar z = 2x + 3y
-Restricciones:
-x + y >= 4
-2x + y >= 6
-x >= 0
-y >= 0
-```
+## Development Notes
 
-### Ejemplo 3: Problema Mixto
-```
-Objetivo: maximizar z = x + 4y
-Restricciones:
-x + 2y <= 12
-2x + y <= 16
-x + y >= 5
-x >= 0
-y >= 0
-```
+- Built for educational purposes in Operations Research
+- Focuses on 2-variable problems for graphical visualization
+- Includes comprehensive input validation and error handling
+- Designed for easy extension to additional LP methods
 
-## 🔧 Tecnologías Utilizadas
+## Academic Context
 
-- **Backend:** Python + Flask
-- **Cálculos:** NumPy
-- **Gráficas:** Matplotlib
-- **Frontend:** HTML5 + CSS3 + JavaScript
-- **Diseño:** Bootstrap 5
-- **Iconos:** Font Awesome
+This application was developed as part of a university parcial in Operations Research, demonstrating practical implementation of linear programming concepts with modern web technologies.
 
-## 📖 Método Gráfico - Explicación
+## License
 
-El método gráfico es ideal para problemas de programación lineal con dos variables:
-
-1. **Graficar restricciones:** Cada restricción se representa como una línea
-2. **Identificar región factible:** Área que satisface todas las restricciones
-3. **Encontrar vértices:** Puntos de intersección de las líneas
-4. **Evaluar función objetivo:** El óptimo siempre está en un vértice
-5. **Seleccionar solución:** El vértice con mejor valor objetivo
-
-## 🎓 Para Estudiantes
-
-Esta aplicación es perfecta para:
-- Aprender programación lineal visualmente
-- Practicar con diferentes tipos de problemas
-- Verificar soluciones de tareas
-- Entender el concepto de región factible
-- Prepararse para exámenes de Investigación de Operaciones
-
-## ⚠️ Limitaciones
-
-- Solo funciona con **2 variables** (x, y)
-- Todas las restricciones deben ser **lineales**
-- Los problemas deben tener **región factible acotada**
-- Para problemas grandes, usar métodos como Simplex
-
-## 🛠️ Desarrollo
-
-### Agregar nuevas funcionalidades
-
-1. **Nuevas rutas:** Edita `app.py`
-2. **Funciones de cálculo:** Modifica `lp_solver.py`
-3. **Interfaz:** Actualiza templates en `/templates/`
-4. **Estilos:** Edita `/static/css/styles.css`
-
-### Personalización
-
-- Cambia colores en las variables CSS de `styles.css`
-- Agrega nuevos ejemplos en la ruta `/examples` de `app.py`
-- Modifica límites de gráfica en `create_plot()` de `lp_solver.py`
-
-## 🐛 Solución de Problemas
-
-### Error: "No module named 'flask'"
-```bash
-pip install flask
-```
-
-### Error: "No se encontró región factible"
-- Verifica que las restricciones sean consistentes
-- Asegúrate de incluir restricciones de no-negatividad
-- Revisa el formato de las restricciones
-
-### Gráfica no se muestra
-- Verifica que matplotlib esté instalado
-- Revisa que el backend de matplotlib esté configurado correctamente
-
-## 📞 Soporte
-
-Si encuentras problemas o tienes sugerencias:
-1. Revisa este README
-2. Verifica que todas las dependencias estén instaladas
-3. Comprueba la sintaxis de tu problema de LP
-4. Consulta los ejemplos incluidos
-
-## � Despliegue Web
-
-La aplicación está preparada para desplegarse en plataformas como:
-
-- **Render** (recomendado) - Gratuito y fácil
-- **Heroku** - Robusto y confiable  
-- **Railway** - Moderno y rápido
-- **Vercel** - Para versiones estáticas
-
-Ver `DEPLOYMENT.md` para instrucciones detalladas.
-
-## 🌟 Funcionalidades Implementadas
-
-- ✅ **Símbolos matemáticos** (≥, ≤) funcionando perfectamente
-- ✅ **Modo oscuro** con toggle persistente
-- ✅ **Región factible** sombreada correctamente
-- ✅ **Rectas por el origen** soportadas
-- ✅ **n restricciones** sin límites
-- ✅ **Diseño responsivo** para todos los dispositivos
-- ✅ **Información institucional** UTP actualizada
-
-## 🎓 Información Académica
-
-**Universidad:** Universidad Tecnológica de Pereira (UTP)  
-**Materia:** Investigación de Operaciones  
-**Profesora:** Bibiana Patricia Arias Villada  
-**Estudiante:** José Herrera  
-**Año:** 2025  
-
----
-
-**¡Perfecto para tu parcial de Investigación de Operaciones!** 🎓
-
-*"Esta web fue creada por José Herrera para la profesora Bibiana Patricia Arias Villada en la materia de Investigación de Operaciones."*
-
-*Desarrollado con ❤️ para estudiantes de la UTP*
+This project is developed for educational purposes. Feel free to use and modify for academic work.

@@ -78,19 +78,14 @@ def parse_constraint(s):
     # Reemplazar símbolos matemáticos por equivalentes ASCII
     s = s.replace('≤', '<=').replace('≥', '>=').replace('≠', '!=')
     
-    # Buscar el operador de comparación (incluyendo símbolos matemáticos)
-    m = re.search(r'(<=|>=|≤|≥|=)', s)
+    # Buscar el operador de comparación (después de normalizar símbolos)
+    m = re.search(r'(<=|>=|=)', s)
     if not m:
         raise ValueError(f"No se encontró operador en la restricción: {s}")
     
     op = m.group(1)
-    # Normalizar operadores
-    if op == '≤':
-        op = '<='
-    elif op == '≥':
-        op = '>='
     
-    parts = re.split(r'(<=|>=|≤|≥|=)', s)
+    parts = re.split(r'(<=|>=|=)', s)
     lhs = parts[0]  # lado izquierdo
     rhs = parts[-1]  # lado derecho
     rhs_val = float(rhs)

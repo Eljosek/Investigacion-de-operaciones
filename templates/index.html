@@ -60,7 +60,6 @@
                         <div class="form-text">
                             <i class="fas fa-info-circle"></i>
                             Operadores válidos: <code><=</code>, <code>>=</code>, <code>=</code> o <code>≤</code>, <code>≥</code>
-                            <br><strong>Importante:</strong> Incluye siempre <code>x >= 0</code> y <code>y >= 0</code> si son necesarias.
                         </div>
                     </div>
 
@@ -134,8 +133,8 @@ function clearForm() {
 
 // Función para cargar un ejemplo
 function loadExample() {
-    document.getElementById('objective').value = 'maximizar z = 3x + 2y';
-    document.getElementById('constraints').value = 'x + 2y <= 8\n2x + y <= 10\nx >= 0\ny >= 0';
+    document.getElementById('objective').value = 'maximizar z = x + y';
+    document.getElementById('constraints').value = 'x + 3y <= 26\n4x + 3y <= 44\n2x + 3y <= 28\nx >= 0\ny >= 0';
 }
 </script>
 {% endblock %}

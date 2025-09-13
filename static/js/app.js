@@ -115,8 +115,22 @@ function validateConstraintsString(constraints) {
     const lines = constraints.split('\n').filter(line => line.trim());
     
     for (const line of lines) {
-        const regex = /[+-]?\s*\d*\.?\d*\s*x\s*[+-]\s*\d*\.?\d*\s*y\s*(<=|>=|=)\s*\d+\.?\d*/;
-        if (!regex.test(line.replace(/\s+/g, ' '))) {
+        const cleanLine = line.replace(/\s+/g, ' ').trim();
+        
+        // Patrones válidos para restricciones
+        const patterns = [
+            // Restricción completa: ax + by <= c (permite coeficientes opcionales)
+            /^[+-]?\s*\d*\.?\d*\s*x\s*[+-]\s*\d*\.?\d*\s*y\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/,
+            // Restricción solo con x: x <= c, x >= c
+            /^[+-]?\s*\d*\.?\d*\s*x\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/,
+            // Restricción solo con y: y <= c, y >= c  
+            /^[+-]?\s*\d*\.?\d*\s*y\s*(<=|>=|=|≤|≥)\s*[+-]?\d+\.?\d*$/
+        ];
+        
+        // Verificar si la línea coincide con algún patrón
+        const isValid = patterns.some(pattern => pattern.test(cleanLine));
+        
+        if (!isValid) {
             return false;
         }
     }

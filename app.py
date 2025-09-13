@@ -89,22 +89,28 @@ def examples():
     """
     examples_data = [
         {
-            'title': 'Problema de Maximización Básico',
-            'objective': 'maximizar z = 3x + 2y',
-            'constraints': 'x + 2y <= 8\n2x + y <= 10\nx >= 0\ny >= 0',
-            'description': 'Un problema clásico de maximización con dos restricciones.'
+            'title': 'Primer Ejercicio del Taller',
+            'objective': 'maximizar z = x + y',
+            'constraints': 'x + 3y <= 26\n4x + 3y <= 44\n2x + 3y <= 28\nx >= 0\ny >= 0',
+            'description': 'Problema de maximización con restricciones lineales.'
         },
         {
-            'title': 'Problema de Minimización',
-            'objective': 'minimizar z = 2x + 3y',
-            'constraints': 'x + y >= 4\n2x + y >= 6\nx >= 0\ny >= 0',
-            'description': 'Problema de minimización con restricciones de tipo mayor o igual.'
+            'title': 'Segundo Ejercicio del Taller',
+            'objective': 'minimizar z = 3x + 2y',
+            'constraints': '3x + 4y <= 12\n3x + 2y >= 2\nx >= 0\ny >= 0',
+            'description': 'Problema de minimización con restricciones mixtas.'
         },
         {
-            'title': 'Problema Mixto',
-            'objective': 'maximizar z = x + 4y',
-            'constraints': 'x + 2y <= 12\n2x + y <= 16\nx + y >= 5\nx >= 0\ny >= 0',
-            'description': 'Problema con restricciones mixtas (menor y mayor que).'
+            'title': 'Problema de Producción Industrial',
+            'objective': 'maximizar z = 5x + 4y',
+            'constraints': '2x + 3y <= 18\n4x + 2y <= 20\nx + y >= 2',
+            'description': 'Problema típico de optimización en producción industrial.'
+        },
+        {
+            'title': 'Problema de Recursos Limitados',
+            'objective': 'minimizar z = 2x + 5y',
+            'constraints': 'x + 2y >= 8\n3x + y >= 9\n2x + 4y <= 24',
+            'description': 'Optimización con restricciones de recursos limitados.'
         }
     ]
     

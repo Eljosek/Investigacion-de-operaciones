@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}Acerca de - Programación Lineal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-5 text-success">
+                <i class="fas fa-info-circle"></i>
+                Acerca del Método Gráfico
+            </h1>
+            <p class="lead">Todo lo que necesitas saber sobre programación lineal y el método gráfico</p>
+            <div class="alert alert-info mt-3">
+                <strong>Esta web fue creada por José Herrera para la profesora Bibiana Patricia Arias Villada en la materia de Investigación de Operaciones.</strong>
+                <br><small class="text-muted">Universidad Tecnológica de Pereira (UTP) - 2025</small>
+            </div>
+        </div>
+
+        <!-- ¿Qué es la Programación Lineal? -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-question-circle"></i>
+                    ¿Qué es la Programación Lineal?
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>La <strong>programación lineal</strong> es una técnica de optimización matemática que busca encontrar el mejor resultado (máximo o mínimo) de una función objetivo lineal, sujeta a un conjunto de restricciones lineales.</p>
+                
+                <p>Los elementos principales son:</p>
+                <ul>
+                    <li><strong>Variables de decisión:</strong> Las incógnitas que queremos determinar (x, y)</li>
+                    <li><strong>Función objetivo:</strong> Lo que queremos maximizar o minimizar</li>
+                    <li><strong>Restricciones:</strong> Las limitaciones del problema</li>
+                    <li><strong>Condiciones de no-negatividad:</strong> x ≥ 0, y ≥ 0</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- El Método Gráfico -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-chart-line"></i>
+                    El Método Gráfico
+                </h3>
+            </div>
+            <div class="card-body">
+                <p>El método gráfico es una técnica visual para resolver problemas de programación lineal con <strong>dos variables</strong>. Los pasos son:</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-1"></i> Graficar las restricciones</h5>
+                        <p>Cada restricción se representa como una línea recta en el plano cartesiano.</p>
+                        
+                        <h5><i class="fas fa-2"></i> Identificar la región factible</h5>
+                        <p>Es el área que satisface todas las restricciones simultáneamente.</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-3"></i> Encontrar los vértices</h5>
+                        <p>Los puntos de intersección de las líneas que forman las esquinas de la región.</p>
+                        
+                        <h5><i class="fas fa-4"></i> Evaluar la función objetivo</h5>
+                        <p>El óptimo siempre se encuentra en un vértice de la región factible.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ventajas y Limitaciones -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4 h-100">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-thumbs-up"></i>
+                            Ventajas
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Fácil de entender visualmente</li>
+                            <li><i class="fas fa-check text-success"></i> Ideal para problemas educativos</li>
+                            <li><i class="fas fa-check text-success"></i> Muestra la región factible claramente</li>
+                            <li><i class="fas fa-check text-success"></i> Permite análisis de sensibilidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-4 h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Limitaciones
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-times text-danger"></i> Solo funciona con 2 variables</li>
+                            <li><i class="fas fa-times text-danger"></i> Impractical para problemas grandes</li>
+                            <li><i class="fas fa-times text-danger"></i> Requiere que todas las restricciones sean lineales</li>
+                            <li><i class="fas fa-times text-danger"></i> La precisión depende de la escala</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formato de entrada -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-keyboard"></i>
+                    Formato de Entrada
+                </h3>
+            </div>
+            <div class="card-body">
+                <h5>Función Objetivo:</h5>
+                <ul>
+                    <li><code>maximizar z = 3x + 2y</code></li>
+                    <li><code>min z = x - 2y</code></li>
+                    <li><code>max z = 5x + 4y</code></li>
+                </ul>
+                
+                <h5>Restricciones:</h5>
+                <ul>
+                    <li><code>x + 2y <= 8</code> (menor o igual)</li>
+                    <li><code>2x + y >= 6</code> (mayor o igual)</li>
+                    <li><code>x + y = 5</code> (igualdad)</li>
+                    <li><code>x >= 0</code> (no-negatividad)</li>
+                </ul>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>Consejo:</strong> Las restricciones de no-negatividad (x ≥ 0, y ≥ 0) se incluyen automáticamente.
+                </div>
+            </div>
+        </div>
+
+        <!-- Aplicaciones -->
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-industry"></i>
+                    Aplicaciones Reales
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-factory"></i> Producción</h6>
+                        <p class="small">Optimizar la producción de productos con recursos limitados.</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-truck"></i> Transporte</h6>
+                        <p class="small">Minimizar costos de transporte entre plantas y destinos.</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-chart-pie"></i> Inversiones</h6>
+                        <p class="small">Optimizar portafolios de inversión con restricciones de riesgo.</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-utensils"></i> Dieta</h6>
+                        <p class="small">Planificar dietas que minimicen costo y cumplan requerimientos nutricionales.</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-calendar-alt"></i> Programación</h6>
+                        <p class="small">Asignar horarios y recursos de manera óptima.</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6><i class="fas fa-coins"></i> Finanzas</h6>
+                        <p class="small">Optimizar presupuestos y asignación de recursos financieros.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tecnologías Utilizadas -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-code"></i>
+                    Tecnologías Utilizadas
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fab fa-python"></i> Backend</h5>
+                        <ul>
+                            <li><strong>Python 3.13:</strong> Lenguaje de programación principal</li>
+                            <li><strong>Flask:</strong> Framework web minimalista y eficiente</li>
+                            <li><strong>NumPy:</strong> Cálculos numéricos y álgebra lineal</li>
+                            <li><strong>Matplotlib:</strong> Generación de gráficas científicas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5><i class="fab fa-html5"></i> Frontend</h5>
+                        <ul>
+                            <li><strong>HTML5:</strong> Estructura semántica moderna</li>
+                            <li><strong>CSS3:</strong> Estilos responsive y modo oscuro</li>
+                            <li><strong>JavaScript ES6:</strong> Interactividad y validaciones</li>
+                            <li><strong>Bootstrap 5:</strong> Framework CSS responsive</li>
+                            <li><strong>Font Awesome:</strong> Iconos vectoriales</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-tools"></i> Herramientas de Desarrollo</h5>
+                        <ul>
+                            <li><strong>Visual Studio Code:</strong> Editor de código</li>
+                            <li><strong>Git:</strong> Control de versiones</li>
+                            <li><strong>GitHub:</strong> Repositorio y despliegue</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-brain"></i> Algoritmos Implementados</h5>
+                        <ul>
+                            <li><strong>Parsing matemático:</strong> Análisis de funciones y restricciones</li>
+                            <li><strong>Intersección de líneas:</strong> Cálculo de vértices</li>
+                            <li><strong>Evaluación de factibilidad:</strong> Verificación de restricciones</li>
+                            <li><strong>Optimización gráfica:</strong> Búsqueda del punto óptimo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del Autor -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-user-graduate"></i>
+                    Información del Proyecto
+                </h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-university"></i> Universidad</h5>
+                        <p><strong>Universidad Tecnológica de Pereira</strong><br>
+                        <small class="text-muted">UTP</small></p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-chalkboard-teacher"></i> Profesora</h5>
+                        <p><strong>Bibiana Patricia Arias Villada</strong><br>
+                        <small class="text-muted">Investigación de Operaciones</small></p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-code"></i> Desarrollador</h5>
+                        <p><strong>José Herrera</strong><br>
+                        <small class="text-muted">Estudiante de Ingeniería</small></p>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <span class="badge bg-primary me-2">Python</span>
+                    <span class="badge bg-success me-2">Flask</span>
+                    <span class="badge bg-info me-2">Bootstrap</span>
+                    <span class="badge bg-warning me-2">JavaScript</span>
+                    <span class="badge bg-danger me-2">NumPy</span>
+                    <span class="badge bg-dark">Matplotlib</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Programación Lineal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Encabezado -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-primary">
+                <i class="fas fa-chart-area"></i>
+                Método Gráfico
+            </h1>
+            <p class="lead text-muted">
+                Resuelve problemas de programación lineal con dos variables usando el método gráfico
+            </p>
+        </div>
+
+        <!-- Formulario principal -->
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit"></i>
+                    Ingresa tu problema de LP
+                </h3>
+            </div>
+            
+            <div class="card-body">
+                <form action="{{ url_for('solve') }}" method="POST" id="lpForm">
+                    <!-- Función objetivo -->
+                    <div class="mb-4">
+                        <label for="objective" class="form-label">
+                            <i class="fas fa-bullseye"></i>
+                            <strong>Función Objetivo</strong>
+                        </label>
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               id="objective" 
+                               name="objective" 
+                               placeholder="Ejemplo: maximizar z = 3x + 2y"
+                               required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i>
+                            Formatos válidos: "maximizar z = 3x + 2y" o "min z = x - 2y"
+                        </div>
+                    </div>
+
+                    <!-- Restricciones -->
+                    <div class="mb-4">
+                        <label for="constraints" class="form-label">
+                            <i class="fas fa-list"></i>
+                            <strong>Restricciones</strong>
+                        </label>
+                        <textarea class="form-control" 
+                                  id="constraints" 
+                                  name="constraints" 
+                                  rows="6" 
+                                  placeholder="Ingresa una restricción por línea. Ejemplos:&#10;x + 2y <= 8&#10;2x + y <= 10&#10;x >= 0&#10;y >= 0"
+                                  required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i>
+                            Operadores válidos: <code><=</code>, <code>>=</code>, <code>=</code> o <code>≤</code>, <code>≥</code>
+                            <br><strong>Importante:</strong> Incluye siempre <code>x >= 0</code> y <code>y >= 0</code> si son necesarias.
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
+                            <i class="fas fa-eraser"></i>
+                            Limpiar
+                        </button>
+                        <button type="button" class="btn btn-outline-info" onclick="loadExample()">
+                            <i class="fas fa-lightbulb"></i>
+                            Ejemplo
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calculator"></i>
+                            Resolver Problema
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección de ayuda -->
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-question-circle fa-3x text-info mb-3"></i>
+                        <h5>¿Cómo funciona?</h5>
+                        <p class="text-muted">
+                            El método gráfico encuentra la solución óptima evaluando los vértices de la región factible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
+                        <h5>Ejemplos</h5>
+                        <p class="text-muted">
+                            Ve ejemplos resueltos para entender mejor cómo formular problemas de LP.
+                        </p>
+                        <a href="{{ url_for('examples') }}" class="btn btn-outline-warning">Ver Ejemplos</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-info-circle fa-3x text-success mb-3"></i>
+                        <h5>Más Información</h5>
+                        <p class="text-muted">
+                            Aprende más sobre el método gráfico y programación lineal.
+                        </p>
+                        <a href="{{ url_for('about') }}" class="btn btn-outline-success">Saber Más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para limpiar el formulario
+function clearForm() {
+    document.getElementById('lpForm').reset();
+}
+
+// Función para cargar un ejemplo
+function loadExample() {
+    document.getElementById('objective').value = 'maximizar z = 3x + 2y';
+    document.getElementById('constraints').value = 'x + 2y <= 8\n2x + y <= 10\nx >= 0\ny >= 0';
+}
+</script>
+{% endblock %}

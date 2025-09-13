@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Ejemplos - Programación Lineal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="text-center mb-5">
+            <h1 class="display-5 text-info">
+                <i class="fas fa-lightbulb"></i>
+                Ejemplos de Problemas
+            </h1>
+            <p class="lead">Aquí tienes algunos ejemplos para practicar con el método gráfico</p>
+        </div>
+
+        {% for example in examples %}
+        <div class="card mb-4 shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-{{ loop.index }}"></i>
+                    {{ example.title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{ example.description }}</p>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6><strong>Función Objetivo:</strong></h6>
+                        <div class="bg-light p-2 rounded">
+                            <code>{{ example.objective }}</code>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6><strong>Restricciones:</strong></h6>
+                        <div class="bg-light p-2 rounded">
+                            {% for constraint in example.constraints.split('\n') %}
+                            <code class="d-block">{{ constraint }}</code>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2 text-center">
+                        <button class="btn btn-outline-primary" 
+                                onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`)">
+                            <i class="fas fa-copy"></i>
+                            Usar Ejemplo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Formulario
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function useExample(objective, constraints) {
+    // Guardar en localStorage para usar en la página principal
+    localStorage.setItem('example_objective', objective);
+    localStorage.setItem('example_constraints', constraints);
+    
+    // Mostrar mensaje de confirmación
+    alert('Ejemplo copiado. Serás redirigido al formulario principal.');
+    
+    // Redirigir a la página principal
+    window.location.href = "{{ url_for('index') }}";
+}
+</script>
+{% endblock %}

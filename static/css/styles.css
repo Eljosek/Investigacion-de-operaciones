@@ -1,0 +1,357 @@
+/* Estilos personalizados para la aplicación de Programación Lineal */
+
+/* Variables CSS para consistencia */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --info-color: #0dcaf0;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    
+    /* Variables para modo claro */
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --navbar-bg: var(--primary-color);
+}
+
+/* Variables para modo oscuro */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --card-bg: #2d2d2d;
+    --border-color: #495057;
+    --navbar-bg: #0a4275;
+    --light-color: #2d2d2d;
+    --shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.075);
+    --shadow-lg: 0 1rem 3rem rgba(255, 255, 255, 0.175);
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar adaptable al tema */
+.navbar-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .navbar-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+/* Cards adaptables */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Navbar personalizada */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffc107 !important;
+}
+
+/* Cards con efectos */
+.card {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Formularios */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control-lg {
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 25px;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-lg {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #0d6efd, #4dabf7);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #198754, #51cf66);
+}
+
+.btn-info {
+    background: linear-gradient(45deg, #0dcaf0, #74c0fc);
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffd43b);
+    color: #000;
+}
+
+/* Alertas */
+.alert {
+    border-radius: 15px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-dismissible .btn-close {
+    padding: 1rem 1rem;
+}
+
+/* Iconos */
+.fas, .far {
+    margin-right: 0.5rem;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Tabla de resultados */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--primary-color);
+    background-color: var(--light-color);
+    font-weight: 600;
+}
+
+.table-success {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.table-success td {
+    font-weight: 600;
+}
+
+/* Imagen de resultados */
+.img-fluid {
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+/* Badges */
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    background-color: var(--light-color) !important;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Lista de restricciones */
+.list-group-item {
+    border-radius: 8px !important;
+    margin-bottom: 0.25rem;
+    border: 1px solid #e9ecef;
+    font-family: 'Courier New', monospace;
+    background-color: #f8f9fa;
+}
+
+/* Código */
+code {
+    background-color: var(--light-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Footer adaptable */
+footer {
+    margin-top: auto;
+    background-color: var(--light-color) !important;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+/* Formularios en modo oscuro */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    background-color: var(--card-bg);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Lista de restricciones en modo oscuro */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Tablas en modo oscuro */
+[data-theme="dark"] .table {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .table thead th {
+    border-bottom-color: var(--border-color);
+    background-color: var(--card-bg);
+}
+
+/* Alertas en modo oscuro */
+[data-theme="dark"] .alert {
+    border-color: var(--border-color);
+}
+
+/* Botón de modo oscuro */
+#darkModeToggle {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#darkModeToggle:hover {
+    transform: scale(1.1);
+}
+
+/* Animación de transición suave */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .display-4, .display-5 {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Efectos hover para iconos */
+.fas:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Estilo para números en la página about */
+.fas.fa-1:before { content: "1"; }
+.fas.fa-2:before { content: "2"; }  
+.fas.fa-3:before { content: "3"; }
+.fas.fa-4:before { content: "4"; }
+
+/* Colores para diferentes tipos de optimización */
+.optimization-max {
+    color: var(--success-color);
+}
+
+.optimization-min {
+    color: var(--info-color);
+}
+
+/* Estilo para las restricciones en el código */
+.constraint-code {
+    background-color: #f1f3f4;
+    padding: 0.5rem;
+    border-left: 4px solid var(--primary-color);
+    font-family: 'Courier New', monospace;
+    margin: 0.25rem 0;
+}

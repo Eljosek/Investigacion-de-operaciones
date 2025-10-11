@@ -13,7 +13,7 @@ Características:
 - Historial completo de iteraciones
 - Normalizacion correcta de signos para MAX/MIN
 
-Autor: Agente de Desarrollo IA
+Autor: Jose Herrera
 Proyecto: Investigación de Operaciones UTP
 Fecha: Octubre 2025
 """

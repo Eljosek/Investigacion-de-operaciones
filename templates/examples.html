@@ -10,69 +10,223 @@
                 <i class="fas fa-lightbulb"></i>
                 Ejemplos de Problemas
             </h1>
-            <p class="lead">Aquí tienes algunos ejemplos para practicar con el método gráfico</p>
+            <p class="lead">Ejemplos organizados por método de resolución para practicar</p>
         </div>
 
-        {% for example in examples %}
-        <div class="card mb-4 shadow">
-            <div class="card-header bg-info text-white">
-                <h4 class="mb-0">
-                    <i class="fas fa-{{ loop.index }}"></i>
-                    {{ example.title }}
-                </h4>
+        <!-- Ejemplos del Método Gráfico -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-success mb-3">
+                    <i class="fas fa-chart-area"></i>
+                    Método Gráfico (2 variables)
+                </h2>
             </div>
-            <div class="card-body">
-                <p class="text-muted">{{ example.description }}</p>
-                
-                <div class="row">
-                    <div class="col-md-4">
-                        <h6><strong>Función Objetivo:</strong></h6>
-                        <div class="bg-light p-2 rounded">
-                            <code>{{ example.objective }}</code>
+            {% for example in examples %}
+                {% if example.method == 'grafico' %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow border-{{ example.color }}">
+                        <div class="card-header bg-{{ example.color }} text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-{{ example.icon }}"></i>
+                                {{ example.title }}
+                            </h5>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <h6><strong>Restricciones:</strong></h6>
-                        <div class="bg-light p-2 rounded">
-                            {% for constraint in example.constraints.split('\n') %}
-                            <code class="d-block">{{ constraint }}</code>
-                            {% endfor %}
+                        <div class="card-body">
+                            <p class="text-muted">{{ example.description }}</p>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <h6><strong>Función Objetivo:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        <code>{{ example.objective }}</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb-3">
+                                    <h6><strong>Restricciones:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        {% for constraint in example.constraints.split('\n') %}
+                                        <code class="d-block">{{ constraint }}</code>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-outline-{{ example.color }}" 
+                                            onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`, 'grafico')">
+                                        <i class="fas fa-copy"></i>
+                                        Usar en Método Gráfico
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-2 text-center">
-                        <button class="btn btn-outline-primary" 
-                                onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`)">
-                            <i class="fas fa-copy"></i>
-                            Usar Ejemplo
-                        </button>
                     </div>
                 </div>
-            </div>
+                {% endif %}
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        <!-- Ejemplos del Método Simplex -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-warning mb-3">
+                    <i class="fas fa-table"></i>
+                    Método Simplex (múltiples variables)
+                </h2>
+            </div>
+            {% for example in examples %}
+                {% if example.method == 'simplex' %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow border-{{ example.color }}">
+                        <div class="card-header bg-{{ example.color }} text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-{{ example.icon }}"></i>
+                                {{ example.title }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">{{ example.description }}</p>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <h6><strong>Función Objetivo:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        <code>{{ example.objective }}</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb-3">
+                                    <h6><strong>Restricciones:</strong></h6>
+                                    <div class="bg-light p-2 rounded" style="max-height: 150px; overflow-y: auto;">
+                                        {% for constraint in example.constraints.split('\n') %}
+                                        <code class="d-block">{{ constraint }}</code>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-outline-{{ example.color }}" 
+                                            onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`, 'simplex')">
+                                        <i class="fas fa-copy"></i>
+                                        Usar en Método Simplex
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Ejemplos del Método Dual Simplex -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-info mb-3">
+                    <i class="fas fa-exchange-alt"></i>
+                    Método Dual Simplex
+                </h2>
+            </div>
+            {% for example in examples %}
+                {% if example.method == 'dual' %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow border-{{ example.color }}">
+                        <div class="card-header bg-{{ example.color }} text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-{{ example.icon }}"></i>
+                                {{ example.title }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">{{ example.description }}</p>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <h6><strong>Función Objetivo:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        <code>{{ example.objective }}</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb-3">
+                                    <h6><strong>Restricciones:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        {% for constraint in example.constraints.split('\n') %}
+                                        <code class="d-block">{{ constraint }}</code>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-outline-{{ example.color }}" 
+                                            onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`, 'dual')">
+                                        <i class="fas fa-copy"></i>
+                                        Usar en Dual Simplex
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
         
         <div class="text-center mt-4">
-            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-arrow-left"></i>
-                Volver al Formulario
-            </a>
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-success btn-lg mb-2">
+                        <i class="fas fa-chart-area"></i>
+                        Método Gráfico
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('simplex') }}" class="btn btn-warning btn-lg mb-2">
+                        <i class="fas fa-table"></i>
+                        Método Simplex
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg mb-2">
+                        <i class="fas fa-exchange-alt"></i>
+                        Dual Simplex
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-function useExample(objective, constraints) {
-    // Guardar en localStorage para usar en la página principal
+function useExample(objective, constraints, method) {
+    // Guardar en localStorage para usar en la página correspondiente
     localStorage.setItem('example_objective', objective);
     localStorage.setItem('example_constraints', constraints);
     
-    // Mostrar mensaje de confirmación
-    alert('Ejemplo copiado. Serás redirigido al formulario principal.');
+    // Determinar la URL de destino según el método
+    let targetUrl;
+    switch(method) {
+        case 'grafico':
+            targetUrl = "{{ url_for('index') }}";
+            break;
+        case 'simplex':
+            targetUrl = "{{ url_for('simplex') }}";
+            break;
+        case 'dual':
+            targetUrl = "{{ url_for('dual_simplex') }}";
+            break;
+        default:
+            targetUrl = "{{ url_for('index') }}";
+    }
     
-    // Redirigir a la página principal
-    window.location.href = "{{ url_for('index') }}";
+    // Mostrar mensaje de confirmación
+    alert('Ejemplo copiado. Serás redirigido al formulario del ' + 
+          (method === 'grafico' ? 'método gráfico' : 
+           method === 'simplex' ? 'método simplex' : 
+           'método dual simplex') + '.');
+    
+    // Redirigir a la página correspondiente
+    window.location.href = targetUrl;
 }
 </script>
 {% endblock %}

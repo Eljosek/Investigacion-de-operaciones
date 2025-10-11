@@ -166,29 +166,64 @@ def examples():
     Página con ejemplos de problemas de programación lineal.
     """
     examples_data = [
+        # Ejemplos para Método Gráfico (2 variables)
         {
-            'title': 'Primer Ejercicio del Taller',
+            'title': 'Método Gráfico - Ejercicio del Taller 1',
+            'method': 'grafico',
             'objective': 'maximizar z = x + y',
             'constraints': 'x + 3y <= 26\n4x + 3y <= 44\n2x + 3y <= 28\nx >= 0\ny >= 0',
-            'description': 'Problema de maximización con restricciones lineales.'
+            'description': 'Problema clásico de maximización con restricciones lineales (2 variables).',
+            'icon': 'chart-area',
+            'color': 'success'
         },
         {
-            'title': 'Segundo Ejercicio del Taller',
+            'title': 'Método Gráfico - Minimización',
+            'method': 'grafico',
             'objective': 'minimizar z = 3x + 2y',
             'constraints': '3x + 4y <= 12\n3x + 2y >= 2\nx >= 0\ny >= 0',
-            'description': 'Problema de minimización con restricciones mixtas.'
+            'description': 'Problema de minimización con restricciones mixtas (ideal para visualización).',
+            'icon': 'chart-area',
+            'color': 'success'
+        },
+        
+        # Ejemplos para Método Simplex (múltiples variables)
+        {
+            'title': 'Método Simplex - Problema Multivariable',
+            'method': 'simplex',
+            'objective': 'maximizar z = 3x1 + 2x2 + x3',
+            'constraints': 'x1 + x2 + x3 <= 10\n2x1 + x2 <= 8\nx1 + 2x3 <= 6\nx1 >= 0\nx2 >= 0\nx3 >= 0',
+            'description': 'Problema con 3 variables ideal para el método Simplex.',
+            'icon': 'table',
+            'color': 'warning'
         },
         {
-            'title': 'Problema de Producción Industrial',
-            'objective': 'maximizar z = 5x + 4y',
-            'constraints': '2x + 3y <= 18\n4x + 2y <= 20\nx + y >= 2',
-            'description': 'Problema típico de optimización en producción industrial.'
+            'title': 'Método Simplex - Producción Óptima',
+            'method': 'simplex',
+            'objective': 'maximizar z = 5x1 + 4x2 + 3x3 + 2x4',
+            'constraints': '2x1 + 3x2 + x3 + x4 <= 20\nx1 + 2x2 + 3x3 + x4 <= 15\n3x1 + x2 + 2x3 + 3x4 <= 25\nx1 >= 0\nx2 >= 0\nx3 >= 0\nx4 >= 0',
+            'description': 'Problema de producción con 4 productos y recursos limitados.',
+            'icon': 'table',
+            'color': 'warning'
+        },
+        
+        # Ejemplos para Método Dual Simplex
+        {
+            'title': 'Dual Simplex - Análisis de Sensibilidad',
+            'method': 'dual',
+            'objective': 'minimizar z = 2x1 + 3x2',
+            'constraints': 'x1 + 2x2 >= 6\n2x1 + x2 >= 8\nx1 >= 0\nx2 >= 0',
+            'description': 'Problema ideal para dual simplex con restricciones >= principalmente.',
+            'icon': 'exchange-alt',
+            'color': 'info'
         },
         {
-            'title': 'Problema de Recursos Limitados',
-            'objective': 'minimizar z = 2x + 5y',
-            'constraints': 'x + 2y >= 8\n3x + y >= 9\n2x + 4y <= 24',
-            'description': 'Optimización con restricciones de recursos limitados.'
+            'title': 'Dual Simplex - Optimización de Costos',
+            'method': 'dual',
+            'objective': 'minimizar z = 4x1 + 3x2 + 2x3',
+            'constraints': 'x1 + x2 + x3 >= 5\n2x1 + x2 >= 4\nx1 + 2x3 >= 3\nx1 >= 0\nx2 >= 0\nx3 >= 0',
+            'description': 'Problema de minimización de costos con múltiples restricciones >=.',
+            'icon': 'exchange-alt',
+            'color': 'info'
         }
     ]
     

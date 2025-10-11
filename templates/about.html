@@ -6,14 +6,14 @@
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <div class="text-center mb-5">
-            <h1 class="display-5 text-success">
-                <i class="fas fa-info-circle"></i>
-                Acerca del Método Gráfico
+            <h1 class="display-5 text-primary">
+                <i class="fas fa-calculator"></i>
+                Métodos de Programación Lineal
             </h1>
-            <p class="lead">Todo lo que necesitas saber sobre programación lineal y el método gráfico</p>
+            <p class="lead">Implementación completa de tres métodos de resolución de problemas de programación lineal</p>
             <div class="alert alert-info mt-3">
-                <strong>Esta web fue creada por José Herrera para la profesora Bibiana Patricia Arias Villada en la materia de Investigación de Operaciones.</strong>
-                <br><small class="text-muted">Universidad Tecnológica de Pereira (UTP) - 2025</small>
+                <strong>Esta aplicación fue desarrollada por José Miguel Herrera Gutiérrez para la profesora Bibiana Patricia Arias Villada en la materia de Investigación de Operaciones.</strong>
+                <br><small class="text-muted">Universidad Tecnológica de Pereira (UTP) - Segundo Parcial 2025</small>
             </div>
         </div>
 
@@ -38,7 +38,98 @@
             </div>
         </div>
 
-        <!-- El Método Gráfico -->
+        <!-- Métodos Implementados -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4">
+                    <i class="fas fa-tools"></i>
+                    Métodos de Resolución Implementados
+                </h2>
+            </div>
+            
+            <!-- Método Gráfico -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-chart-area"></i>
+                            Método Gráfico
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Ideal para:</strong> Problemas con 2 variables</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="small">
+                            <li>Visualización gráfica de la región factible</li>
+                            <li>Identificación de vértices óptimos</li>
+                            <li>Análisis geométrico intuitivo</li>
+                            <li>Generación automática de gráficas</li>
+                        </ul>
+                        <div class="text-center">
+                            <a href="{{ url_for('index') }}" class="btn btn-success btn-sm">
+                                <i class="fas fa-play"></i> Usar Método
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Método Simplex -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-warning">
+                    <div class="card-header bg-warning text-dark text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-table"></i>
+                            Método Simplex
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Ideal para:</strong> Problemas con múltiples variables</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="small">
+                            <li>Resolución algorítmica sistemática</li>
+                            <li>Manejo de restricciones complejas</li>
+                            <li>Optimización eficiente</li>
+                            <li>Solución de problemas grandes</li>
+                        </ul>
+                        <div class="text-center">
+                            <a href="{{ url_for('simplex') }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-play"></i> Usar Método
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Método Dual Simplex -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-info">
+                    <div class="card-header bg-info text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exchange-alt"></i>
+                            Dual Simplex
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Ideal para:</strong> Problemas con restricciones violadas</p>
+                        <p><strong>Características:</strong></p>
+                        <ul class="small">
+                            <li>Solución dual factible inicial</li>
+                            <li>Manejo de restricciones >= y =</li>
+                            <li>Análisis de sensibilidad</li>
+                            <li>Complemento del método simplex</li>
+                        </ul>
+                        <div class="text-center">
+                            <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-sm">
+                                <i class="fas fa-play"></i> Usar Método
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- El Método Gráfico (detalle) -->
         <div class="card mb-4">
             <div class="card-header bg-success text-white">
                 <h3 class="mb-0">
@@ -203,6 +294,7 @@
                             <li><strong>Flask:</strong> Framework web minimalista y eficiente</li>
                             <li><strong>NumPy:</strong> Cálculos numéricos y álgebra lineal</li>
                             <li><strong>Matplotlib:</strong> Generación de gráficas científicas</li>
+                            <li><strong>PuLP:</strong> Optimización lineal y solvers matemáticos</li>
                         </ul>
                     </div>
                     
@@ -232,9 +324,10 @@
                         <h5><i class="fas fa-brain"></i> Algoritmos Implementados</h5>
                         <ul>
                             <li><strong>Parsing matemático:</strong> Análisis de funciones y restricciones</li>
-                            <li><strong>Intersección de líneas:</strong> Cálculo de vértices</li>
-                            <li><strong>Evaluación de factibilidad:</strong> Verificación de restricciones</li>
-                            <li><strong>Optimización gráfica:</strong> Búsqueda del punto óptimo</li>
+                            <li><strong>Método gráfico:</strong> Intersección de líneas y vértices</li>
+                            <li><strong>Algoritmo Simplex:</strong> Optimización por pivoteo</li>
+                            <li><strong>Dual Simplex:</strong> Resolución de problemas duales</li>
+                            <li><strong>Validación automática:</strong> Verificación de factibilidad</li>
                         </ul>
                     </div>
                 </div>
@@ -265,7 +358,7 @@
                     
                     <div class="col-md-4">
                         <h5><i class="fas fa-code"></i> Desarrollador</h5>
-                        <p><strong>José Herrera</strong><br>
+                        <p><strong>José Miguel Herrera Gutiérrez</strong><br>
                         <small class="text-muted">Estudiante de Ingeniería</small></p>
                     </div>
                 </div>
@@ -276,7 +369,8 @@
                     <span class="badge bg-info me-2">Bootstrap</span>
                     <span class="badge bg-warning me-2">JavaScript</span>
                     <span class="badge bg-danger me-2">NumPy</span>
-                    <span class="badge bg-dark">Matplotlib</span>
+                    <span class="badge bg-dark me-2">Matplotlib</span>
+                    <span class="badge bg-secondary">PuLP</span>
                 </div>
             </div>
         </div>

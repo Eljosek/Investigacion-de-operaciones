@@ -10,8 +10,8 @@ Fecha: 2025
 import os
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from lp_solver import solve_lp_problem
-from simplex_solver import solve_simplex
-from dual_simplex_solver import solve_dual_simplex
+import simplex_solver
+import dual_simplex_solver
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)
@@ -85,7 +85,7 @@ def simplex():
     return render_template('simplex.html')
 
 @app.route('/solve-simplex', methods=['POST'])
-def solve_simplex():
+def solve_simplex_route():
     """
     Procesa el formulario y resuelve el problema usando método Simplex.
     """
@@ -100,7 +100,7 @@ def solve_simplex():
         constraints_list = [line.strip() for line in constraints_text.split('\n') 
                            if line.strip()]
         
-        result = solve_simplex(objective, constraints_list)
+        result = simplex_solver.solve_simplex(objective, constraints_list)
         
         if not result['success']:
             flash(result['error'], 'error')
@@ -109,7 +109,11 @@ def solve_simplex():
         return render_template('simplex_results.html', 
                              objective=objective,
                              constraints=constraints_list,
-                             result=result)
+                             result=result,
+                             solution=result.get('solution', {}),
+                             optimal_value=result.get('optimal_value', 0),
+                             opt_type=result.get('opt_type', 'max'),
+                             status=result.get('status', 'unknown'))
         
     except Exception as e:
         flash(f'Error inesperado: {str(e)}', 'error')
@@ -138,7 +142,7 @@ def solve_dual_simplex_route():
         constraints_list = [line.strip() for line in constraints_text.split('\n') 
                            if line.strip()]
         
-        result = solve_dual_simplex(objective, constraints_list)
+        result = dual_simplex_solver.solve_dual_simplex(objective, constraints_list)
         
         if not result['success']:
             flash(result['error'], 'error')
@@ -147,7 +151,11 @@ def solve_dual_simplex_route():
         return render_template('dual_simplex_results.html', 
                              objective=objective,
                              constraints=constraints_list,
-                             result=result)
+                             result=result,
+                             solution=result.get('solution', {}),
+                             optimal_value=result.get('optimal_value', 0),
+                             opt_type=result.get('opt_type', 'min'),
+                             status=result.get('status', 'unknown'))
         
     except Exception as e:
         flash(f'Error inesperado: {str(e)}', 'error')

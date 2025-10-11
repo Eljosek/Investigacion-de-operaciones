@@ -1,0 +1,720 @@
+{% extends "base.html" %}{% extends "base.html" %}
+
+
+
+{% block title %}Acerca de - Programación Lineal{% endblock %}{% block title %}Acerca de - Programación Lineal{% endblock %}
+
+
+
+{% block content %}{% block content %}
+
+<div class="row"><div class="row">
+
+    <div class="col-lg-10 mx-auto">    <div class="col-lg-10 mx-auto">
+
+        <div class="text-center mb-5">        <div class="text-center mb-5">
+
+            <h1 class="display-5 text-primary">            <h1 class="display-5 text-success">
+
+                <i class="fas fa-info-circle"></i>                <i class="fas fa-info-circle"></i>
+
+                Acerca de la Aplicación de Programación Lineal                Acerca de los Métodos de Optimización
+
+            </h1>            </h1>
+
+            <p class="lead">Sistema completo para resolver problemas de optimización usando tres métodos diferentes</p>            <p class="lead">Conoce los tres métodos de programación lineal implementados en esta aplicación</p>
+
+            <div class="alert alert-info mt-3">            <div class="alert alert-info mt-3">
+
+                <strong>Desarrollado por José Miguel Herrera Gutiérrez para la profesora Bibiana Patricia Arias Villada</strong>                <strong>Esta web fue creada por José Herrera para la profesora Bibiana Patricia Arias Villada en la materia de Investigación de Operaciones.</strong>
+
+                <br><strong>Investigación de Operaciones - Universidad Tecnológica de Pereira (UTP)</strong>                <br><small class="text-muted">Universidad Tecnológica de Pereira (UTP) - 2025</small>
+
+                <br><small class="text-muted">Segundo Parcial - 2025 | Versión 2.0 Enhanced</small>            </div>
+
+            </div>        </div>
+
+        </div>
+
+        <!-- ¿Qué es la Programación Lineal? -->
+
+        <!-- Métodos Implementados -->        <div class="card mb-4">
+
+        <div class="row mb-5">            <div class="card-header bg-primary text-white">
+
+            <div class="col-md-4">                <h3 class="mb-0">
+
+                <div class="card h-100 border-primary">                    <i class="fas fa-question-circle"></i>
+
+                    <div class="card-header bg-primary text-white text-center">                    ¿Qué es la Programación Lineal?
+
+                        <h4><i class="fas fa-chart-line"></i> Método Gráfico</h4>                </h3>
+
+                    </div>            </div>
+
+                    <div class="card-body">            <div class="card-body">
+
+                        <p><strong>Para 2 variables:</strong></p>                <p>La <strong>programación lineal</strong> es una técnica de optimización matemática que busca encontrar el mejor resultado (máximo o mínimo) de una función objetivo lineal, sujeta a un conjunto de restricciones lineales.</p>
+
+                        <ul>                
+
+                            <li>Visualización gráfica de restricciones</li>                <p>Los elementos principales son:</p>
+
+                            <li>Identificación de región factible</li>                <ul>
+
+                            <li>Evaluación de puntos críticos</li>                    <li><strong>Variables de decisión:</strong> Las incógnitas que queremos determinar (x₁, x₂, ..., xₙ)</li>
+
+                            <li>Solución geométrica intuitiva</li>                    <li><strong>Función objetivo:</strong> La expresión que queremos maximizar o minimizar</li>
+
+                        </ul>                    <li><strong>Restricciones:</strong> Las limitaciones del problema (desigualdades o igualdades)</li>
+
+                        <div class="mt-3">                    <li><strong>Condiciones de no-negatividad:</strong> xᵢ ≥ 0 para todas las variables</li>
+
+                            <span class="badge bg-info">2 variables máximo</span>                </ul>
+
+                            <span class="badge bg-success">Fácil comprensión</span>            </div>
+
+                        </div>        </div>
+
+                    </div>
+
+                </div>        <!-- Tabla Comparativa de Métodos -->
+
+            </div>        <div class="card mb-4">
+
+                        <div class="card-header bg-dark text-white">
+
+            <div class="col-md-4">                <h3 class="mb-0">
+
+                <div class="card h-100 border-success">                    <i class="fas fa-balance-scale"></i>
+
+                    <div class="card-header bg-success text-white text-center">                    Comparación de Métodos
+
+                        <h4><i class="fas fa-table"></i> Método Simplex</h4>                </h3>
+
+                    </div>            </div>
+
+                    <div class="card-body">            <div class="card-body">
+
+                        <p><strong>Para n variables:</strong></p>                <div class="table-responsive">
+
+                        <ul>                    <table class="table table-bordered table-hover">
+
+                            <li>Algoritmo algebraico iterativo</li>                        <thead class="table-light">
+
+                            <li>Tableaux paso a paso</li>                            <tr>
+
+                            <li>Variables de holgura/exceso</li>                                <th>Característica</th>
+
+                            <li>Historial de iteraciones completo</li>                                <th class="text-center"><i class="fas fa-chart-line text-success"></i> Método Gráfico</th>
+
+                        </ul>                                <th class="text-center"><i class="fas fa-table text-primary"></i> Método Simplex</th>
+
+                        <div class="mt-3">                                <th class="text-center"><i class="fas fa-exchange-alt text-warning"></i> Dual Simplex</th>
+
+                            <span class="badge bg-info">n variables</span>                            </tr>
+
+                            <span class="badge bg-warning">Algorítmico</span>                        </thead>
+
+                        </div>                        <tbody>
+
+                    </div>                            <tr>
+
+                </div>                                <td><strong>Variables</strong></td>
+
+            </div>                                <td class="text-center">2 variables</td>
+
+                                            <td class="text-center">2 o más variables</td>
+
+            <div class="col-md-4">                                <td class="text-center">2 o más variables</td>
+
+                <div class="card h-100 border-warning">                            </tr>
+
+                    <div class="card-header bg-warning text-white text-center">                            <tr>
+
+                        <h4><i class="fas fa-exchange-alt"></i> Dual Simplex</h4>                                <td><strong>Restricciones</strong></td>
+
+                    </div>                                <td class="text-center">≤, ≥, =</td>
+
+                    <div class="card-body">                                <td class="text-center">≤, ≥, =</td>
+
+                        <p><strong>Enfoque dual:</strong></p>                                <td class="text-center">≤, ≥, =</td>
+
+                        <ul>                            </tr>
+
+                            <li>Conversión primal-dual automática</li>                            <tr>
+
+                            <li>Optimización en espacio dual</li>                                <td><strong>Visualización</strong></td>
+
+                            <li>Recuperación de solución primal</li>                                <td class="text-center"><span class="badge bg-success">Visual</span></td>
+
+                            <li>Eficiente para ciertos problemas</li>                                <td class="text-center"><span class="badge bg-secondary">Algebraico</span></td>
+
+                        </ul>                                <td class="text-center"><span class="badge bg-secondary">Algebraico</span></td>
+
+                        <div class="mt-3">                            </tr>
+
+                            <span class="badge bg-info">Transformación dual</span>                            <tr>
+
+                            <span class="badge bg-danger">Avanzado</span>                                <td><strong>Complejidad</strong></td>
+
+                        </div>                                <td class="text-center">Baja</td>
+
+                    </div>                                <td class="text-center">Media-Alta</td>
+
+                </div>                                <td class="text-center">Media-Alta</td>
+
+            </div>                            </tr>
+
+        </div>                            <tr>
+
+                                <td><strong>Uso principal</strong></td>
+
+        <!-- ¿Qué es la Programación Lineal? -->                                <td class="text-center">Educativo</td>
+
+        <div class="card mb-4">                                <td class="text-center">General</td>
+
+            <div class="card-header bg-primary text-white">                                <td class="text-center">Re-optimización</td>
+
+                <h3 class="mb-0">                            </tr>
+
+                    <i class="fas fa-question-circle"></i>                        </tbody>
+
+                    ¿Qué es la Programación Lineal?                    </table>
+
+                </h3>                </div>
+
+            </div>            </div>
+
+            <div class="card-body">        </div>
+
+                <p>La <strong>programación lineal</strong> es una técnica de optimización matemática que busca encontrar el mejor resultado (máximo o mínimo) de una función objetivo lineal, sujeta a un conjunto de restricciones lineales.</p>
+
+                        <!-- Método Gráfico -->
+
+                <div class="row mt-4">        <div class="card mb-4">
+
+                    <div class="col-md-6">            <div class="card-header bg-success text-white">
+
+                        <h5><i class="fas fa-bullseye text-success"></i> Función Objetivo</h5>                <h3 class="mb-0">
+
+                        <p>Expresión matemática que queremos optimizar:</p>                    <i class="fas fa-chart-line"></i>
+
+                        <div class="bg-light p-2 rounded">                    Método Gráfico
+
+                            <code>Maximizar: Z = c₁x₁ + c₂x₂ + ... + cₙxₙ</code><br>                </h3>
+
+                            <code>Minimizar: Z = c₁x₁ + c₂x₂ + ... + cₙxₙ</code>            </div>
+
+                        </div>            <div class="card-body">
+
+                    </div>                <p>El método gráfico es una técnica visual para resolver problemas de programación lineal con <strong>dos variables</strong>.</p>
+
+                    <div class="col-md-6">                
+
+                        <h5><i class="fas fa-lock text-warning"></i> Restricciones</h5>                <div class="row">
+
+                        <p>Limitaciones que debe satisfacer la solución:</p>                    <div class="col-md-6">
+
+                        <div class="bg-light p-2 rounded">                        <h5><i class="fas fa-1"></i> Graficar las restricciones</h5>
+
+                            <code>a₁₁x₁ + a₁₂x₂ + ... + a₁ₙxₙ ≤ b₁</code><br>                        <p>Cada restricción se representa como una línea recta en el plano cartesiano.</p>
+
+                            <code>a₂₁x₁ + a₂₂x₂ + ... + a₂ₙxₙ ≥ b₂</code><br>                        
+
+                            <code>x₁, x₂, ..., xₙ ≥ 0 (no negatividad)</code>                        <h5><i class="fas fa-2"></i> Identificar la región factible</h5>
+
+                        </div>                        <p>Área que satisface todas las restricciones simultáneamente.</p>
+
+                    </div>                    </div>
+
+                </div>                    
+
+            </div>                    <div class="col-md-6">
+
+        </div>                        <h5><i class="fas fa-3"></i> Encontrar los vértices</h5>
+
+                        <p>Puntos de intersección que forman las esquinas de la región.</p>
+
+        <!-- Tecnologías y Herramientas -->                        
+
+        <div class="card mb-4">                        <h5><i class="fas fa-4"></i> Evaluar la función objetivo</h5>
+
+            <div class="card-header bg-success text-white">                        <p>El óptimo siempre está en un vértice de la región factible.</p>
+
+                <h3 class="mb-0">                    </div>
+
+                    <i class="fas fa-cogs"></i>                </div>
+
+                    Tecnologías Implementadas                
+
+                </h3>                <div class="alert alert-info mt-3">
+
+            </div>                    <i class="fas fa-lightbulb"></i>
+
+            <div class="card-body">                    <strong>Ventaja:</strong> Permite visualizar claramente la solución y la región factible.
+
+                <div class="row">                    <br><strong>Limitación:</strong> Solo funciona con problemas de 2 variables.
+
+                    <div class="col-md-6">                </div>
+
+                        <h5><i class="fab fa-python text-primary"></i> Backend (Python)</h5>            </div>
+
+                        <ul>        </div>
+
+                            <li><strong>Flask:</strong> Framework web ligero y flexible</li>
+
+                            <li><strong>PuLP:</strong> Biblioteca de optimización lineal</li>        <!-- Método Simplex -->
+
+                            <li><strong>CBC Solver:</strong> Motor de optimización profesional</li>        <div class="card mb-4">
+
+                            <li><strong>NumPy:</strong> Cálculos numéricos y matriciales</li>            <div class="card-header bg-primary text-white">
+
+                        </ul>                <h3 class="mb-0">
+
+                    </div>                    <i class="fas fa-table"></i>
+
+                    <div class="col-md-6">                    Método Simplex
+
+                        <h5><i class="fab fa-html5 text-danger"></i> Frontend</h5>                </h3>
+
+                        <ul>            </div>
+
+                            <li><strong>Bootstrap 5:</strong> Framework CSS responsivo</li>            <div class="card-body">
+
+                            <li><strong>Font Awesome:</strong> Iconografía moderna</li>                <p>El método Simplex es el algoritmo algebraico más utilizado para resolver problemas de programación lineal con <strong>cualquier número de variables</strong>.</p>
+
+                            <li><strong>Chart.js:</strong> Gráficos interactivos</li>                
+
+                            <li><strong>JavaScript:</strong> Interactividad del usuario</li>                <h5>Proceso del Algoritmo:</h5>
+
+                        </ul>                <ol>
+
+                    </div>                    <li><strong>Forma estándar:</strong> Convertir todas las restricciones a igualdades usando variables de holgura/exceso</li>
+
+                </div>                    <li><strong>Solución básica inicial:</strong> Comenzar en un vértice de la región factible</li>
+
+                                    <li><strong>Iteraciones:</strong> Moverse de vértice en vértice mejorando el valor objetivo</li>
+
+                <div class="alert alert-success mt-3">                    <li><strong>Optimalidad:</strong> Detenerse cuando no hay mejora posible</li>
+
+                    <strong><i class="fas fa-check-circle"></i> Garantía de Precisión:</strong>                </ol>
+
+                    Todos los resultados están validados matemáticamente usando el solver CBC de categoría industrial.                
+
+                </div>                <h5>Variables Auxiliares:</h5>
+
+            </div>                <ul>
+
+        </div>                    <li><strong>Variables de holgura (s):</strong> Para restricciones ≤ (convierten en igualdad)</li>
+
+                    <li><strong>Variables de exceso (e):</strong> Para restricciones ≥ (parte que excede)</li>
+
+        <!-- Características de los Algoritmos -->                    <li><strong>Variables artificiales (a):</strong> Para Fase 1 del método Two-Phase</li>
+
+        <div class="card mb-4">                </ul>
+
+            <div class="card-header bg-info text-white">                
+
+                <h3 class="mb-0">                <div class="alert alert-primary mt-3">
+
+                    <i class="fas fa-cog"></i>                    <i class="fas fa-info-circle"></i>
+
+                    Algoritmos y Características                    <strong>Two-Phase Simplex:</strong> Si hay restricciones ≥ o =, se usa una Fase 1 para encontrar una solución básica factible inicial, y una Fase 2 para optimizar.
+
+                </h3>                </div>
+
+            </div>            </div>
+
+            <div class="card-body">        </div>
+
+                <div class="row">
+
+                    <div class="col-md-4">        <!-- Dual Simplex -->
+
+                        <div class="text-center mb-3">        <div class="card mb-4">
+
+                            <i class="fas fa-chart-line fa-3x text-primary"></i>            <div class="card-header bg-warning text-dark">
+
+                            <h5 class="mt-2">Método Gráfico</h5>                <h3 class="mb-0">
+
+                        </div>                    <i class="fas fa-exchange-alt"></i>
+
+                        <ul class="list-unstyled">                    Método Dual Simplex
+
+                            <li><i class="fas fa-check text-success"></i> Visualización 2D completa</li>                </h3>
+
+                            <li><i class="fas fa-check text-success"></i> Región factible coloreada</li>            </div>
+
+                            <li><i class="fas fa-check text-success"></i> Evaluación de vértices</li>            <div class="card-body">
+
+                            <li><i class="fas fa-check text-success"></i> Ideal para aprendizaje</li>                <p>El Dual Simplex es una variante del método Simplex que parte de una solución dual factible pero puede tener restricciones primales violadas.</p>
+
+                        </ul>                
+
+                    </div>                <h5>¿Cuándo usar Dual Simplex?</h5>
+
+                                    <ul>
+
+                    <div class="col-md-4">                    <li><strong>Re-optimización:</strong> Cuando se modifican restricciones de un problema ya resuelto</li>
+
+                        <div class="text-center mb-3">                    <li><strong>Análisis de sensibilidad:</strong> Estudiar cómo cambia la solución con cambios paramétricos</li>
+
+                            <i class="fas fa-table fa-3x text-success"></i>                    <li><strong>Branch and bound:</strong> En algoritmos de programación entera</li>
+
+                            <h5 class="mt-2">Simplex Clásico</h5>                </ul>
+
+                        </div>                
+
+                        <ul class="list-unstyled">                <h5>Diferencias clave:</h5>
+
+                            <li><i class="fas fa-check text-success"></i> Tableaux paso a paso</li>                <div class="row">
+
+                            <li><i class="fas fa-check text-success"></i> Variables auxiliares automáticas</li>                    <div class="col-md-6">
+
+                            <li><i class="fas fa-check text-success"></i> Historial de iteraciones</li>                        <h6>Simplex Primal:</h6>
+
+                            <li><i class="fas fa-check text-success"></i> Soporte para ≤, ≥, =</li>                        <ul>
+
+                        </ul>                            <li>Parte de solución primal factible</li>
+
+                    </div>                            <li>Mejora valor objetivo</li>
+
+                                                <li>Mantiene factibilidad primal</li>
+
+                    <div class="col-md-4">                        </ul>
+
+                        <div class="text-center mb-3">                    </div>
+
+                            <i class="fas fa-exchange-alt fa-3x text-warning"></i>                    <div class="col-md-6">
+
+                            <h5 class="mt-2">Dual Simplex</h5>                        <h6>Simplex Dual:</h6>
+
+                        </div>                        <ul>
+
+                        <ul class="list-unstyled">                            <li>Parte de solución dual factible</li>
+
+                            <li><i class="fas fa-check text-success"></i> Conversión primal-dual</li>                            <li>Restaura factibilidad primal</li>
+
+                            <li><i class="fas fa-check text-success"></i> Teoría de dualidad</li>                            <li>Mantiene optimalidad dual</li>
+
+                            <li><i class="fas fa-check text-success"></i> Optimización en espacio dual</li>                        </ul>
+
+                            <li><i class="fas fa-check text-success"></i> Extracción de solución primal</li>                    </div>
+
+                        </ul>                </div>
+
+                    </div>                
+
+                </div>                <div class="alert alert-warning mt-3">
+
+            </div>                    <i class="fas fa-exclamation-triangle"></i>
+
+        </div>                    <strong>Nota:</strong> Esta implementación usa automáticamente el método más adecuado según las características del problema.
+
+                </div>
+
+        <!-- Casos de Uso y Aplicaciones -->            </div>
+
+        <div class="card mb-4">        </div>
+
+            <div class="card-header bg-warning text-white">
+
+                <h3 class="mb-0">        <!-- Formato de entrada -->
+
+                    <i class="fas fa-lightbulb"></i>        <div class="card mb-4">
+
+                    Aplicaciones de la Programación Lineal            <div class="card-header bg-secondary text-white">
+
+                </h3>                <h3 class="mb-0">
+
+            </div>                    <i class="fas fa-keyboard"></i>
+
+            <div class="card-body">                    Formato de Entrada
+
+                <div class="row">                </h3>
+
+                    <div class="col-md-6">            </div>
+
+                        <h5><i class="fas fa-industry text-primary"></i> Industria y Producción</h5>            <div class="card-body">
+
+                        <ul>                <h5>Función Objetivo:</h5>
+
+                            <li>Optimización de procesos de manufactura</li>                <ul>
+
+                            <li>Planificación de la producción</li>                    <li><code>maximizar z = 3x1 + 2x2</code> o <code>max z = 3x1 + 2x2</code></li>
+
+                            <li>Asignación de recursos limitados</li>                    <li><code>minimizar z = 2x1 - x2 + 3x3</code> o <code>min z = 2x1 - x2 + 3x3</code></li>
+
+                            <li>Minimización de costos operativos</li>                </ul>
+
+                        </ul>                
+
+                    </div>                <h5>Restricciones:</h5>
+
+                                    <ul>
+
+                    <div class="col-md-6">                    <li><code>x1 + 2x2 <= 8</code> (menor o igual)</li>
+
+                        <h5><i class="fas fa-chart-line text-success"></i> Finanzas y Logística</h5>                    <li><code>2x1 + x2 >= 6</code> (mayor o igual)</li>
+
+                        <ul>                    <li><code>x1 + x2 = 5</code> (igualdad)</li>
+
+                            <li>Optimización de carteras de inversión</li>                    <li><code>x1 >= 0</code>, <code>x2 >= 0</code> (no-negatividad)</li>
+
+                            <li>Planificación de rutas de transporte</li>                </ul>
+
+                            <li>Gestión de inventarios</li>                
+
+                            <li>Asignación de presupuestos</li>                <div class="alert alert-info mt-3">
+
+                        </ul>                    <i class="fas fa-lightbulb"></i>
+
+                    </div>                    <strong>Consejos:</strong>
+
+                </div>                    <ul class="mb-0">
+
+            </div>                        <li>Las variables deben nombrarse como x1, x2, x3, etc.</li>
+
+        </div>                        <li>Las restricciones de no-negatividad son opcionales (se asumen automáticamente)</li>
+
+                        <li>Usa espacios para mayor claridad</li>
+
+        <!-- Formato de Entrada -->                    </ul>
+
+        <div class="card mb-4">                </div>
+
+            <div class="card-header bg-dark text-white">            </div>
+
+                <h3 class="mb-0">        </div>
+
+                    <i class="fas fa-keyboard"></i>
+
+                    Formato de Entrada        <!-- Aplicaciones -->
+
+                </h3>        <div class="card mb-4">
+
+            </div>            <div class="card-header bg-info text-white">
+
+            <div class="card-body">                <h3 class="mb-0">
+
+                <div class="row">                    <i class="fas fa-industry"></i>
+
+                    <div class="col-md-6">                    Aplicaciones Reales
+
+                        <h5>Función Objetivo</h5>                </h3>
+
+                        <div class="bg-light p-3 rounded">            </div>
+
+                            <strong>Ejemplos válidos:</strong><br>            <div class="card-body">
+
+                            <code>maximizar z = 3x1 + 2x2</code><br>                <div class="row">
+
+                            <code>minimizar z = 5x1 + 4x2 + 3x3</code><br>                    <div class="col-md-4 mb-3">
+
+                            <code>max z = x1 + 2x2 - x3</code>                        <h6><i class="fas fa-factory"></i> Producción</h6>
+
+                        </div>                        <p class="small">Optimizar la producción de productos con recursos limitados (materias primas, tiempo, mano de obra).</p>
+
+                    </div>                    </div>
+
+                    <div class="col-md-6">                    
+
+                        <h5>Restricciones</h5>                    <div class="col-md-4 mb-3">
+
+                        <div class="bg-light p-3 rounded">                        <h6><i class="fas fa-truck"></i> Transporte</h6>
+
+                            <strong>Ejemplos válidos:</strong><br>                        <p class="small">Minimizar costos de transporte entre plantas y centros de distribución.</p>
+
+                            <code>x1 + x2 &lt;= 4</code><br>                    </div>
+
+                            <code>2x1 + 3x2 &gt;= 6</code><br>                    
+
+                            <code>x1 + 2x2 + x3 = 10</code>                    <div class="col-md-4 mb-3">
+
+                        </div>                        <h6><i class="fas fa-chart-pie"></i> Inversiones</h6>
+
+                    </div>                        <p class="small">Optimizar portafolios de inversión maximizando retorno con restricciones de riesgo.</p>
+
+                </div>                    </div>
+
+                                </div>
+
+                <div class="alert alert-info mt-3">                
+
+                    <strong><i class="fas fa-info-circle"></i> Nota:</strong>                <div class="row">
+
+                    Las restricciones de no negatividad (xi ≥ 0) se agregan automáticamente y no necesitan especificarse.                    <div class="col-md-4 mb-3">
+
+                </div>                        <h6><i class="fas fa-utensils"></i> Dieta</h6>
+
+            </div>                        <p class="small">Planificar dietas que minimicen costo cumpliendo requerimientos nutricionales.</p>
+
+        </div>                    </div>
+
+                    
+
+        <!-- API y Endpoints -->                    <div class="col-md-4 mb-3">
+
+        <div class="card mb-4">                        <h6><i class="fas fa-calendar-alt"></i> Programación</h6>
+
+            <div class="card-header bg-secondary text-white">                        <p class="small">Asignar horarios, turnos y recursos de manera óptima.</p>
+
+                <h3 class="mb-0">                    </div>
+
+                    <i class="fas fa-code"></i>                    
+
+                    API REST Disponible                    <div class="col-md-4 mb-3">
+
+                </h3>                        <h6><i class="fas fa-coins"></i> Finanzas</h6>
+
+            </div>                        <p class="small">Optimizar presupuestos y asignación de recursos financieros.</p>
+
+            <div class="card-body">                    </div>
+
+                <p>La aplicación proporciona endpoints JSON para integración con otros sistemas:</p>                </div>
+
+                            </div>
+
+                <div class="row">        </div>
+
+                    <div class="col-md-6">
+
+                        <h6><span class="badge bg-success">POST</span> /api/solve-simplex</h6>        <!-- Información del Proyecto -->
+
+                        <small class="text-muted">Resuelve problemas usando el método Simplex</small>        <div class="card mb-4">
+
+                    </div>            <div class="card-header bg-success text-white">
+
+                    <div class="col-md-6">                <h3 class="mb-0">
+
+                        <h6><span class="badge bg-warning">POST</span> /api/solve-dual-simplex</h6>                    <i class="fas fa-user-graduate"></i>
+
+                        <small class="text-muted">Resuelve problemas usando el método Dual Simplex</small>                    Información del Proyecto
+
+                    </div>                </h3>
+
+                </div>            </div>
+
+                            <div class="card-body text-center">
+
+                <div class="mt-3">                <div class="row">
+
+                    <h6>Formato de respuesta JSON:</h6>                    <div class="col-md-4">
+
+                    <pre class="bg-light p-2 rounded small"><code>{                        <h5><i class="fas fa-university"></i> Universidad</h5>
+
+  "status": "success",                        <p><strong>Universidad Tecnológica de Pereira</strong><br>
+
+  "opt_value": 24.0,                        <small class="text-muted">UTP</small></p>
+
+  "variables": {"x1": 0.0, "x2": 0.0, "x3": 8.0},                    </div>
+
+  "iterations": 3,                    
+
+  "message": "Optimal solution found",                    <div class="col-md-4">
+
+  "iteration_history": [...],                        <h5><i class="fas fa-chalkboard-teacher"></i> Profesora</h5>
+
+  "method": "Simplex (PuLP-Enhanced with CBC)"                        <p><strong>Bibiana Patricia Arias Villada</strong><br>
+
+}</code></pre>                        <small class="text-muted">Investigación de Operaciones</small></p>
+
+                </div>                    </div>
+
+            </div>                    
+
+        </div>                    <div class="col-md-4">
+
+                        <h5><i class="fas fa-code"></i> Desarrollador</h5>
+
+        <!-- Información del Desarrollador -->                        <p><strong>José Herrera</strong><br>
+
+        <div class="card mb-4 border-primary">                        <small class="text-muted">Estudiante de Ingeniería</small></p>
+
+            <div class="card-header bg-primary text-white">                    </div>
+
+                <h3 class="mb-0">                </div>
+
+                    <i class="fas fa-user-graduate"></i>                
+
+                    Información del Desarrollador                <div class="mt-3">
+
+                </h3>                    <span class="badge bg-primary me-2">Python 3.13</span>
+
+            </div>                    <span class="badge bg-success me-2">Flask</span>
+
+            <div class="card-body">                    <span class="badge bg-info me-2">Bootstrap 5</span>
+
+                <div class="row">                    <span class="badge bg-warning me-2">NumPy</span>
+
+                    <div class="col-md-8">                    <span class="badge bg-danger me-2">Matplotlib</span>
+
+                        <h5><i class="fas fa-user"></i> José Miguel Herrera Gutiérrez</h5>                </div>
+
+                        <p><strong>Estudiante de Ingeniería de Sistemas y Computación</strong></p>            </div>
+
+                        <p><i class="fas fa-university text-primary"></i> Universidad Tecnológica de Pereira (UTP)</p>        </div>
+
+                        <p><i class="fas fa-book text-success"></i> Investigación de Operaciones</p>
+
+                        <p><i class="fas fa-chalkboard-teacher text-info"></i> Profesora: Bibiana Patricia Arias Villada</p>        <div class="text-center">
+
+                                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+
+                        <div class="mt-3">                <i class="fas fa-arrow-left"></i>
+
+                            <h6>Objetivos del Proyecto:</h6>                Volver al Inicio
+
+                            <ul>            </a>
+
+                                <li>Implementar algoritmos de optimización lineal</li>        </div>
+
+                                <li>Proporcionar herramientas educativas interactivas</li>    </div>
+
+                                <li>Demostrar aplicaciones prácticas de la programación lineal</li></div>
+
+                                <li>Crear una interfaz web intuitiva y profesional</li>{% endblock %}
+
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 text-center">
+                        <div class="mt-3">
+                            <i class="fas fa-graduation-cap fa-5x text-primary mb-3"></i>
+                            <h6>Segundo Parcial</h6>
+                            <p class="text-muted">Investigación de Operaciones<br>2025</p>
+                            
+                            <div class="mt-4">
+                                <span class="badge bg-primary">Python</span>
+                                <span class="badge bg-success">Flask</span>
+                                <span class="badge bg-info">Bootstrap</span>
+                                <span class="badge bg-warning">PuLP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer del contenido -->
+        <div class="text-center mt-5 mb-4">
+            <div class="alert alert-light border">
+                <h5><i class="fas fa-heart text-danger"></i> Desarrollado con pasión por la optimización</h5>
+                <p class="mb-2">
+                    Esta aplicación combina teoría matemática sólida con tecnología moderna 
+                    para proporcionar una herramienta educativa completa y profesional.
+                </p>
+                <p class="text-muted mb-0">
+                    <small>
+                        <i class="fas fa-code"></i> Código fuente disponible para fines educativos |
+                        <i class="fas fa-bug"></i> Reportar errores o sugerencias al desarrollador
+                    </small>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

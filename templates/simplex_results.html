@@ -1,0 +1,261 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Resultados - Método Simplex{% endblock %}
+
+{% block content %}
+<div class="row method-simplex">
+    <div class="col-lg-10 mx-auto">
+        <div class="text-center mb-4">
+            <h2 class="text-method-simplex">
+                <i class="fas fa-check-circle text-method-simplex"></i> Resultados del Método Simplex
+            </h2>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-file-alt"></i> Problema Ingresado</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Función Objetivo:</strong> {{ objective }}</p>
+                <p><strong>Tipo:</strong> {% if opt_type == 'max' %}Maximización{% else %}Minimización{% endif %}</p>
+                <p><strong>Restricciones:</strong></p>
+                <ul>
+                    {% for constraint in constraints %}
+                    <li>{{ constraint }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-trophy"></i> Solución Óptima</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h3 class="text-center">
+                        <strong>Z óptimo = {{ optimal_value }}</strong>
+                    </h3>
+                </div>
+                
+                <h5><i class="fas fa-calculator"></i> Valores de las Variables:</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for var, val in solution.items() %}
+                            <tr>
+                                <td><strong>{{ var }}</strong></td>
+                                <td>{{ val }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Historial de Iteraciones -->
+        {% if iteration_history and iteration_history|length > 0 %}
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-history"></i> Historial de Iteraciones del Método Simplex
+                    <span class="badge bg-light text-success ms-2">{{ iteration_history|length }} pasos</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Propósito educativo:</strong> Este historial muestra los pasos conceptuales del algoritmo Simplex.
+                    Cada iteración representa una mejora en la función objetivo hasta llegar al óptimo.
+                </div>
+
+                <div class="accordion" id="iterationAccordion">
+                    {% for step in iteration_history %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ step.iteration }}">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{ step.iteration }}" 
+                                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" 
+                                    aria-controls="collapse{{ step.iteration }}">
+                                
+                                <div class="d-flex align-items-center w-100">
+                                    <div class="me-3">
+                                        {% if step.iteration == 0 %}
+                                            <i class="fas fa-play text-primary"></i>
+                                        {% elif step.is_optimal %}
+                                            <i class="fas fa-flag-checkered text-success"></i>
+                                        {% else %}
+                                            <i class="fas fa-arrow-right text-warning"></i>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="flex-grow-1">
+                                        <strong>
+                                            {% if step.iteration == 0 %}
+                                                Configuración Inicial
+                                            {% elif step.is_optimal %}
+                                                Solución Óptima Encontrada
+                                            {% else %}
+                                                Iteración {{ step.iteration }}
+                                            {% endif %}
+                                        </strong>
+                                        
+                                        {% if step.objective_value is defined %}
+                                        <span class="badge bg-success ms-2">
+                                            Z = {{ "%.2f"|format(step.objective_value) }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        
+                        <div id="collapse{{ step.iteration }}" 
+                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                             aria-labelledby="heading{{ step.iteration }}" 
+                             data-bs-parent="#iterationAccordion">
+                            <div class="accordion-body">
+                                
+                                <!-- Descripción del paso -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h6><i class="fas fa-file-text text-info"></i> Descripción:</h6>
+                                        <p class="text-muted">{{ step.description }}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Información del tableau -->
+                                {% if step.tableau_info %}
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <h6><i class="fas fa-table text-success"></i> Información del Tableau:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Tipo:</strong> {{ step.tableau_info.type|title }}</li>
+                                            {% if step.tableau_info.objective_type %}
+                                            <li><strong>Optimización:</strong> {{ step.tableau_info.objective_type }}</li>
+                                            {% endif %}
+                                            {% if step.tableau_info.operation %}
+                                            <li><strong>Operación:</strong> {{ step.tableau_info.operation|title }}</li>
+                                            {% endif %}
+                                            {% if step.tableau_info.progress %}
+                                            <li><strong>Progreso:</strong> {{ step.tableau_info.progress }}</li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    
+                                    {% if step.tableau_info.basic_variables %}
+                                    <div class="col-md-6">
+                                        <h6><i class="fas fa-list text-warning"></i> Variables Básicas:</h6>
+                                        <div class="d-flex flex-wrap">
+                                            {% for var in step.tableau_info.basic_variables %}
+                                            <span class="badge bg-secondary me-1 mb-1">{{ var }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Variables que entran y salen -->
+                                {% if step.entering_var or step.leaving_var %}
+                                <div class="row mb-3">
+                                    {% if step.entering_var %}
+                                    <div class="col-md-6">
+                                        <div class="alert alert-success py-2">
+                                            <strong><i class="fas fa-arrow-down"></i> Variable que entra:</strong>
+                                            <span class="badge bg-success ms-2">{{ step.entering_var }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if step.leaving_var %}
+                                    <div class="col-md-6">
+                                        <div class="alert alert-warning py-2">
+                                            <strong><i class="fas fa-arrow-up"></i> Variable que sale:</strong>
+                                            <span class="badge bg-warning text-dark ms-2">{{ step.leaving_var }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Información del pivoteo -->
+                                {% if step.pivot_info %}
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-crosshairs"></i> Información de Pivoteo:</h6>
+                                            <p>{{ step.pivot_info }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Estado de la solución -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="alert {% if step.feasible %}alert-success{% else %}alert-danger{% endif %} py-2">
+                                            <strong>Estado:</strong>
+                                            {% if step.feasible %}
+                                                <i class="fas fa-check text-success"></i> Factible
+                                            {% else %}
+                                                <i class="fas fa-times text-danger"></i> No factible
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="alert {% if step.is_optimal %}alert-success{% else %}alert-secondary{% endif %} py-2">
+                                            <strong>Optimalidad:</strong>
+                                            {% if step.is_optimal %}
+                                                <i class="fas fa-trophy text-success"></i> Óptimo alcanzado
+                                            {% else %}
+                                                <i class="fas fa-clock text-secondary"></i> En progreso
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Resumen final -->
+                <div class="alert alert-success mt-3">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-calculator"></i> Total de Iteraciones</h6>
+                            <span class="badge bg-success fs-6">{{ iteration_history|length - 1 }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-trophy"></i> Valor Óptimo</h6>
+                            <span class="badge bg-success fs-6">{{ optimal_value }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-check-circle"></i> Estado Final</h6>
+                            <span class="badge bg-success fs-6">Óptimo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="text-center">
+            <a href="{{ url_for('simplex') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-arrow-left text-white"></i> Resolver Otro Problema
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

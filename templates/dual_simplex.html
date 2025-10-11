@@ -1,0 +1,56 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Método Dual Simplex - Programación Lineal{% endblock %}
+
+{% block content %}
+<div class="row method-dual">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-method-dual">
+                <i class="fas fa-exchange-alt text-method-dual"></i> Método Dual Simplex
+            </h1>
+            <p class="lead text-muted">
+                Resuelve problemas de programación lineal con n variables
+            </p>
+        </div>
+
+        <div class="card shadow-lg border-warning">
+            <div class="card-header bg-method-dual text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit"></i> Ingresa tu problema
+                </h3>
+            </div>
+            
+            <div class="card-body">
+                <form action="{{ url_for('solve_dual_simplex_route') }}" method="POST">
+                    <div class="mb-4">
+                        <label for="objective" class="form-label">
+                            <i class="fas fa-bullseye"></i> <strong>Función Objetivo</strong>
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="objective" name="objective" placeholder="Ejemplo: maximizar z = 3x1 + 2x2 + x3" required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Formatos: "max z = 3x1 + 2x2" o "min z = 5x1 + 4x2 + 3x3"
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="constraints" class="form-label">
+                            <i class="fas fa-list"></i> <strong>Restricciones</strong>
+                        </label>
+                        <textarea class="form-control" id="constraints" name="constraints" rows="6" placeholder="Una restricción por línea:&#10;x1 + x2 <= 4&#10;2x1 + x2 <= 6&#10;x1 >= 0&#10;x2 >= 0" required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Operadores válidos: <=, >=, =
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg text-white">
+                            <i class="fas fa-calculator text-white"></i> Resolver con Dual Simplex
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

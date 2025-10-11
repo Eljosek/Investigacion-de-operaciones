@@ -8,13 +8,63 @@
         <!-- Encabezado -->
         <div class="text-center mb-5">
             <h1 class="display-4 text-primary">
-                <i class="fas fa-chart-area"></i>
-                Método Gráfico
+                <i class="fas fa-calculator"></i>
+                Programación Lineal
             </h1>
             <p class="lead text-muted">
-                Resuelve problemas de programación lineal con dos variables usando el método gráfico
+                Selecciona el método de resolución para tu problema de programación lineal
             </p>
+            
+            <!-- Métodos disponibles -->
+            <div class="row mt-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-area fa-2x text-success mb-2"></i>
+                            <h5 class="card-title">Método Gráfico</h5>
+                            <p class="card-text small">Para problemas con 2 variables</p>
+                            <button type="button" class="btn btn-success btn-sm" onclick="showGraphicMethod()">
+                                Seleccionar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-warning">
+                        <div class="card-body text-center">
+                            <i class="fas fa-table fa-2x text-warning mb-2"></i>
+                            <h5 class="card-title">Método Simplex</h5>
+                            <p class="card-text small">Para problemas generales</p>
+                            <a href="{{ url_for('simplex') }}" class="btn btn-warning btn-sm">
+                                Seleccionar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-info">
+                        <div class="card-body text-center">
+                            <i class="fas fa-exchange-alt fa-2x text-info mb-2"></i>
+                            <h5 class="card-title">Dual Simplex</h5>
+                            <p class="card-text small">Para problemas duales</p>
+                            <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-sm">
+                                Seleccionar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Formulario del método gráfico (inicialmente oculto) -->
+        <div id="graphicMethodForm" style="display: none;">
+            <div class="text-center mb-4">
+                <h2 class="text-success">
+                    <i class="fas fa-chart-area"></i>
+                    Método Gráfico
+                </h2>
+                <p class="text-muted">Resuelve problemas de programación lineal con dos variables</p>
+            </div>
 
         <!-- Formulario principal -->
         <div class="card shadow-lg">
@@ -81,6 +131,7 @@
                 </form>
             </div>
         </div>
+        </div> <!-- Cierre del div graphicMethodForm -->
 
         <!-- Sección de ayuda -->
         <div class="row mt-5">
@@ -135,6 +186,14 @@ function clearForm() {
 function loadExample() {
     document.getElementById('objective').value = 'maximizar z = x + y';
     document.getElementById('constraints').value = 'x + 3y <= 26\n4x + 3y <= 44\n2x + 3y <= 28\nx >= 0\ny >= 0';
+}
+
+// Función para mostrar el formulario del método gráfico
+function showGraphicMethod() {
+    // Ocultar la selección de métodos
+    document.querySelector('.row.mt-4').style.display = 'none';
+    // Mostrar el formulario del método gráfico
+    document.getElementById('graphicMethodForm').style.display = 'block';
 }
 </script>
 {% endblock %}

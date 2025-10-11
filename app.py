@@ -8,8 +8,10 @@ Fecha: 2025
 """
 
 import os
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from lp_solver import solve_lp_problem
+from simplex_solver import solve_simplex
+from dual_simplex_solver import solve_dual_simplex
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)
@@ -75,6 +77,82 @@ def solve():
         flash(f'Error inesperado: {str(e)}', 'error')
         return redirect(url_for('index'))
 
+@app.route('/simplex')
+def simplex():
+    """
+    Página para resolver problemas usando el método Simplex.
+    """
+    return render_template('simplex.html')
+
+@app.route('/solve-simplex', methods=['POST'])
+def solve_simplex():
+    """
+    Procesa el formulario y resuelve el problema usando método Simplex.
+    """
+    try:
+        objective = request.form.get('objective', '').strip()
+        constraints_text = request.form.get('constraints', '').strip()
+        
+        if not objective or not constraints_text:
+            flash('Por favor completa todos los campos.', 'error')
+            return redirect(url_for('simplex'))
+        
+        constraints_list = [line.strip() for line in constraints_text.split('\n') 
+                           if line.strip()]
+        
+        result = solve_simplex(objective, constraints_list)
+        
+        if not result['success']:
+            flash(result['error'], 'error')
+            return redirect(url_for('simplex'))
+        
+        return render_template('simplex_results.html', 
+                             objective=objective,
+                             constraints=constraints_list,
+                             result=result)
+        
+    except Exception as e:
+        flash(f'Error inesperado: {str(e)}', 'error')
+        return redirect(url_for('simplex'))
+
+@app.route('/dual-simplex')
+def dual_simplex():
+    """
+    Página para resolver problemas usando el método Dual Simplex.
+    """
+    return render_template('dual_simplex.html')
+
+@app.route('/solve-dual-simplex', methods=['POST'])
+def solve_dual_simplex_route():
+    """
+    Procesa el formulario y resuelve el problema usando método Dual Simplex.
+    """
+    try:
+        objective = request.form.get('objective', '').strip()
+        constraints_text = request.form.get('constraints', '').strip()
+        
+        if not objective or not constraints_text:
+            flash('Por favor completa todos los campos.', 'error')
+            return redirect(url_for('dual_simplex'))
+        
+        constraints_list = [line.strip() for line in constraints_text.split('\n') 
+                           if line.strip()]
+        
+        result = solve_dual_simplex(objective, constraints_list)
+        
+        if not result['success']:
+            flash(result['error'], 'error')
+            return redirect(url_for('dual_simplex'))
+        
+        return render_template('dual_simplex_results.html', 
+                             objective=objective,
+                             constraints=constraints_list,
+                             result=result)
+        
+    except Exception as e:
+        flash(f'Error inesperado: {str(e)}', 'error')
+        return redirect(url_for('dual_simplex'))
+
 @app.route('/about')
 def about():
     """
@@ -135,8 +213,9 @@ if __name__ == '__main__':
     debug = os.environ.get('DEBUG', 'True').lower() == 'true'
     
     print("🚀 Iniciando aplicación de Programación Lineal...")
-    print("📊 Método Gráfico - Investigación de Operaciones")
-    print("👨‍💻 Desarrollado por José Herrera para UTP")
+    print("📊 Métodos: Gráfico, Simplex y Dual Simplex")
+    print("🎓 Investigación de Operaciones - Segundo Parcial")
+    print("👨‍💻 Desarrollado por José Miguel Herrera Gutiérrez para UTP")
     print("👩‍🏫 Profesora: Bibiana Patricia Arias Villada")
     
     if debug:

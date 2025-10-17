@@ -224,8 +224,7 @@ def examples():
             'icon': 'exchange-alt',
             'color': 'info'
         },
-        {
-            'title': 'Dual Simplex - Optimización de Costos',
+        {       'title': 'Dual Simplex - Optimización de Costos',
             'method': 'dual',
             'objective': 'minimizar z = 4x1 + 3x2 + 2x3',
             'constraints': 'x1 + x2 + x3 >= 5\n2x1 + x2 >= 4\nx1 + 2x3 >= 3\nx1 >= 0\nx2 >= 0\nx3 >= 0',

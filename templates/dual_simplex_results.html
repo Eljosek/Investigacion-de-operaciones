@@ -79,19 +79,19 @@
                 <div class="accordion" id="dualTableauAccordion">
                     {% for iter in iterations %}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="dualHeading{{ step.iteration }}">
+                        <h2 class="accordion-header" id="dualHeading{{ iter.iteration }}">
                             <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
                                     type="button" 
                                     data-bs-toggle="collapse" 
-                                    data-bs-target="#dualCollapse{{ step.iteration }}" 
+                                    data-bs-target="#dualCollapse{{ iter.iteration }}" 
                                     aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" 
-                                    aria-controls="dualCollapse{{ step.iteration }}">
+                                    aria-controls="dualCollapse{{ iter.iteration }}">
                                 
                                 <div class="d-flex align-items-center w-100">
                                     <div class="me-3">
-                                        {% if step.iteration == 0 %}
+                                        {% if iter.iteration == 0 %}
                                             <i class="fas fa-play text-warning"></i>
-                                        {% elif step.is_optimal %}
+                                        {% elif iter.is_optimal %}
                                             <i class="fas fa-flag-checkered text-success"></i>
                                         {% else %}
                                             <i class="fas fa-exchange-alt text-warning"></i>
@@ -100,18 +100,18 @@
                                     
                                     <div class="flex-grow-1">
                                         <strong>
-                                            {% if step.iteration == 0 %}
+                                            {% if iter.iteration == 0 %}
                                                 Conversión Primal → Dual
-                                            {% elif step.is_optimal %}
+                                            {% elif iter.is_optimal %}
                                                 Solución Dual Óptima
                                             {% else %}
-                                                Iteración Dual {{ step.iteration }}
+                                                Iteración Dual {{ iter.iteration }}
                                             {% endif %}
                                         </strong>
                                         
-                                        {% if step.objective_value is defined %}
+                                        {% if iter.objective_value is defined %}
                                         <span class="badge bg-warning text-dark ms-2">
-                                            Z = {{ "%.2f"|format(step.objective_value) }}
+                                            Z = {{ "%.2f"|format(iter.objective_value) }}
                                         </span>
                                         {% endif %}
                                     </div>
@@ -119,9 +119,9 @@
                             </button>
                         </h2>
                         
-                        <div id="dualCollapse{{ step.iteration }}" 
+                        <div id="dualCollapse{{ iter.iteration }}" 
                              class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
-                             aria-labelledby="dualHeading{{ step.iteration }}" 
+                             aria-labelledby="dualHeading{{ iter.iteration }}" 
                              data-bs-parent="#dualIterationAccordion">
                             <div class="accordion-body">
                                 
@@ -129,33 +129,33 @@
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <h6><i class="fas fa-file-text text-warning"></i> Descripción:</h6>
-                                        <p class="text-muted">{{ step.description }}</p>
+                                        <p class="text-muted">{{ iter.description }}</p>
                                     </div>
                                 </div>
 
                                 <!-- Información específica del dual -->
-                                {% if step.dual_info %}
+                                {% if iter.dual_info %}
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <h6><i class="fas fa-balance-scale text-warning"></i> Información Dual:</h6>
                                         <ul class="list-unstyled">
-                                            {% if step.dual_info.transformation %}
-                                            <li><strong>Transformación:</strong> {{ step.dual_info.transformation }}</li>
+                                            {% if iter.dual_info.transformation %}
+                                            <li><strong>Transformación:</strong> {{ iter.dual_info.transformation }}</li>
                                             {% endif %}
-                                            {% if step.dual_info.dual_type %}
-                                            <li><strong>Tipo Dual:</strong> {{ step.dual_info.dual_type }}</li>
+                                            {% if iter.dual_info.dual_type %}
+                                            <li><strong>Tipo Dual:</strong> {{ iter.dual_info.dual_type }}</li>
                                             {% endif %}
-                                            {% if step.dual_info.feasibility_status %}
-                                            <li><strong>Factibilidad:</strong> {{ step.dual_info.feasibility_status }}</li>
+                                            {% if iter.dual_info.feasibility_status %}
+                                            <li><strong>Factibilidad:</strong> {{ iter.dual_info.feasibility_status }}</li>
                                             {% endif %}
                                         </ul>
                                     </div>
                                     
-                                    {% if step.dual_info.dual_variables %}
+                                    {% if iter.dual_info.dual_variables %}
                                     <div class="col-md-6">
                                         <h6><i class="fas fa-list text-warning"></i> Variables Duales:</h6>
                                         <div class="d-flex flex-wrap">
-                                            {% for var in step.dual_info.dual_variables %}
+                                            {% for var in iter.dual_info.dual_variables %}
                                             <span class="badge bg-warning text-dark me-1 mb-1">{{ var }}</span>
                                             {% endfor %}
                                         </div>
@@ -165,26 +165,26 @@
                                 {% endif %}
 
                                 <!-- Información del tableau (similar al simplex pero con enfoque dual) -->
-                                {% if step.tableau_info %}
+                                {% if iter.tableau_info %}
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <h6><i class="fas fa-table text-warning"></i> Tableau Dual:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Tipo:</strong> {{ step.tableau_info.type|title }}</li>
-                                            {% if step.tableau_info.dual_operation %}
-                                            <li><strong>Operación:</strong> {{ step.tableau_info.dual_operation|title }}</li>
+                                            <li><strong>Tipo:</strong> {{ iter.tableau_info.type|title }}</li>
+                                            {% if iter.tableau_info.dual_operation %}
+                                            <li><strong>Operación:</strong> {{ iter.tableau_info.dual_operation|title }}</li>
                                             {% endif %}
-                                            {% if step.tableau_info.progress %}
-                                            <li><strong>Progreso:</strong> {{ step.tableau_info.progress }}</li>
+                                            {% if iter.tableau_info.progress %}
+                                            <li><strong>Progreso:</strong> {{ iter.tableau_info.progress }}</li>
                                             {% endif %}
                                         </ul>
                                     </div>
                                     
-                                    {% if step.tableau_info.basic_variables %}
+                                    {% if iter.tableau_info.basic_variables %}
                                     <div class="col-md-6">
                                         <h6><i class="fas fa-list text-warning"></i> Variables Básicas Duales:</h6>
                                         <div class="d-flex flex-wrap">
-                                            {% for var in step.tableau_info.basic_variables %}
+                                            {% for var in iter.tableau_info.basic_variables %}
                                             <span class="badge bg-secondary me-1 mb-1">{{ var }}</span>
                                             {% endfor %}
                                         </div>
@@ -194,22 +194,22 @@
                                 {% endif %}
 
                                 <!-- Variables que entran y salen en el contexto dual -->
-                                {% if step.entering_var or step.leaving_var %}
+                                {% if iter.entering_var or iter.leaving_var %}
                                 <div class="row mb-3">
-                                    {% if step.entering_var %}
+                                    {% if iter.entering_var %}
                                     <div class="col-md-6">
                                         <div class="alert alert-success py-2">
                                             <strong><i class="fas fa-arrow-down"></i> Variable dual que entra:</strong>
-                                            <span class="badge bg-success ms-2">{{ step.entering_var }}</span>
+                                            <span class="badge bg-success ms-2">{{ iter.entering_var }}</span>
                                         </div>
                                     </div>
                                     {% endif %}
                                     
-                                    {% if step.leaving_var %}
+                                    {% if iter.leaving_var %}
                                     <div class="col-md-6">
                                         <div class="alert alert-warning py-2">
                                             <strong><i class="fas fa-arrow-up"></i> Variable dual que sale:</strong>
-                                            <span class="badge bg-warning text-dark ms-2">{{ step.leaving_var }}</span>
+                                            <span class="badge bg-warning text-dark ms-2">{{ iter.leaving_var }}</span>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -217,12 +217,12 @@
                                 {% endif %}
 
                                 <!-- Información del pivoteo dual -->
-                                {% if step.pivot_info %}
+                                {% if iter.pivot_info %}
                                 <div class="row mb-3">
                                     <div class="col-12">
                                         <div class="alert alert-warning">
                                             <h6><i class="fas fa-exchange-alt"></i> Pivoteo Dual:</h6>
-                                            <p>{{ step.pivot_info }}</p>
+                                            <p>{{ iter.pivot_info }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -231,9 +231,9 @@
                                 <!-- Estado de la solución dual -->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="alert {% if step.feasible %}alert-success{% else %}alert-danger{% endif %} py-2">
+                                        <div class="alert {% if iter.feasible %}alert-success{% else %}alert-danger{% endif %} py-2">
                                             <strong>Factibilidad Dual:</strong>
-                                            {% if step.feasible %}
+                                            {% if iter.feasible %}
                                                 <i class="fas fa-check text-success"></i> Factible
                                             {% else %}
                                                 <i class="fas fa-times text-danger"></i> No factible
@@ -242,9 +242,9 @@
                                     </div>
                                     
                                     <div class="col-md-6">
-                                        <div class="alert {% if step.is_optimal %}alert-success{% else %}alert-secondary{% endif %} py-2">
+                                        <div class="alert {% if iter.is_optimal %}alert-success{% else %}alert-secondary{% endif %} py-2">
                                             <strong>Optimalidad Dual:</strong>
-                                            {% if step.is_optimal %}
+                                            {% if iter.is_optimal %}
                                                 <i class="fas fa-trophy text-success"></i> Óptimo dual alcanzado
                                             {% else %}
                                                 <i class="fas fa-clock text-secondary"></i> En progreso

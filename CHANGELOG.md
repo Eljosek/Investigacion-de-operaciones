@@ -6,6 +6,78 @@
 
 ---
 
+## 📋 FASE 3: VISUALIZACIÓN PASO A PASO MÉTODO DUAL SIMPLEX ✅
+
+### ➕ Archivos Creados
+
+#### 1. **dual_simplex_tableau.py**
+   - **Razón:** Implementación manual del algoritmo Dual Simplex con registro de iteraciones
+   - **Características:**
+     - Clase `DualSimplexTableau` con construcción de tableau desde cero
+     - Conversión automática de restricciones >= a <= (multiplicando por -1)
+     - Identificación de fila saliente (RHS más negativo - solución no factible)
+     - Cálculo de ratios z_j / a_ij para seleccionar columna entrante
+     - Registro completo de cada iteración con ratios calculados
+     - Documentación de operaciones de fila
+     - Soporte para minimización (ideal para Dual Simplex)
+     - Manejo de casos: óptimo, no factible, máximo de iteraciones
+   - **Impacto:** Permite mostrar paso a paso el método Dual para propósitos educativos
+
+### 🔧 Archivos Modificados
+
+#### 1. **app.py**
+   - **Cambios:**
+     - Importado módulo `dual_simplex_tableau`
+     - Ruta `/solve-dual-simplex` ahora usa `dual_simplex_tableau.solve_dual_simplex_tableau()`
+     - Pasando `iterations` al template para mostrar paso a paso
+   - **Líneas modificadas:** 15 (import), 134-152 (ruta dual-simplex)
+
+#### 2. **templates/dual_simplex_results.html**
+   - **Cambios:**
+     - Iniciado reescritura del acordeón de iteraciones
+     - Preparado para mostrar tableau completo por iteración
+     - Header actualizado con badge de iteraciones
+     - Alert informativo sobre método Dual Simplex
+   - **Estado:** Parcialmente actualizado (estructura del acordeón definida)
+   - **Pendiente:** Implementación completa del contenido de cada iteración con tableau
+
+#### 3. **test_tableau.py**
+   - **Cambios:**
+     - Actualizado para probar el solver Dual Simplex
+     - Test con problema de minimización: min z=2x1+3x2 s.a. x1+2x2>=6, 2x1+x2>=8
+
+### 🐛 Correcciones de Bugs
+
+#### 1. **Valor óptimo negativo en minimización (Dual Simplex)**
+   - **Problema:** El solver retornaba -10.6667 cuando debía ser 10.6667
+   - **Causa:** El RHS de Z en el tableau es negativo para minimización
+   - **Solución:** Negar el valor al construir la solución: `optimal_value = -self.tableau[-1, -1]`
+   - **Archivos afectados:** `dual_simplex_tableau.py` líneas 87, 257
+
+### ✅ Pruebas Realizadas
+
+- **Caso de prueba:** min z = 2x1 + 3x2 s.a. x1 + 2x2 ≥ 6, 2x1 + x2 ≥ 8
+- **Resultado esperado:** Z = 10.6667, x1 = 3.3333, x2 = 1.3333
+- **Resultado obtenido:** ✓ Correcto
+- **Iteraciones:** 3 (inicial + 2 pivotes)
+- **Verificación:** z = 2(3.3333) + 3(1.3333) = 6.6666 + 4 = 10.6666 ✓
+
+### 📊 Estadísticas
+
+- **Líneas de código añadidas:** ~424 (dual_simplex_tableau.py)
+- **Líneas modificadas:** ~20 (app.py + imports)
+- **Algoritmo:** Dual Simplex con selección de pivote por ratio mínimo
+- **Funcionalidad educativa:** 100% - muestra cálculos de ratios y RHS negativos
+
+### 🎯 Diferencias clave Dual Simplex vs Simplex Primal
+
+1. **Selección de fila saliente:** RHS más negativo (en lugar de ratio mínimo)
+2. **Selección de columna entrante:** Ratio z_j/a_ij con a_ij<0, elegir menos negativo
+3. **Optimalidad:** Todos los RHS ≥ 0 (factibilidad primal alcanzada)
+4. **Uso típico:** Problemas de minimización con restricciones >=
+
+---
+
 ## 📋 FASE 2: VISUALIZACIÓN PASO A PASO MÉTODO SIMPLEX ✅
 
 ### ➕ Archivos Creados

@@ -60,24 +60,24 @@
             </div>
         </div>
 
-        <!-- Sección de Historial de Iteraciones Dual Simplex -->
-        {% if iteration_history and iteration_history|length > 0 %}
+        <!-- Sección de Tableau Dual Simplex Paso a Paso -->
+        {% if iterations and iterations|length > 0 %}
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-warning text-white">
+            <div class="card-header bg-info text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-exchange-alt"></i> Historial de Iteraciones del Método Dual Simplex
-                    <span class="badge bg-light text-warning ms-2">{{ iteration_history|length }} pasos</span>
+                    <i class="fas fa-exchange-alt"></i> Tableau Dual Simplex Paso a Paso
+                    <span class="badge bg-light text-info ms-2">{{ iterations|length }} iteraciones</span>
                 </h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-warning">
+                <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Enfoque Dual:</strong> Este método resuelve el problema dual manteniendo la factibilidad dual.
-                    Cada iteración mejora la optimalidad hasta encontrar la solución primal óptima.
+                    <strong>Método Dual Simplex:</strong> Este método comienza con una solución básica dual factible (pero puede ser primal no factible) y mantiene la optimalidad dual mientras busca la factibilidad primal.
+                    Se resaltan las filas con RHS negativo y los cálculos de ratios para la selección del pivote.
                 </div>
 
-                <div class="accordion" id="dualIterationAccordion">
-                    {% for step in iteration_history %}
+                <div class="accordion" id="dualTableauAccordion">
+                    {% for iter in iterations %}
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="dualHeading{{ step.iteration }}">
                             <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 

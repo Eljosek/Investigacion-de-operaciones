@@ -231,30 +231,77 @@
                                 </div>
                                 {% endif %}
 
-                                <!-- Estado de la solución dual -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="alert {% if iter.feasible %}alert-success{% else %}alert-danger{% endif %} py-2">
-                                            <strong>Factibilidad Dual:</strong>
-                                            {% if iter.feasible %}
-                                                <i class="fas fa-check text-success"></i> Factible
-                                            {% else %}
-                                                <i class="fas fa-times text-danger"></i> No factible
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <div class="alert {% if iter.is_optimal %}alert-success{% else %}alert-secondary{% endif %} py-2">
-                                            <strong>Optimalidad Dual:</strong>
-                                            {% if iter.is_optimal %}
-                                                <i class="fas fa-trophy text-success"></i> Óptimo dual alcanzado
-                                            {% else %}
-                                                <i class="fas fa-clock text-secondary"></i> En progreso
-                                            {% endif %}
-                                        </div>
+                                <!-- Tableau Dual -->
+                                {% if iter.tableau %}
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-bordered table-sm text-center">
+                                        <thead class="table-warning">
+                                            <tr>
+                                                <th>Base</th>
+                                                {% for col_idx in range(iter.tableau[0]|length - 1) %}
+                                                    {% if col_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                            x{{ col_idx + 1 }}
+                                                        </th>
+                                                    {% else %}
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                            s{{ col_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}
+                                                        </th>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <th>RHS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row_idx in range(iter.tableau|length - 1) %}
+                                            <tr class="{% if iter.pivot_row == row_idx %}table-danger{% endif %}">
+                                                <!-- Variable básica -->
+                                                <td class="fw-bold">
+                                                    {% if iter.basic_vars[row_idx] < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                        x{{ iter.basic_vars[row_idx] + 1 }}
+                                                    {% else %}
+                                                        s{{ iter.basic_vars[row_idx] - (iter.tableau[0]|length - iter.tableau|length) + 1 }}
+                                                    {% endif %}
+                                                </td>
+                                                <!-- Coeficientes -->
+                                                {% for col_idx in range(iter.tableau[row_idx]|length) %}
+                                                    <td class="{% if iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-danger text-white fw-bold{% elif iter.pivot_row == row_idx or iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                        {{ "%.4g"|format(iter.tableau[row_idx][col_idx]) }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                            <!-- Fila Z -->
+                                            <tr class="table-primary fw-bold">
+                                                <td>Z</td>
+                                                {% for col_idx in range(iter.tableau[-1]|length) %}
+                                                    <td>{{ "%.4g"|format(iter.tableau[-1][col_idx]) }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Variables básicas actuales -->
+                                <div class="alert alert-secondary mt-3">
+                                    <h6><i class="fas fa-list"></i> Variables Básicas Actuales:</h6>
+                                    <div class="d-flex flex-wrap">
+                                        {% if iter.tableau_info and iter.tableau_info.basic_vars %}
+                                            {% for var_name in iter.tableau_info.basic_vars %}
+                                                <span class="badge bg-warning me-2 mb-2">{{ var_name }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for var_idx in iter.basic_vars %}
+                                                {% if var_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                    <span class="badge bg-warning me-2 mb-2">x{{ var_idx + 1 }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

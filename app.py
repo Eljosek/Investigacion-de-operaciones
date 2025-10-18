@@ -24,6 +24,13 @@ def index():
     """
     return render_template('index.html')
 
+@app.route('/graphical')
+def graphical():
+    """
+    Ruta alternativa para el método gráfico (redirige a index).
+    """
+    return render_template('index.html')
+
 @app.route('/solve', methods=['POST'])
 def solve():
     """

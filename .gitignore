@@ -221,3 +221,17 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Test files - Development only
+test_*.py
+
+# Backup files
+*_backup.py
+*_new.py
+
+# Documentation files - Development process
+FASES_IMPLEMENTACION.md
+CORRECCIONES_SIMPLEX.md
+ESTADO_FINAL.md
+PLAN_IMPLEMENTACION.md
+PRUEBAS_FRONTEND.md

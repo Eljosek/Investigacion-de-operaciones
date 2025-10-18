@@ -1,6 +1,7 @@
 """
 Implementación del Método Dual Simplex con Tableau
 Genera visualización paso a paso con todas las iteraciones
+Versión: 2.0.1 - Bug fix NumPy arrays
 """
 
 import numpy as np

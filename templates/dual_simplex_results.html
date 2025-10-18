@@ -6,13 +6,13 @@
 <div class="row method-dual">
     <div class="col-lg-10 mx-auto">
         <div class="text-center mb-4">
-            <h2 class="text-method-dual">
-                <i class="fas fa-check-circle text-method-dual"></i> Resultados del Método Dual Simplex
+            <h2 class="text-dual">
+                <i class="fas fa-check-circle"></i> Resultados del Método Dual Simplex
             </h2>
         </div>
 
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-success text-white">
+            <div class="card-header bg-info-dual text-white">
                 <h4 class="mb-0"><i class="fas fa-file-alt"></i> Problema Ingresado</h4>
             </div>
             <div class="card-body">
@@ -28,7 +28,7 @@
         </div>
 
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-info-dual text-white">
                 <h4 class="mb-0"><i class="fas fa-trophy"></i> Solución Óptima</h4>
             </div>
             <div class="card-body">
@@ -40,7 +40,7 @@
                 
                 <h5><i class="fas fa-calculator"></i> Valores de las Variables:</h5>
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-striped table-hover table-info">
                         <thead>
                             <tr>
                                 <th>Variable</th>
@@ -63,10 +63,10 @@
         <!-- Sección de Tableau Dual Simplex Paso a Paso -->
         {% if iterations and iterations|length > 0 %}
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-info text-white">
+            <div class="card-header bg-info-dual text-white">
                 <h4 class="mb-0">
                     <i class="fas fa-exchange-alt"></i> Tableau Dual Simplex Paso a Paso
-                    <span class="badge bg-light text-info ms-2">{{ iterations|length }} iteraciones</span>
+                    <span class="badge badge-dual ms-2">{{ iterations|length }} iteraciones</span>
                 </h4>
             </div>
             <div class="card-body">

@@ -10,8 +10,6 @@ Fecha: 2025
 import os
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from lp_solver import solve_lp_problem
-import simplex_solver
-import dual_simplex_solver
 import simplex_tableau
 import dual_simplex_tableau
 

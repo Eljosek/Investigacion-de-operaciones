@@ -8,10 +8,17 @@ Fecha: 2025
 """
 
 import os
+import sys
+import importlib
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from lp_solver import solve_lp_problem
 import simplex_tableau
 import dual_simplex_tableau
+
+# Recargar módulos en cada petición (útil en desarrollo)
+if 'WERKZEUG_RUN_MAIN' in os.environ or not os.environ.get('FLASK_ENV'):
+    importlib.reload(simplex_tableau)
+    importlib.reload(dual_simplex_tableau)
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)

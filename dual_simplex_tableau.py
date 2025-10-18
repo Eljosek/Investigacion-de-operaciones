@@ -86,10 +86,14 @@ class DualSimplexTableau:
         if self.opt_type == 'min':
             is_optimal = is_feasible and all(z_row >= -1e-10)
         else:
-            is_optimal = is_feasible and all(z_row <= 1e-10)
+            is_optimal = is_feasible and all(z_row >= -1e-10)  # MAX también usa >= después de convertir
         
         # Valor objetivo actual
-        objective_value = -self.tableau[-1, -1] if self.opt_type == 'min' else self.tableau[-1, -1]
+        z_value = self.tableau[-1, -1]
+        if self.opt_type == 'min':
+            objective_value = round(-z_value, 4)  # MIN: invertir signo (tableau tiene -Z)
+        else:
+            objective_value = round(-z_value, 4)  # MAX: invertir signo (tableau tiene -Z)
         
         # Formatear nombres de variables
         entering_var_name = f'x{entering_var+1}' if entering_var is not None and entering_var < self.n_vars else (f'S{entering_var-self.n_vars+1}' if entering_var is not None else None)
@@ -287,8 +291,9 @@ class DualSimplexTableau:
                 else:
                     solution[f'x{i + 1}'] = 0.0
             
-            # Valor óptimo - el RHS de Z está negativo en el tableau, cambiar signo
-            optimal_value = -self.tableau[-1, -1]
+            # Valor óptimo
+            z_value = self.tableau[-1, -1]
+            optimal_value = round(-z_value, 4)  # Invertir signo (tableau tiene -Z)
             
             return {
                 'success': True,
@@ -297,7 +302,9 @@ class DualSimplexTableau:
                 'solution': solution,
                 'opt_type': self.opt_type,
                 'iterations': self.iterations,
-                'method': 'Dual Simplex con Tableau'
+                'method': 'Dual Simplex con Tableau',
+                'factibilidad_dual': 'Verificada',
+                'estado_final': 'Óptimo'
             }
         
         elif status == 'infeasible':
@@ -305,7 +312,9 @@ class DualSimplexTableau:
                 'success': False,
                 'status': 'infeasible',
                 'error': 'El problema no tiene solución factible (infeasible).',
-                'iterations': self.iterations
+                'iterations': self.iterations,
+                'factibilidad_dual': 'No factible',
+                'estado_final': 'Infeasible'
             }
         
         elif status == 'max_iterations':
@@ -313,7 +322,8 @@ class DualSimplexTableau:
                 'success': False,
                 'status': 'error',
                 'error': 'Se alcanzó el máximo de iteraciones sin encontrar solución óptima.',
-                'iterations': self.iterations
+                'iterations': self.iterations,
+                'estado_final': 'Error'
             }
         
         else:
@@ -321,7 +331,8 @@ class DualSimplexTableau:
                 'success': False,
                 'status': 'error',
                 'error': 'Estado desconocido.',
-                'iterations': self.iterations
+                'iterations': self.iterations,
+                'estado_final': 'Error'
             }
 
 

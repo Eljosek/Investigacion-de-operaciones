@@ -75,16 +75,46 @@ class SimplexTableau:
                        entering_var: Optional[int], leaving_var: Optional[int],
                        operation: str):
         """Guarda el estado actual del tableau"""
+        # Verificar optimalidad
+        z_row = self.tableau[-1, :-1]
+        if self.opt_type == 'max':
+            is_optimal = all(z_row >= -1e-10)
+        else:
+            is_optimal = all(z_row >= -1e-10)
+        
+        # Valor objetivo actual
+        if self.opt_type == 'max':
+            objective_value = -self.tableau[-1, -1]
+        else:
+            objective_value = self.tableau[-1, -1]
+        
+        # Formatear nombres de variables
+        entering_var_name = f'x{entering_var+1}' if entering_var is not None and entering_var < self.n_vars else (f'S{entering_var-self.n_vars+1}' if entering_var is not None else None)
+        leaving_var_name = f'x{leaving_var+1}' if leaving_var is not None and leaving_var < self.n_vars else (f'S{leaving_var-self.n_vars+1}' if leaving_var is not None else None)
+        
         iteration_data = {
             'iteration': self.current_iteration,
+            'description': operation,
             'tableau': self.tableau.copy(),
             'basic_vars': self.basic_vars.copy(),
             'pivot_col': pivot_col,
             'pivot_row': pivot_row,
-            'entering_var': entering_var,
-            'leaving_var': leaving_var,
+            'entering_var': entering_var_name,
+            'leaving_var': leaving_var_name,
             'operation': operation,
-            'z_value': self.tableau[-1, -1]  # El valor de Z está directamente en el RHS
+            'objective_value': objective_value,
+            'is_optimal': is_optimal,
+            'z_value': self.tableau[-1, -1],
+            'tableau_info': {
+                'n_rows': self.n_constraints,
+                'n_cols': self.n_vars + self.n_constraints,
+                'basic_vars': [f'x{bv+1}' if bv < self.n_vars else f'S{bv-self.n_vars+1}' for bv in self.basic_vars]
+            },
+            'pivot_info': {
+                'row': pivot_row,
+                'col': pivot_col,
+                'element': float(self.tableau[pivot_row, pivot_col]) if pivot_row is not None and pivot_col is not None else None
+            } if pivot_row is not None and pivot_col is not None else None
         }
         self.iterations.append(iteration_data)
     
@@ -350,22 +380,29 @@ def solve_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Di
                 coeffs, op, rhs = parse_constraint(constraint_str, n_vars)
                 
                 # Normalizar restricciones a forma estándar (<=)
+                # Para Simplex, necesitamos RHS no negativos
                 if op == '<=':
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                    # Caso normal: mantener como está si RHS >= 0
+                    if rhs >= 0:
+                        constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                    else:
+                        # Si RHS < 0, negar ambos lados
+                        constraints.append({'coeffs': [-c for c in coeffs], 'rhs': -rhs, 'type': '<='})
                 elif op == '>=':
                     # Para >=, convertir a <= multiplicando por -1
-                    # PERO: si RHS queda negativo, multiplicar toda la restricción por -1
                     coeffs_neg = [-c for c in coeffs]
                     rhs_neg = -rhs
+                    # Asegurar RHS no negativo
                     if rhs_neg < 0:
-                        # Multiplicar de nuevo por -1 para tener RHS positivo
                         coeffs_neg = [-c for c in coeffs_neg]
                         rhs_neg = -rhs_neg
-                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '>='})
+                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '<='})
                 elif op == '=':
-                    # Para igualdades, las tratamos como <=
-                    # (idealmente usaríamos variables artificiales pero por simplicidad usamos <=)
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '='})
+                    # Para igualdades, tratarlas como <= (simplificado)
+                    if rhs >= 0:
+                        constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                    else:
+                        constraints.append({'coeffs': [-c for c in coeffs], 'rhs': -rhs, 'type': '<='})
             except Exception as e:
                 continue
         
@@ -376,16 +413,9 @@ def solve_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Di
                 'error': 'No se encontraron restricciones válidas.'
             }
         
-        # Construir matrices (ya no verificamos RHS negativos aquí)
+        # Construir matrices
         A = [c['coeffs'] for c in constraints]
         b = [c['rhs'] for c in constraints]
-        
-        # Verificar que todos los RHS sean no negativos después de la normalización
-        for i, rhs_val in enumerate(b):
-            if rhs_val < 0:
-                # Si aún hay RHS negativo, multiplicar esa fila por -1
-                A[i] = [-coef for coef in A[i]]
-                b[i] = -rhs_val
         
         # Crear y resolver tableau
         tableau = SimplexTableau(obj_coeffs, A, b, opt_type)

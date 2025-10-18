@@ -727,3 +727,146 @@ code {
     font-family: 'Courier New', monospace;
     margin: 0.25rem 0;
 }
+/* ========================================
+   ESTILOS PARA IMPRESIÓN (Print Styles)
+   ======================================== */
+@media print {
+    /* Ocultar elementos de navegación y botones */
+    .navbar, 
+    .no-print, 
+    .btn, 
+    footer,
+    .accordion-button::after {
+        display: none !important;
+    }
+    
+    /* Forzar que los botones dentro de .no-print se oculten */
+    .no-print * {
+        display: none !important;
+    }
+    
+    /* Ajustar el body para impresión */
+    body {
+        background-color: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    /* Cards sin sombras y con bordes simples */
+    .card {
+        border: 2px solid #333 !important;
+        box-shadow: none !important;
+        margin-bottom: 15px;
+        page-break-inside: avoid;
+    }
+    
+    .card-header {
+        background-color: #f0f0f0 !important;
+        color: #000 !important;
+        border-bottom: 2px solid #333 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Tablas con bordes visibles */
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        page-break-inside: avoid;
+    }
+    
+    table th,
+    table td {
+        border: 1px solid #333 !important;
+        padding: 8px !important;
+    }
+    
+    table thead {
+        background-color: #e0e0e0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Accordion expandido para mostrar todo */
+    .accordion-collapse {
+        display: block !important;
+        height: auto !important;
+    }
+    
+    .accordion-item {
+        border: 1px solid #333 !important;
+        page-break-inside: avoid;
+        margin-bottom: 10px;
+    }
+    
+    .accordion-button {
+        background-color: #f5f5f5 !important;
+        color: #000 !important;
+        font-weight: bold;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: #e0e0e0 !important;
+    }
+    
+    /* Alerts con bordes y fondos claros */
+    .alert {
+        border: 2px solid #333 !important;
+        background-color: #f9f9f9 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .alert-success {
+        border-color: #28a745 !important;
+        background-color: #d4edda !important;
+    }
+    
+    .alert-info {
+        border-color: #17a2b8 !important;
+        background-color: #d1ecf1 !important;
+    }
+    
+    /* Badges visibles */
+    .badge {
+        border: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Títulos y encabezados */
+    h1, h2, h3, h4, h5, h6 {
+        color: #000 !important;
+        page-break-after: avoid;
+    }
+    
+    /* Links sin color azul */
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+    
+    /* Evitar cortes de página molestos */
+    h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+    
+    ul, ol, img {
+        page-break-inside: avoid;
+    }
+    
+    /* Agregar márgenes de página */
+    @page {
+        margin: 2cm;
+    }
+    
+    /* Container full width para impresión */
+    .container, .container-fluid {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

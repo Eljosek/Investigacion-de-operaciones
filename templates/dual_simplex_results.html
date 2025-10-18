@@ -9,6 +9,9 @@
             <h2 class="text-dual">
                 <i class="fas fa-check-circle"></i> Resultados del Método Dual Simplex
             </h2>
+            <button onclick="window.print()" class="btn btn-info mt-3 no-print" style="background-color: var(--color-dual) !important; border-color: var(--color-dual) !important;">
+                <i class="fas fa-print"></i> Imprimir Resultados
+            </button>
         </div>
 
         <div class="card shadow-lg mb-4">
@@ -283,7 +286,7 @@
         </div>
         {% endif %}
 
-        <div class="text-center">
+        <div class="text-center no-print">
             <a href="{{ url_for('dual_simplex') }}" class="btn btn-warning btn-lg text-white">
                 <i class="fas fa-arrow-left text-white"></i> Resolver Otro Problema
             </a>

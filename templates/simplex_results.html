@@ -9,6 +9,9 @@
             <h2 class="text-simplex">
                 <i class="fas fa-check-circle"></i> Resultados del Método Simplex
             </h2>
+            <button onclick="window.print()" class="btn btn-success mt-3 no-print">
+                <i class="fas fa-print"></i> Imprimir Resultados
+            </button>
         </div>
 
         <!-- Problema Ingresado -->
@@ -245,7 +248,7 @@
         </div>
         {% endif %}
 
-        <div class="text-center">
+        <div class="text-center no-print">
             <a href="{{ url_for('simplex') }}" class="btn btn-success btn-lg">
                 <i class="fas fa-arrow-left text-white"></i> Resolver Otro Problema
             </a>

@@ -303,6 +303,58 @@ function enableTooltips() {
 }
 
 /**
+ * Muestra el spinner de carga
+ */
+function showLoadingSpinner(message = 'Calculando solución...') {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        const messageEl = spinner.querySelector('p');
+        if (messageEl) {
+            messageEl.textContent = message;
+        }
+        spinner.style.display = 'flex';
+    }
+}
+
+/**
+ * Oculta el spinner de carga
+ */
+function hideLoadingSpinner() {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        spinner.style.display = 'none';
+    }
+}
+
+/**
+ * Muestra estado de carga en el formulario
+ */
+function showLoadingState() {
+    showLoadingSpinner('Calculando solución...');
+    
+    // Deshabilitar botones de submit
+    const submitButtons = document.querySelectorAll('button[type="submit"]');
+    submitButtons.forEach(btn => {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Calculando...';
+    });
+}
+
+/**
+ * Restaura el estado normal del formulario
+ */
+function restoreFormState() {
+    hideLoadingSpinner();
+    
+    // Re-habilitar botones de submit
+    const submitButtons = document.querySelectorAll('button[type="submit"]');
+    submitButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-calculator"></i> Resolver';
+    });
+}
+
+/**
  * Configura efectos visuales adicionales
  */
 function setupVisualEffects() {
@@ -426,3 +478,5 @@ window.loadExample = loadExample;
 window.copyToClipboard = copyToClipboard;
 window.exportResults = exportResults;
 window.toggleDarkMode = toggleDarkMode;
+window.showLoadingSpinner = showLoadingSpinner;
+window.hideLoadingSpinner = hideLoadingSpinner;

@@ -6,7 +6,135 @@
 
 ---
 
-## 🏠 FASE 6: REDISEÑO COMPLETO DEL HOMEPAGE ✅
+## � FASE 7: MEJORAS UX CON TOOLTIPS Y BOTONES DE AYUDA ✅
+
+### 🔧 Archivos Modificados
+
+#### 1. **templates/simplex.html** (Enhancements UX)
+   - **Cambios:**
+     - **Tooltips informativos:**
+       - Agregado `data-bs-toggle="tooltip"` a todos los labels
+       - Tooltips específicos por campo:
+         * "Tipo de optimización": "Selecciona si deseas maximizar o minimizar la función objetivo"
+         * "Número de variables": "Cantidad de variables de decisión (x₁, x₂, ...)"
+         * "Número de restricciones": "Cantidad de restricciones del problema"
+         * "Coeficientes de función objetivo": "Valores de la función objetivo Z"
+         * "Coeficientes de restricciones": "Matriz A del sistema Ax ≤ b"
+         * "Valores lado derecho": "Vector b de recursos/límites"
+       - Inicialización con JavaScript en DOMContentLoaded
+     
+     - **Botones de utilidad:**
+       - **Botón "Limpiar"** con icono `fa-eraser` para resetear formulario
+       - **Botón "Cargar Ejemplo"** con icono `fa-lightbulb` para datos de prueba
+       - Btn-group responsive con clases `btn-outline-danger` y `btn-outline-info`
+       - Funciones JavaScript:
+         * `clearSimplexForm()`: Resetea todos los campos y textarea
+         * `loadSimplexExample()`: Carga ejemplo "maximizar z = 3x1 + 5x2"
+         * Alerta de éxito con auto-dismiss después de 3 segundos
+     
+     - **Sección de Ayuda:**
+       - Alert tipo `info` con icono `fa-info-circle`
+       - 4 puntos de guía para el usuario:
+         1. Usar tooltips (hover sobre labels)
+         2. Probar "Cargar Ejemplo" para ver formato
+         3. "Limpiar" para resetear campos
+         4. Verificar dimensiones antes de resolver
+       - Clase `method-simplex` para consistencia de color
+     
+     - **Form ID:** Cambiado a `simplexForm` para targeting JavaScript
+
+   - **Estadísticas:**
+     - Tooltips agregados: 6
+     - Funciones JavaScript: 2 nuevas
+     - Botones de ayuda: 2
+     - Lines de código: +80 aprox.
+
+#### 2. **templates/dual_simplex.html** (Enhancements UX)
+   - **Cambios:**
+     - **Tooltips específicos para Dual:**
+       - Mensajes adaptados al método dual:
+         * "Tipo de optimización": "Para dual simplex, típicamente minimización"
+         * "Número de variables": "Variables de decisión para el problema dual"
+         * "Número de restricciones": "Restricciones (generalmente con ≥ )"
+         * Énfasis en características del dual en cada tooltip
+     
+     - **Botones de utilidad:**
+       - **Botón "Limpiar"** con `clearDualForm()`
+       - **Botón "Cargar Ejemplo"** con `loadDualExample()`
+       - Ejemplo específico: "minimizar z = 2x1 + 3x2" con restricciones `≥`
+       - Alert de éxito con mensaje: "Ejemplo dual cargado. Nota: usa restricciones ≥"
+     
+     - **Sección de Ayuda especial:**
+       - Alert tipo `warning` (no info) para destacar particularidades
+       - Icono `fa-exclamation-triangle` para llamar atención
+       - Contenido específico del dual:
+         1. "El dual simplex requiere problemas en forma estándar dual"
+         2. "Típicamente minimización con restricciones ≥"
+         3. "RHS negativo es común en dual"
+         4. Uso de tooltips y ejemplo
+       - Clase `method-dual` para color púrpura distintivo
+     
+     - **Form ID:** Cambiado a `dualSimplexForm` para claridad
+
+   - **Estadísticas:**
+     - Tooltips adaptados: 6
+     - Funciones JavaScript: 2 nuevas
+     - Alert especial: `warning` (no `info`)
+     - Ejemplo dual específico cargado
+
+### ✨ Elementos Nuevos Destacados
+
+**Sistema de Tooltips:**
+```javascript
+// Inicialización en DOMContentLoaded
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => 
+    new bootstrap.Tooltip(tooltipTriggerEl)
+);
+```
+
+**Funciones Helper (Simplex):**
+- `clearSimplexForm()`: Resetea variables, restricciones, objetivo, restricciones_text
+- `loadSimplexExample()`:
+  - Maximizar z = 3x1 + 5x2
+  - 3 restricciones, 2 variables
+  - Restricciones: "2 3 ≤ 10\n1 4 ≤ 8\n3 2 ≤ 12"
+  - Objetivo: "3 5"
+
+**Funciones Helper (Dual):**
+- `clearDualForm()`: Resetea todos los campos
+- `loadDualExample()`:
+  - Minimizar z = 2x1 + 3x2
+  - 2 restricciones, 2 variables
+  - Restricciones: "1 2 ≥ 4\n3 1 ≥ 6"
+  - Objetivo: "2 3"
+
+**Comparación de Alerts:**
+| Método | Tipo | Icono | Color | Mensaje |
+|---|---|---|---|---|
+| Simplex | Info | fa-info-circle | Azul | Guía general |
+| Dual | Warning | fa-exclamation-triangle | Amarillo | Requisitos especiales |
+
+### 🎯 Resultado
+
+Las páginas de Simplex y Dual ahora:
+- **Guían al usuario** con tooltips contextuales en hover
+- **Facilitan testing** con ejemplos pre-cargados de un click
+- **Permiten reinicio rápido** con botón Limpiar
+- **Educan sobre particularidades** con alerts específicos por método
+- **Mejoran discoverability** con iconos Font Awesome claros
+- **Mantienen consistencia** con colores method-specific (verde/púrpura)
+- **Reducen errores** al verificar dimensiones y formato antes de resolver
+
+**Impacto UX:**
+- Menor fricción en formularios
+- Onboarding implícito con tooltips
+- Feedback inmediato con alerts de éxito
+- Reducción de consultas "¿cómo uso esto?"
+
+---
+
+## �🏠 FASE 6: REDISEÑO COMPLETO DEL HOMEPAGE ✅
 
 ### 🔧 Archivos Modificados
 

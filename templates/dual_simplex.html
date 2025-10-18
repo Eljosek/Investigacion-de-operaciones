@@ -22,12 +22,21 @@
             </div>
             
             <div class="card-body">
-                <form action="{{ url_for('solve_dual_simplex_route') }}" method="POST">
+                <form action="{{ url_for('solve_dual_simplex_route') }}" method="POST" id="dualSimplexForm">
                     <div class="mb-4">
                         <label for="objective" class="form-label">
                             <i class="fas fa-bullseye"></i> <strong>Función Objetivo</strong>
+                            <i class="fas fa-question-circle text-muted ms-2" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="right" 
+                               title="Ingresa la función a optimizar. El Dual Simplex es ideal para problemas de minimización"></i>
                         </label>
-                        <input type="text" class="form-control form-control-lg" id="objective" name="objective" placeholder="Ejemplo: maximizar z = 3x1 + 2x2 + x3" required>
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               id="objective" 
+                               name="objective" 
+                               placeholder="Ejemplo: minimizar z = 2x1 + 3x2" 
+                               required>
                         <div class="form-text">
                             <i class="fas fa-info-circle"></i> Formatos: "max z = 3x1 + 2x2" o "min z = 5x1 + 4x2 + 3x3"
                         </div>
@@ -36,8 +45,17 @@
                     <div class="mb-4">
                         <label for="constraints" class="form-label">
                             <i class="fas fa-list"></i> <strong>Restricciones</strong>
+                            <i class="fas fa-question-circle text-muted ms-2" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="right" 
+                               title="El Dual Simplex maneja bien restricciones >= en problemas de minimización"></i>
                         </label>
-                        <textarea class="form-control" id="constraints" name="constraints" rows="6" placeholder="Una restricción por línea:&#10;x1 + x2 <= 4&#10;2x1 + x2 <= 6&#10;x1 >= 0&#10;x2 >= 0" required></textarea>
+                        <textarea class="form-control" 
+                                  id="constraints" 
+                                  name="constraints" 
+                                  rows="6" 
+                                  placeholder="Una restricción por línea:&#10;x1 + 2x2 >= 6&#10;2x1 + x2 >= 8&#10;x1 >= 0&#10;x2 >= 0" 
+                                  required></textarea>
                         <div class="form-text">
                             <i class="fas fa-info-circle"></i> Operadores válidos: <=, >=, =
                         </div>
@@ -47,10 +65,57 @@
                         <button type="submit" class="btn btn-info btn-lg">
                             <i class="fas fa-calculator"></i> Resolver con Dual Simplex
                         </button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearDualForm()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button type="button" class="btn btn-outline-warning" onclick="loadDualExample()">
+                                <i class="fas fa-lightbulb"></i> Cargar Ejemplo
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- Ayuda rápida para Dual Simplex -->
+        <div class="alert alert-warning mt-4 shadow-sm">
+            <h5><i class="fas fa-info-circle"></i> Sobre el Método Dual Simplex</h5>
+            <ul class="mb-0 small">
+                <li><strong>Ideal para:</strong> Problemas de minimización con restricciones >=</li>
+                <li><strong>Diferencia clave:</strong> Selecciona primero la fila saliente (RHS más negativo)</li>
+                <li><strong>Ratios duales:</strong> Calcula zⱼ/aᵢⱼ para determinar columna entrante</li>
+                <li><strong>Ejemplo típico:</strong> "minimizar z = 2x1 + 3x2" con "x1 + 2x2 >= 6"</li>
+            </ul>
+        </div>
     </div>
 </div>
+
+<script>
+// Inicializar tooltips de Bootstrap
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// Función para limpiar el formulario
+function clearDualForm() {
+    document.getElementById('dualSimplexForm').reset();
+}
+
+// Función para cargar un ejemplo
+function loadDualExample() {
+    document.getElementById('objective').value = 'minimizar z = 2x1 + 3x2';
+    document.getElementById('constraints').value = 'x1 + 2x2 >= 6\n2x1 + x2 >= 8\nx1 >= 0\nx2 >= 0';
+    
+    // Mostrar notificación
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+    alert.innerHTML = '<i class="fas fa-check-circle"></i> <strong>Ejemplo cargado!</strong> Puedes modificarlo o resolverlo directamente. <button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+    document.querySelector('.card-body').insertBefore(alert, document.getElementById('dualSimplexForm'));
+    setTimeout(() => alert.remove(), 3000);
+}
+</script>
 {% endblock %}

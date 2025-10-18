@@ -5,9 +5,12 @@
 **Desarrollado por:** José Miguel Herrera Gutiérrez  
 **Profesora:** Bibiana Patricia Arias Villada
 
+**Última actualización:** 18 de Octubre de 2025  
+**Versión:** 2.0 - Con Método de Dos Fases Completo
+
 ---
 
-Una aplicación web completa para resolver problemas de programación lineal con **tres métodos diferentes**: Gráfico, Simplex y Dual Simplex. Diseñada con enfoque educativo para visualizar **paso a paso** cada iteración del algoritmo.
+Una aplicación web completa para resolver problemas de programación lineal con **tres métodos diferentes**: Gráfico, Simplex (con Dos Fases) y Dual Simplex. Diseñada con enfoque educativo para visualizar **paso a paso** cada iteración del algoritmo.
 
 ## ✨ Características Principales
 
@@ -21,25 +24,48 @@ Una aplicación web completa para resolver problemas de programación lineal con
 
 ### 🔢 Tres Métodos de Solución
 
-| Método | Ideal Para | Visualización | Algoritmo |
+| Método | Ideal Para | Restricciones | Algoritmo |
 |--------|------------|---------------|-----------|
-| **Gráfico** | 2 variables | Gráfica interactiva con región factible | Intersecciones y vértices |
-| **Simplex** | 2-5+ variables | Tableau paso a paso con pivotes | Algoritmo Simplex estándar |
-| **Dual Simplex** | Problemas duales | Ratios zⱼ/aᵢⱼ con RHS negativo | Algoritmo Dual Simplex |
+| **Gráfico** | 2 variables | <= | Intersecciones y vértices |
+| **Simplex** | 2-5+ variables | **<=, >=, =** | Simplex con Método de Dos Fases |
+| **Dual Simplex** | MAX/MIN con >= | >= | Dual Simplex para MAX y MIN |
+
+### 🆕 Novedades Versión 2.0
+
+#### ✅ Método de Dos Fases Completo
+- **Fase I:** Eliminación de variables artificiales
+- **Fase II:** Optimización de función objetivo original
+- **Soporte para restricciones >=, =**
+- **Detección de infactibilidad** en Fase I
+- **Transición automática** entre fases
+
+#### ✅ Dual-Simplex Mejorado
+- **Soporte para MAX y MIN**
+- **Selección correcta de pivotes** según tipo de optimización
+- **Factibilidad dual verificada**
+- **Cálculo correcto de valor objetivo** para ambos tipos
+
+#### ✅ Validaciones Robustas
+- **Detección de problemas no acotados**
+- **Detección de infactibilidad**
+- **Mensajes de error claros y educativos**
+- **Bland's Rule** para evitar cycling
 
 ### 📚 Enfoque Educativo
 - **Visualización paso a paso** de cada iteración
-- **Tableau completo** con variables de holgura/exceso
+- **Tableau completo** con variables de holgura/exceso/artificiales
 - **Pivotes identificados** con colores
 - **Ratios calculados** (θ para Simplex, zⱼ/aᵢⱼ para Dual)
 - **Explicaciones claras** de cada paso
 - **Variables básicas/no básicas** marcadas
+- **Indicadores de fase** (Fase I/II en Dos Fases)
 
 ### 🛠️ Implementación Manual
 - **Sin librerías externas** de optimización (no PuLP, no SciPy)
 - **NumPy puro** para operaciones matriciales
 - **Algoritmos escritos desde cero** para fines educativos
 - **Código bien documentado** y legible
+- **Tolerancia numérica** (EPS = 1e-9)
 
 ## 🚀 Inicio Rápido
 

@@ -1,5 +1,5 @@
 """
-Implementación del Método Dual Simplex con Tableau
+Implementación del Método Simplex con Tableau
 Genera visualización paso a paso con todas las iteraciones
 """
 
@@ -8,60 +8,54 @@ from typing import Dict, List, Tuple, Optional
 import re
 
 
-class DualSimplexTableau:
-    def __init__(self, c: List[float], A: List[List[float]], b: List[float], opt_type: str = 'min'):
+class SimplexTableau:
+    def __init__(self, c: List[float], A: List[List[float]], b: List[float], opt_type: str = 'max'):
         """
-        Inicializa el problema de programación lineal para Dual Simplex
+        Inicializa el problema de programación lineal en forma estándar
         
         Args:
             c: Coeficientes de la función objetivo
             A: Matriz de coeficientes de restricciones
             b: Vector de términos independientes
             opt_type: 'max' o 'min'
-        
-        Nota: El método Dual Simplex trabaja mejor con problemas de minimización
-        con restricciones >= que se convierten a <= multiplicando por -1
         """
         self.opt_type = opt_type.lower()
-        self.n_vars = len(c)
+        self.n_vars = len(c)  # Variables originales
         self.n_constraints = len(b)
         
+        # No convertir, mantener el tipo original
         self.c_original = c.copy()
         
-        # Variables de holgura/exceso
+        # Variables de holgura
         self.slack_vars = list(range(self.n_vars, self.n_vars + self.n_constraints))
         
         # Construir tableau inicial
-        # Para Dual Simplex, necesitamos forma estándar con variables de holgura
+        # Formato: [variables originales | variables de holgura | RHS]
         self.tableau = []
         for i in range(self.n_constraints):
             row = A[i].copy()
-            # Agregar variables de holgura
+            # Agregar variables de holgura (identidad)
             slack = [0] * self.n_constraints
             slack[i] = 1
             row.extend(slack)
             row.append(b[i])
             self.tableau.append(row)
         
-        # Fila objetivo (Z)
-        # Para Dual Simplex con restricciones >= convertidas a <=:
-        # - MIN: Dual-factibilidad requiere Z-row >= 0, usamos c directamente
-        # - MAX: Dual-factibilidad requiere Z-row <= 0, usamos -c
-        # IMPORTANTE: Esto es DIFERENTE del Simplex estándar
-        if self.opt_type == 'min':
-            z_row = c.copy()  # [c1, c2, ...] positivos para dual-factibilidad
-        else:
-            # Para MAX en Dual-Simplex, queremos Z-row <= 0
-            # Usamos coeficientes negativos: [-c1, -c2, ...]
+        # Fila objetivo (Z) - negativos para maximización
+        # Para max: ponemos -c en la fila Z (para que al resolver, aumentar una variable con coef negativo mejore Z)
+        # Para min: ponemos c directamente
+        if self.opt_type == 'max':
             z_row = [-ci for ci in c]
-        
-        z_row.extend([0] * self.n_constraints)  # Coeficientes de holgura
-        z_row.append(0)  # RHS inicial de Z
+        else:
+            z_row = c.copy()
+        z_row.extend([0] * self.n_constraints)  # Coeficientes de holgura en Z
+        z_row.append(0)  # Valor inicial de Z
         self.tableau.append(z_row)
         
+        # Convertir a numpy array
         self.tableau = np.array(self.tableau, dtype=float)
         
-        # Variables básicas iniciales
+        # Variables básicas iniciales (variables de holgura)
         self.basic_vars = self.slack_vars.copy()
         
         # Historial de iteraciones
@@ -74,36 +68,25 @@ class DualSimplexTableau:
             pivot_row=None,
             entering_var=None,
             leaving_var=None,
-            operation="Tableau Inicial - Dual Simplex",
-            ratios=None
+            operation="Tableau Inicial"
         )
     
     def _save_iteration(self, pivot_col: Optional[int], pivot_row: Optional[int],
                        entering_var: Optional[int], leaving_var: Optional[int],
-                       operation: str, ratios: Optional[List[Tuple[int, float]]] = None):
+                       operation: str):
         """Guarda el estado actual del tableau"""
-        # Verificar factibilidad primal (RHS no negativos)
-        is_feasible = all(self.tableau[i, -1] >= -1e-10 for i in range(self.n_constraints))
-        
-        # Verificar optimalidad (factibilidad dual)
-        # Para Dual Simplex:
-        # - MIN: Todos los reduced costs (Zj - Cj) deben ser >= 0
-        # - MAX: Todos los reduced costs deben ser <= 0
+        # Verificar optimalidad
         z_row = self.tableau[-1, :-1]
-        if self.opt_type == 'min':
-            is_optimal = is_feasible and all(z_row >= -1e-10)
-        else:  # MAX
-            is_optimal = is_feasible and all(z_row <= 1e-10)
+        if self.opt_type == 'max':
+            is_optimal = all(z_row >= -1e-10)
+        else:
+            is_optimal = all(z_row >= -1e-10)
         
         # Valor objetivo actual
-        # El tableau siempre representa: Z + (costos)*x = RHS
-        # Para MIN: Z-row es [c1, c2, ..., valor], entonces Z = -valor
-        # Para MAX: Convertimos a MIN -Z, entonces Z-row es [-c1, -c2, ..., valor], y Z_original = valor
-        z_value = self.tableau[-1, -1]
-        if self.opt_type == 'min':
-            objective_value = round(-z_value, 4)  # MIN: Z = -valor_tableau
+        if self.opt_type == 'max':
+            objective_value = -self.tableau[-1, -1]
         else:
-            objective_value = round(z_value, 4)  # MAX: Z_original = valor_tableau (ya es -Z_min)
+            objective_value = self.tableau[-1, -1]
         
         # Formatear nombres de variables
         entering_var_name = f'x{entering_var+1}' if entering_var is not None and entering_var < self.n_vars else (f'S{entering_var-self.n_vars+1}' if entering_var is not None else None)
@@ -121,13 +104,7 @@ class DualSimplexTableau:
             'operation': operation,
             'objective_value': objective_value,
             'is_optimal': is_optimal,
-            'is_feasible': is_feasible,
-            'ratios': ratios if ratios else [],
-            'dual_info': {
-                'primal_feasible': is_feasible,
-                'dual_feasible': is_optimal,
-                'status': 'Óptimo' if is_optimal else ('Factible' if is_feasible else 'No factible')
-            },
+            'z_value': self.tableau[-1, -1],
             'tableau_info': {
                 'n_rows': self.n_constraints,
                 'n_cols': self.n_vars + self.n_constraints,
@@ -141,67 +118,41 @@ class DualSimplexTableau:
         }
         self.iterations.append(iteration_data)
     
-    def _find_leaving_row(self) -> Optional[int]:
-        """
-        Encuentra la fila pivote (variable saliente) en Dual Simplex
-        Busca el RHS más negativo (solución no factible)
-        """
-        min_rhs = float('inf')
-        leaving_row = None
-        
-        for i in range(self.n_constraints):
-            rhs = self.tableau[i, -1]
-            if rhs < -1e-10 and rhs < min_rhs:
-                min_rhs = rhs
-                leaving_row = i
-        
-        return leaving_row
-    
-    def _find_entering_column(self, leaving_row: int) -> Tuple[Optional[int], List[Tuple[int, float]]]:
-        """
-        Encuentra la columna pivote (variable entrante) en Dual Simplex
-        Usa el ratio mínimo de z_j / a_{leaving_row,j} donde a_{leaving_row,j} < 0
-        
-        Returns:
-            Tupla de (columna_pivote, lista_de_ratios)
-        """
+    def _find_pivot_column(self) -> Optional[int]:
+        """Encuentra la columna pivote (variable entrante)"""
         z_row = self.tableau[-1, :-1]
-        leaving_row_coeffs = self.tableau[leaving_row, :-1]
         
+        # Para minimización: el más negativo
+        # Para maximización (ya convertido): el más negativo
+        negative_indices = np.where(z_row < -1e-10)[0]
+        
+        if len(negative_indices) == 0:
+            return None  # Óptimo alcanzado
+        
+        # Elegir el más negativo (regla de Bland para evitar ciclos)
+        pivot_col = negative_indices[np.argmin(z_row[negative_indices])]
+        return pivot_col
+    
+    def _find_pivot_row(self, pivot_col: int) -> Optional[int]:
+        """Encuentra la fila pivote (variable saliente) usando el ratio mínimo"""
         ratios = []
-        valid_ratios = []
+        for i in range(self.n_constraints):
+            denominator = self.tableau[i, pivot_col]
+            if denominator > 1e-10:  # Solo positivos
+                ratio = self.tableau[i, -1] / denominator
+                ratios.append((ratio, i))
+            else:
+                ratios.append((float('inf'), i))
         
-        for j in range(len(leaving_row_coeffs)):
-            coeff = leaving_row_coeffs[j]
-            z_coeff = z_row[j]
-            
-            if coeff < -1e-10:  # Solo columnas con coeficiente negativo
-                ratio = z_coeff / coeff
-                ratios.append((j, ratio))
-                
-                # Para Dual Simplex:
-                # - MIN: Z-row >= 0, coeff < 0, entonces ratio <= 0. Buscamos ratio menos negativo (máximo)
-                # - MAX: Z-row <= 0, coeff < 0, entonces ratio >= 0. Buscamos ratio mínimo positivo
-                if self.opt_type == 'min':
-                    # Ratios negativos o cero son válidos
-                    if ratio <= 1e-10:
-                        valid_ratios.append((j, ratio))
-                else:  # MAX
-                    # Ratios positivos o cero son válidos
-                    if ratio >= -1e-10:
-                        valid_ratios.append((j, ratio))
+        # Filtrar ratios válidos (no negativos)
+        valid_ratios = [(r, i) for r, i in ratios if r >= 0 and r != float('inf')]
         
         if not valid_ratios:
-            return None, ratios
+            return None  # Problema no acotado
         
-        # Elegir el ratio apropiado
-        if self.opt_type == 'min':
-            # Ratio menos negativo (máximo)
-            entering_col = max(valid_ratios, key=lambda x: x[1])[0]
-        else:  # MAX
-            # Ratio mínimo positivo
-            entering_col = min(valid_ratios, key=lambda x: x[1])[0]
-        return entering_col, ratios
+        # Elegir el ratio mínimo
+        min_ratio, pivot_row = min(valid_ratios, key=lambda x: x[0])
+        return pivot_row
     
     def _pivot_operation(self, pivot_row: int, pivot_col: int) -> List[str]:
         """Realiza la operación de pivoteo y retorna las operaciones realizadas"""
@@ -210,7 +161,7 @@ class DualSimplexTableau:
         
         # 1. Dividir fila pivote por el elemento pivote
         if abs(pivot_element - 1.0) > 1e-10:
-            operations.append(f"F{pivot_row + 1} = F{pivot_row + 1} / ({pivot_element:.4g})")
+            operations.append(f"F{pivot_row + 1} = F{pivot_row + 1} / {pivot_element:.4g}")
             self.tableau[pivot_row] = self.tableau[pivot_row] / pivot_element
         
         # 2. Hacer ceros en el resto de la columna pivote
@@ -218,64 +169,46 @@ class DualSimplexTableau:
             if i != pivot_row:
                 multiplier = self.tableau[i, pivot_col]
                 if abs(multiplier) > 1e-10:
-                    row_label = f"F{i + 1}" if i < self.n_constraints else "Z"
-                    pivot_label = f"F{pivot_row + 1}"
-                    
                     if multiplier > 0:
-                        operations.append(f"{row_label} = {row_label} - {multiplier:.4g} × {pivot_label}")
+                        operations.append(f"F{i + 1 if i < self.n_constraints else 'Z'} = F{i + 1 if i < self.n_constraints else 'Z'} - {multiplier:.4g} × F{pivot_row + 1}")
                     else:
-                        operations.append(f"{row_label} = {row_label} + {abs(multiplier):.4g} × {pivot_label}")
-                    
+                        operations.append(f"F{i + 1 if i < self.n_constraints else 'Z'} = F{i + 1 if i < self.n_constraints else 'Z'} + {abs(multiplier):.4g} × F{pivot_row + 1}")
                     self.tableau[i] = self.tableau[i] - multiplier * self.tableau[pivot_row]
         
         return operations
     
-    def _is_optimal(self) -> bool:
-        """
-        Verifica si la solución es óptima
-        Para Dual Simplex: todos los RHS deben ser no negativos (factibilidad primal)
-        """
-        for i in range(self.n_constraints):
-            if self.tableau[i, -1] < -1e-10:
-                return False
-        return True
-    
     def solve(self, max_iterations: int = 100) -> Dict:
         """
-        Resuelve el problema usando el método Dual Simplex
+        Resuelve el problema usando el método Simplex
         
         Returns:
             Dict con el resultado y todas las iteraciones
         """
         try:
             for iteration in range(max_iterations):
-                # Verificar optimalidad
-                if self._is_optimal():
+                # Encontrar columna pivote
+                pivot_col = self._find_pivot_column()
+                
+                if pivot_col is None:
+                    # Solución óptima encontrada
                     return self._build_solution('optimal')
                 
-                # Encontrar fila saliente (RHS más negativo)
-                leaving_row = self._find_leaving_row()
+                # Encontrar fila pivote
+                pivot_row = self._find_pivot_row(pivot_col)
                 
-                if leaving_row is None:
-                    # No hay RHS negativos, solución óptima
-                    return self._build_solution('optimal')
-                
-                # Encontrar columna entrante
-                entering_col, ratios = self._find_entering_column(leaving_row)
-                
-                if entering_col is None:
-                    # No hay columna válida, problema infactible
-                    return self._build_solution('infeasible')
+                if pivot_row is None:
+                    # Problema no acotado
+                    return self._build_solution('unbounded')
                 
                 # Variables entrante y saliente
-                entering_var = entering_col
-                leaving_var = self.basic_vars[leaving_row]
+                entering_var = pivot_col
+                leaving_var = self.basic_vars[pivot_row]
                 
                 # Realizar pivoteo
-                operations = self._pivot_operation(leaving_row, entering_col)
+                operations = self._pivot_operation(pivot_row, pivot_col)
                 
                 # Actualizar variable básica
-                self.basic_vars[leaving_row] = entering_var
+                self.basic_vars[pivot_row] = entering_var
                 
                 # Incrementar iteración
                 self.current_iteration += 1
@@ -283,12 +216,11 @@ class DualSimplexTableau:
                 # Guardar iteración
                 operation_str = " | ".join(operations)
                 self._save_iteration(
-                    pivot_col=entering_col,
-                    pivot_row=leaving_row,
+                    pivot_col=pivot_col,
+                    pivot_row=pivot_row,
                     entering_var=entering_var,
                     leaving_var=leaving_var,
-                    operation=operation_str,
-                    ratios=ratios
+                    operation=operation_str
                 )
             
             # Máximo de iteraciones alcanzado
@@ -298,7 +230,7 @@ class DualSimplexTableau:
             return {
                 'success': False,
                 'status': 'error',
-                'error': f'Error durante la ejecución del Dual Simplex: {str(e)}'
+                'error': f'Error durante la ejecución del Simplex: {str(e)}'
             }
     
     def _build_solution(self, status: str) -> Dict:
@@ -314,14 +246,8 @@ class DualSimplexTableau:
                 else:
                     solution[f'x{i + 1}'] = 0.0
             
-            # Valor óptimo
-            # Para MIN: tableau tiene Z + cx = b, entonces Z_opt = -b
-            # Para MAX: convertimos a min(-Z), tableau tiene -Z + (-c)x = b, entonces Z_opt = b
-            z_value = self.tableau[-1, -1]
-            if self.opt_type == 'min':
-                optimal_value = round(-z_value, 4)  # MIN: Z = -valor_RHS
-            else:
-                optimal_value = round(z_value, 4)  # MAX: Z = valor_RHS
+            # Valor óptimo - está directamente en el RHS de la fila Z
+            optimal_value = self.tableau[-1, -1]
             
             return {
                 'success': True,
@@ -330,19 +256,15 @@ class DualSimplexTableau:
                 'solution': solution,
                 'opt_type': self.opt_type,
                 'iterations': self.iterations,
-                'method': 'Dual Simplex con Tableau',
-                'factibilidad_dual': 'Verificada',
-                'estado_final': 'Óptimo'
+                'method': 'Simplex con Tableau'
             }
         
-        elif status == 'infeasible':
+        elif status == 'unbounded':
             return {
                 'success': False,
-                'status': 'infeasible',
-                'error': 'El problema no tiene solución factible (infeasible).',
-                'iterations': self.iterations,
-                'factibilidad_dual': 'No factible',
-                'estado_final': 'Infeasible'
+                'status': 'unbounded',
+                'error': 'La solución es no acotada (unbounded).',
+                'iterations': self.iterations
             }
         
         elif status == 'max_iterations':
@@ -350,8 +272,7 @@ class DualSimplexTableau:
                 'success': False,
                 'status': 'error',
                 'error': 'Se alcanzó el máximo de iteraciones sin encontrar solución óptima.',
-                'iterations': self.iterations,
-                'estado_final': 'Error'
+                'iterations': self.iterations
             }
         
         else:
@@ -359,8 +280,7 @@ class DualSimplexTableau:
                 'success': False,
                 'status': 'error',
                 'error': 'Estado desconocido.',
-                'iterations': self.iterations,
-                'estado_final': 'Error'
+                'iterations': self.iterations
             }
 
 
@@ -433,19 +353,26 @@ def parse_constraint(s: str, n_vars: int) -> Tuple[List[float], str, float]:
     return coefficients, op, rhs_value
 
 
-def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Dict:
+def solve_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Dict:
     """
-    Resuelve un problema de programación lineal usando el método Dual Simplex con tableau
+    Resuelve un problema de programación lineal usando el método Simplex con tableau
     
-    NOTA: Para problemas con >= en minimización, se resuelve convirtiendo a forma estándar
+    Args:
+        objective_str: String de la función objetivo (ej: "max z = 3x1 + 2x2")
+        constraints_list: Lista de strings con las restricciones
+    
+    Returns:
+        Dict con la solución y todas las iteraciones del tableau
     """
     try:
         # Parse objetivo
         opt_type, obj_coeffs = parse_objective(objective_str)
         n_vars = len(obj_coeffs)
         
-        # Parse restricciones
+        # Parse restricciones y validar compatibilidad
         constraints = []
+        has_ge_or_eq = False  # Detectar restricciones >= o =
+        
         for constraint_str in constraints_list:
             constraint_str = constraint_str.strip()
             if not constraint_str or re.match(r'x\d+\s*>=\s*0', constraint_str.lower()):
@@ -454,16 +381,46 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
             try:
                 coeffs, op, rhs = parse_constraint(constraint_str, n_vars)
                 
-                # Para Dual Simplex, convertir >= en <= con coeficientes negados
-                # Ejemplo: x1 + 2x2 >= 6  →  -x1 - 2x2 + S1 = -6  (RHS negativo es OK para Dual Simplex)
-                if op == '>=':
-                    # Negar ambos lados: -x1 - 2x2 <= -6
-                    coeffs = [-c for c in coeffs]
-                    rhs = -rhs
+                # Detectar restricciones que requieren variables artificiales
+                if op == '>=' or op == '=':
+                    has_ge_or_eq = True
                 
-                constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': op})
+                # Normalizar restricciones a forma estándar (<=)
+                # Para Simplex, necesitamos RHS no negativos
+                if op == '<=':
+                    # Caso normal: mantener como está si RHS >= 0
+                    if rhs >= 0:
+                        constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                    else:
+                        # Si RHS < 0, negar ambos lados
+                        constraints.append({'coeffs': [-c for c in coeffs], 'rhs': -rhs, 'type': '<='})
+                elif op == '>=':
+                    # Para >=, convertir a <= multiplicando por -1
+                    coeffs_neg = [-c for c in coeffs]
+                    rhs_neg = -rhs
+                    # Asegurar RHS no negativo
+                    if rhs_neg < 0:
+                        coeffs_neg = [-c for c in coeffs_neg]
+                        rhs_neg = -rhs_neg
+                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '<='})
+                elif op == '=':
+                    # Para igualdades, tratarlas como <= (simplificado)
+                    if rhs >= 0:
+                        constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                    else:
+                        constraints.append({'coeffs': [-c for c in coeffs], 'rhs': -rhs, 'type': '<='})
             except Exception as e:
                 continue
+        
+        # Validar compatibilidad con Simplex estándar
+        if has_ge_or_eq:
+            return {
+                'success': False,
+                'status': 'error',
+                'error': ('Este problema contiene restricciones >= o =, que requieren el método de Dos Fases '
+                         'o variables artificiales. Por favor, use el Método Dual-Simplex para restricciones >= '
+                         'o espere la implementación del Método de Dos Fases para restricciones = .')
+            }
         
         if not constraints:
             return {
@@ -477,15 +434,14 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
         b = [c['rhs'] for c in constraints]
         
         # Crear y resolver tableau
-        tableau = DualSimplexTableau(obj_coeffs, A, b, opt_type)
+        tableau = SimplexTableau(obj_coeffs, A, b, opt_type)
         result = tableau.solve()
         
         return result
     
     except Exception as e:
-        import traceback
         return {
             'success': False,
             'status': 'error',
-            'error': f'Error al procesar el problema: {str(e)}\n{traceback.format_exc()}'
+            'error': f'Error al procesar el problema: {str(e)}'
         }

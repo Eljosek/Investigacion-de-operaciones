@@ -1,14 +1,117 @@
 ﻿# CHANGELOG - Optimización del Proyecto de Programación Lineal
 
-**Fecha Actualización:** 18 18e octubre, 2025  
+**Fecha Actualización:** 18 de octubre, 2025  
 **Autor:** José Miguel Herrera Gutiérrez  
 **Proyecto:** Investigación de Operaciones - Segundo Parcial UTP
 
 ---
 
-##  FASE 9: CORRECCIONES CRÍTICAS Y MEJORAS FINALES 
+## 🎉 VERSIÓN 2.0 - IMPLEMENTACIÓN COMPLETA (18 de Octubre, 2025)
 
-###  CORRECCIONES CRÍTICAS
+### 🚀 NUEVAS CARACTERÍSTICAS MAYORES
+
+#### 1. ✅ Método de Dos Fases Completo
+**Funcionalidad:**
+- Implementado algoritmo completo de Dos Fases para manejar restricciones >=, =
+- Fase I: Minimización de suma de variables artificiales
+- Fase II: Optimización de función objetivo original
+- Transición automática entre fases con restauración de Z-row
+
+**Bugs Corregidos:**
+1. **Variables artificiales re-entrando en Fase I** (`simplex_tableau.py:206-220`)
+   - Filtro agregado para excluir artificiales como candidatas a entrar
+   - Previene cycling infinito
+   
+2. **Variables de exceso con coeficientes negativos en Fase II** (`simplex_tableau.py:367-371`)
+   - Forzado a 0 coeficientes de exceso y artificiales después de transición
+   - Previene "unbounded" erróneo
+
+3. **Valor óptimo con signo incorrecto para MIN** (`simplex_tableau.py:390-399`)
+   - Para MIN: usar z_value directo (sin negar)
+   - Para MAX: usar z_value directo
+   - RHS de Z-row ya refleja valor correcto después de dual-factibilidad
+
+**Tests:**
+- ✅ min z=10x1+30x2, x1+5x2>=15, 5x1+x2>=15 → Z=100, x1=2.5, x2=2.5
+- ✅ 4 iteraciones (3 Fase I + 1 Fase II)
+- ✅ Variables artificiales eliminadas correctamente
+
+#### 2. ✅ Dual-Simplex para MAX y MIN
+**Funcionalidad:**
+- Soporte completo para problemas MAX con restricciones >=
+- Soporte completo para problemas MIN con restricciones >=
+- Selección de pivote adaptativa según tipo de optimización
+
+**Bugs Corregidos:**
+1. **Selección de pivote incorrecta para MAX** (`dual_simplex_tableau.py:156-184`)
+   - MIN: Ratios <= 0 válidos, seleccionar máximo (menos negativo)
+   - MAX: Ratios >= 0 válidos, seleccionar mínimo
+   - Filtrado condicional según `opt_type`
+
+2. **Criterio de optimalidad incorrecto** (`dual_simplex_tableau.py:87-94`)
+   - MIN: all(z_row >= -EPS)
+   - MAX: all(z_row <= EPS)
+
+3. **Cálculo de valor objetivo** (`dual_simplex_tableau.py:95-102, 303-308`)
+   - MIN: Z = -tableau[-1,-1]
+   - MAX: Z = tableau[-1,-1]
+
+**Tests:**
+- ✅ MIN: min z=3x1+2x2 → Z=4.2, x1=0.6, x2=1.2
+- ✅ MAX: max z=5x1+4x2 → Z=19.2, x1=2.4, x2=1.8
+- ✅ 3 iteraciones cada uno
+
+### 📝 ARCHIVOS MODIFICADOS
+
+#### Backend (Python)
+- `simplex_tableau.py` - Reemplazado con implementación Dos Fases completa
+- `dual_simplex_tableau.py` - Correcciones para MAX/MIN
+- `simplex_tableau_backup.py` - Backup de versión anterior
+
+#### Tests Creados
+- `test_two_phase.py` - Debug Dos Fases
+- `test_dual_max.py` - Validación Dual MAX
+- `test_dual_max_debug.py` - Debug detallado
+- `test_dual_min.py` - Regresión Dual MIN
+- `test_integration.py` - 5 tests completos
+- `test_validation.py` - Validación mensajes
+- `test_simplex_validation.py` - Validación restricciones
+
+#### Documentación
+- `README.md` - Actualizado con características v2.0
+- `CHANGELOG.md` - Este archivo
+- `FASES_IMPLEMENTACION.md` - Plan de 6 fases completo
+- `PRUEBAS_FRONTEND.md` - Guía de pruebas navegador
+- `ESTADO_FINAL.md` - Estado del proyecto
+
+### 🧪 TESTING
+
+#### CLI Tests (100% Pass)
+1. ✅ Simplex MAX <=: Z=14, x1=2, x2=4
+2. ✅ Simplex Dos Fases MIN >=: Z=100, x1=2.5, x2=2.5
+3. ✅ Dual-Simplex MIN: Z=4.2, x1=0.6, x2=1.2
+4. ✅ Dual-Simplex MAX: Z=19.2, x1=2.4, x2=1.8
+5. ✅ Unbounded detectado correctamente
+
+#### Integración
+- ✅ Servidor Flask ejecutándose sin errores
+- ✅ Simple Browser abierto en http://localhost:5000
+- ✅ Backend completamente funcional
+
+### 📊 ESTADÍSTICAS
+
+**Tiempo de Implementación:** ~90 minutos  
+**Fases Completadas:** 6/6 (100%)  
+**Tests CLI:** 5/5 pasados (100%)  
+**Bugs Críticos Corregidos:** 6  
+**Archivos de Test Creados:** 7  
+**Líneas de Documentación:** 800+
+
+---
+
+## FASE 9: CORRECCIONES CRÍTICAS Y MEJORAS FINALES (Versión 1.x)
+
+### CORRECCIONES CRÍTICAS
 
 #### 1. Fix: Error 'step' undefined en Dual-Simplex (Commit: 0852fc9)
 **Problema:**
@@ -238,7 +341,8 @@ elif op == '=':
    - Impacto: CRÍTICO - Backend robusto con todos los tipos de restricciones
 
 3. **Commit 99e552d** - feat: Funcionalidad de impresión
-   - Modificados: simplex_results.html, dual_simplex_results.html, esults.html, styles.css
+   - Modificados: simplex_results.html, dual_simplex_results.html, 
+esults.html, styles.css
    - Cambios: Botones + reglas @media print completas
    - Impacto: ALTO - Profesionalización de resultados
 

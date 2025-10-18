@@ -3,72 +3,182 @@
 {% block title %}Inicio - Programación Lineal{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <!-- Encabezado -->
-        <div class="text-center mb-5">
-            <h1 class="display-4 text-primary">
-                <i class="fas fa-calculator"></i>
-                Programación Lineal
-            </h1>
-            <p class="lead text-muted">
-                Selecciona el método de resolución para tu problema de programación lineal
+<!-- Hero Section -->
+<div class="hero-section text-center py-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <h1 class="display-3 fw-bold mb-3 text-gradient">
+                    Optimización con Programación Lineal
+                </h1>
+                <p class="lead text-muted mb-4" style="font-size: 1.25rem;">
+                    Herramienta educativa interactiva con visualización paso a paso de tres algoritmos de optimización matemática
+                </p>
+                <div class="d-flex justify-content-center gap-3 mb-4">
+                    <span class="badge bg-primary px-3 py-2" style="font-size: 0.95rem;">
+                        <i class="fas fa-chart-area"></i> Método Gráfico
+                    </span>
+                    <span class="badge bg-success px-3 py-2" style="font-size: 0.95rem;">
+                        <i class="fas fa-table"></i> Método Simplex
+                    </span>
+                    <span class="badge bg-info px-3 py-2" style="font-size: 0.95rem;">
+                        <i class="fas fa-exchange-alt"></i> Dual Simplex
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Selector de Métodos -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h2 class="text-center mb-4 fw-bold">
+                <i class="fas fa-compass"></i> Selecciona tu Método de Resolución
+            </h2>
+            <p class="text-center text-muted mb-5">
+                Elige el algoritmo más adecuado según las características de tu problema
             </p>
             
-            <!-- Métodos disponibles -->
-            <div class="row mt-4">
-                <div class="col-md-4 mb-3">
-                    <div class="card method-grafico border-0 shadow">
-                        <div class="card-body text-center">
-                            <i class="fas fa-chart-area fa-3x text-method-grafico mb-3"></i>
-                            <h5 class="card-title">Método Gráfico</h5>
-                            <p class="card-text small text-muted">Para problemas con 2 variables</p>
-                            <button type="button" class="btn btn-primary" onclick="showGraphicMethod()">
-                                <i class="fas fa-arrow-right"></i> Seleccionar
+            <div class="row g-4">
+                <!-- Card Método Gráfico -->
+                <div class="col-md-4">
+                    <div class="card method-grafico h-100 border-0 shadow-lg">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-chart-area fa-4x text-method-grafico"></i>
+                            </div>
+                            <h4 class="card-title fw-bold mb-3">Método Gráfico</h4>
+                            <p class="card-text text-muted mb-3">
+                                Visualización intuitiva para problemas con <strong>2 variables</strong>
+                            </p>
+                            <ul class="list-unstyled text-start small mb-4">
+                                <li class="mb-2"><i class="fas fa-check text-primary me-2"></i>Gráfica interactiva</li>
+                                <li class="mb-2"><i class="fas fa-check text-primary me-2"></i>Región factible visual</li>
+                                <li class="mb-2"><i class="fas fa-check text-primary me-2"></i>Ideal para aprendizaje</li>
+                            </ul>
+                            <button type="button" class="btn btn-primary btn-lg w-100" onclick="showGraphicMethod()">
+                                <i class="fas fa-play"></i> Comenzar
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card method-simplex border-0 shadow">
-                        <div class="card-body text-center">
-                            <i class="fas fa-table fa-3x text-method-simplex mb-3"></i>
-                            <h5 class="card-title">Método Simplex</h5>
-                            <p class="card-text small text-muted">Para problemas generales</p>
-                            <a href="{{ url_for('simplex') }}" class="btn btn-success">
-                                <i class="fas fa-arrow-right"></i> Seleccionar
+
+                <!-- Card Método Simplex -->
+                <div class="col-md-4">
+                    <div class="card method-simplex h-100 border-0 shadow-lg">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-table fa-4x text-method-simplex"></i>
+                            </div>
+                            <h4 class="card-title fw-bold mb-3">Método Simplex</h4>
+                            <p class="card-text text-muted mb-3">
+                                Algoritmo robusto para problemas con <strong>n variables</strong>
+                            </p>
+                            <ul class="list-unstyled text-start small mb-4">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Tableau paso a paso</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Pivotes identificados</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Escalable y eficiente</li>
+                            </ul>
+                            <a href="{{ url_for('simplex') }}" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-play"></i> Comenzar
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card method-dual border-0 shadow">
-                        <div class="card-body text-center">
-                            <i class="fas fa-exchange-alt fa-3x text-method-dual mb-3"></i>
-                            <h5 class="card-title">Dual Simplex</h5>
-                            <p class="card-text small text-muted">Para problemas duales</p>
-                            <a href="{{ url_for('dual_simplex') }}" class="btn btn-info">
-                                <i class="fas fa-arrow-right"></i> Seleccionar
+
+                <!-- Card Método Dual Simplex -->
+                <div class="col-md-4">
+                    <div class="card method-dual h-100 border-0 shadow-lg">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-exchange-alt fa-4x text-method-dual"></i>
+                            </div>
+                            <h4 class="card-title fw-bold mb-3">Dual Simplex</h4>
+                            <p class="card-text text-muted mb-3">
+                                Método dual para <strong>análisis y sensibilidad</strong>
+                            </p>
+                            <ul class="list-unstyled text-start small mb-4">
+                                <li class="mb-2"><i class="fas fa-check text-info me-2"></i>Ratios duales (zⱼ/aᵢⱼ)</li>
+                                <li class="mb-2"><i class="fas fa-check text-info me-2"></i>RHS negativo marcado</li>
+                                <li class="mb-2"><i class="fas fa-check text-info me-2"></i>Complementario al Simplex</li>
+                            </ul>
+                            <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg w-100">
+                                <i class="fas fa-play"></i> Comenzar
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Formulario del método gráfico (inicialmente oculto) -->
-        <div id="graphicMethodForm" style="display: none;">
-            <div class="text-center mb-4">
-                <h2 class="text-success">
-                    <i class="fas fa-chart-area"></i>
-                    Método Gráfico
+<!-- Características de la Aplicación -->
+<div class="bg-light py-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <h2 class="text-center mb-5 fw-bold">
+                    <i class="fas fa-star"></i> Características Principales
                 </h2>
-                <p class="text-muted">Resuelve problemas de programación lineal con dos variables</p>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Enfoque Educativo</h5>
+                            <p class="text-muted">
+                                Visualización detallada de cada iteración del algoritmo con explicaciones paso a paso
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-code fa-3x text-success"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Implementación Manual</h5>
+                            <p class="text-muted">
+                                Algoritmos programados desde cero con NumPy, no wrappers de bibliotecas
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-palette fa-3x text-info"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Diseño Moderno</h5>
+                            <p class="text-muted">
+                                Interfaz intuitiva con colores distintivos por método y modo oscuro completo
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulario del Método Gráfico (inicialmente oculto) -->
+<div id="graphicMethodForm" style="display: none;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="text-center mb-4">
+                    <h2 class="text-method-grafico fw-bold">
+                        <i class="fas fa-chart-area"></i>
+                        Método Gráfico
+                    </h2>
+                    <p class="text-muted">Resuelve problemas de programación lineal con dos variables</p>
+                </div>
 
         <!-- Formulario principal -->
-        <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white">
+        <div class="card shadow-lg method-grafico">
+            <div class="card-header text-white">
                 <h3 class="card-title mb-0">
                     <i class="fas fa-edit"></i>
                     Ingresa tu problema de LP
@@ -114,62 +224,99 @@
                     </div>
 
                     <!-- Botones -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
-                            <i class="fas fa-eraser"></i>
-                            Limpiar
-                        </button>
-                        <button type="button" class="btn btn-outline-info" onclick="loadExample()">
-                            <i class="fas fa-lightbulb"></i>
-                            Ejemplo
-                        </button>
+                    <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fas fa-calculator"></i>
                             Resolver Problema
                         </button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearForm()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button type="button" class="btn btn-outline-info" onclick="loadExample()">
+                                <i class="fas fa-lightbulb"></i> Cargar Ejemplo
+                            </button>
+                            <button type="button" class="btn btn-outline-warning" onclick="hideGraphicMethod()">
+                                <i class="fas fa-arrow-left"></i> Cambiar Método
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
-        </div> <!-- Cierre del div graphicMethodForm -->
 
         <!-- Sección de ayuda -->
-        <div class="row mt-5">
+        <div class="row mt-5 g-4">
             <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-question-circle fa-3x text-info mb-3"></i>
-                        <h5>¿Cómo funciona?</h5>
-                        <p class="text-muted">
-                            El método gráfico encuentra la solución óptima evaluando los vértices de la región factible.
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-question-circle fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">¿Cómo funciona?</h5>
+                        <p class="text-muted small">
+                            El método gráfico encuentra la solución óptima evaluando los vértices de la región factible en el plano cartesiano.
                         </p>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
-                        <h5>Ejemplos</h5>
-                        <p class="text-muted">
-                            Ve ejemplos resueltos para entender mejor cómo formular problemas de LP.
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-book-open fa-3x text-warning"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Ejemplos Resueltos</h5>
+                        <p class="text-muted small mb-3">
+                            Consulta ejemplos paso a paso para entender mejor la formulación de problemas de LP.
                         </p>
-                        <a href="{{ url_for('examples') }}" class="btn btn-outline-warning">Ver Ejemplos</a>
+                        <a href="{{ url_for('examples') }}" class="btn btn-warning">
+                            <i class="fas fa-arrow-right"></i> Ver Ejemplos
+                        </a>
                     </div>
                 </div>
             </div>
             
             <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-info-circle fa-3x text-success mb-3"></i>
-                        <h5>Más Información</h5>
-                        <p class="text-muted">
-                            Aprende más sobre el método gráfico y programación lineal.
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            <i class="fas fa-graduation-cap fa-3x text-success"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Documentación</h5>
+                        <p class="text-muted small mb-3">
+                            Aprende más sobre los 3 métodos de programación lineal implementados.
                         </p>
-                        <a href="{{ url_for('about') }}" class="btn btn-outline-success">Saber Más</a>
+                        <a href="{{ url_for('about') }}" class="btn btn-success">
+                            <i class="fas fa-arrow-right"></i> Leer Más
+                        </a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Final -->
+<div class="py-5 my-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center text-white">
+                <h2 class="display-5 fw-bold mb-4">¿Necesitas ayuda con tu problema?</h2>
+                <p class="lead mb-4">
+                    Visita la sección de ejemplos o lee la documentación para entender mejor cada método
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('examples') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-book-open"></i> Ver Ejemplos
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle"></i> Acerca de
+                    </a>
                 </div>
             </div>
         </div>
@@ -190,10 +337,28 @@ function loadExample() {
 
 // Función para mostrar el formulario del método gráfico
 function showGraphicMethod() {
-    // Ocultar la selección de métodos
-    document.querySelector('.row.mt-4').style.display = 'none';
+    // Ocultar la selección de métodos y características
+    document.querySelector('.hero-section').style.display = 'none';
+    document.querySelectorAll('.container.mb-5').forEach(el => el.style.display = 'none');
+    document.querySelector('.bg-light.py-5').style.display = 'none';
+    document.querySelector('.py-5.my-5').style.display = 'none';
     // Mostrar el formulario del método gráfico
     document.getElementById('graphicMethodForm').style.display = 'block';
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Función para volver a la selección de métodos
+function hideGraphicMethod() {
+    // Mostrar la selección de métodos
+    document.querySelector('.hero-section').style.display = 'block';
+    document.querySelectorAll('.container.mb-5').forEach(el => el.style.display = 'block');
+    document.querySelector('.bg-light.py-5').style.display = 'block';
+    document.querySelector('.py-5.my-5').style.display = 'block';
+    // Ocultar el formulario
+    document.getElementById('graphicMethodForm').style.display = 'none';
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 {% endblock %}

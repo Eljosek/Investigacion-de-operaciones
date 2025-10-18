@@ -169,10 +169,14 @@ class SimplexTableau:
             if i != pivot_row:
                 multiplier = self.tableau[i, pivot_col]
                 if abs(multiplier) > 1e-10:
+                    # Determinar el nombre de la fila
+                    row_name = f"F{i + 1}" if i < self.n_constraints else "FZ"
+                    pivot_row_name = f"F{pivot_row + 1}"
+                    
                     if multiplier > 0:
-                        operations.append(f"F{i + 1 if i < self.n_constraints else 'Z'} = F{i + 1 if i < self.n_constraints else 'Z'} - {multiplier:.4g} × F{pivot_row + 1}")
+                        operations.append(f"{row_name} = {row_name} - {multiplier:.4g} × {pivot_row_name}")
                     else:
-                        operations.append(f"F{i + 1 if i < self.n_constraints else 'Z'} = F{i + 1 if i < self.n_constraints else 'Z'} + {abs(multiplier):.4g} × F{pivot_row + 1}")
+                        operations.append(f"{row_name} = {row_name} + {abs(multiplier):.4g} × {pivot_row_name}")
                     self.tableau[i] = self.tableau[i] - multiplier * self.tableau[pivot_row]
         
         return operations

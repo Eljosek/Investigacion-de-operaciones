@@ -142,19 +142,27 @@
                                     <div class="col-md-6">
                                         <div class="alert alert-success py-2 mb-0">
                                             <strong><i class="fas fa-sign-in-alt"></i> Variable Entrante:</strong>
-                                            <span class="badge bg-success ms-2">x{{ iter.entering_var + 1 }}</span>
+                                            <span class="badge bg-success ms-2">{{ iter.entering_var }}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="alert alert-warning py-2 mb-0">
                                             <strong><i class="fas fa-sign-out-alt"></i> Variable Saliente:</strong>
-                                            {% if iter.leaving_var < (iter.tableau|length - 1) %}
-                                                <span class="badge bg-warning text-dark ms-2">s{{ iter.leaving_var + 1 - (iter.tableau[0]|length - iter.tableau|length + 1) }}</span>
-                                            {% else %}
-                                                <span class="badge bg-warning text-dark ms-2">x{{ iter.leaving_var + 1 }}</span>
-                                            {% endif %}
+                                            <span class="badge bg-warning text-dark ms-2">{{ iter.leaving_var }}</span>
                                         </div>
                                     </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Información del pivote -->
+                                {% if iter.pivot_info %}
+                                <div class="alert alert-primary">
+                                    <h6><i class="fas fa-crosshairs"></i> Información del Pivote:</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>Fila:</strong> {{ iter.pivot_info.row + 1 }}</li>
+                                        <li><strong>Columna:</strong> {{ iter.pivot_info.col + 1 }}</li>
+                                        <li><strong>Elemento Pivote:</strong> {{ "%.4g"|format(iter.pivot_info.element) }}</li>
+                                    </ul>
                                 </div>
                                 {% endif %}
 
@@ -212,13 +220,19 @@
                                 <div class="alert alert-secondary mt-3">
                                     <h6><i class="fas fa-list"></i> Variables Básicas Actuales:</h6>
                                     <div class="d-flex flex-wrap">
-                                        {% for var_idx in iter.basic_vars %}
-                                            {% if var_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
-                                                <span class="badge bg-primary me-2 mb-2">x{{ var_idx + 1 }}</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
-                                            {% endif %}
-                                        {% endfor %}
+                                        {% if iter.tableau_info and iter.tableau_info.basic_vars %}
+                                            {% for var_name in iter.tableau_info.basic_vars %}
+                                                <span class="badge bg-primary me-2 mb-2">{{ var_name }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% for var_idx in iter.basic_vars %}
+                                                {% if var_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                    <span class="badge bg-primary me-2 mb-2">x{{ var_idx + 1 }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

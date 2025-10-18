@@ -349,17 +349,23 @@ def solve_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Di
             try:
                 coeffs, op, rhs = parse_constraint(constraint_str, n_vars)
                 
-                # Solo aceptamos <= por ahora (forma estándar)
+                # Normalizar restricciones a forma estándar (<=)
                 if op == '<=':
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
+                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
                 elif op == '>=':
-                    # Convertir >= a <= multiplicando por -1
-                    coeffs = [-c for c in coeffs]
-                    rhs = -rhs
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
+                    # Para >=, convertir a <= multiplicando por -1
+                    # PERO: si RHS queda negativo, multiplicar toda la restricción por -1
+                    coeffs_neg = [-c for c in coeffs]
+                    rhs_neg = -rhs
+                    if rhs_neg < 0:
+                        # Multiplicar de nuevo por -1 para tener RHS positivo
+                        coeffs_neg = [-c for c in coeffs_neg]
+                        rhs_neg = -rhs_neg
+                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '>='})
                 elif op == '=':
-                    # Por simplicidad, tratamos = como <=
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
+                    # Para igualdades, las tratamos como <=
+                    # (idealmente usaríamos variables artificiales pero por simplicidad usamos <=)
+                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '='})
             except Exception as e:
                 continue
         
@@ -370,18 +376,16 @@ def solve_simplex_tableau(objective_str: str, constraints_list: List[str]) -> Di
                 'error': 'No se encontraron restricciones válidas.'
             }
         
-        # Verificar que todos los RHS sean no negativos
-        for c in constraints:
-            if c['rhs'] < 0:
-                return {
-                    'success': False,
-                    'status': 'error',
-                    'error': 'Todas las restricciones deben tener RHS >= 0 para el método Simplex estándar.'
-                }
-        
-        # Construir matrices
+        # Construir matrices (ya no verificamos RHS negativos aquí)
         A = [c['coeffs'] for c in constraints]
         b = [c['rhs'] for c in constraints]
+        
+        # Verificar que todos los RHS sean no negativos después de la normalización
+        for i, rhs_val in enumerate(b):
+            if rhs_val < 0:
+                # Si aún hay RHS negativo, multiplicar esa fila por -1
+                A[i] = [-coef for coef in A[i]]
+                b[i] = -rhs_val
         
         # Crear y resolver tableau
         tableau = SimplexTableau(obj_coeffs, A, b, opt_type)

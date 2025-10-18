@@ -385,16 +385,21 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
             try:
                 coeffs, op, rhs = parse_constraint(constraint_str, n_vars)
                 
-                # Para Dual Simplex, convertir >= a <= multiplicando por -1
-                if op == '>=':
-                    coeffs = [-c for c in coeffs]
-                    rhs = -rhs
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
-                elif op == '<=':
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
+                # Normalizar restricciones a forma estándar (<=)
+                if op == '<=':
+                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
+                elif op == '>=':
+                    # Para >=, convertir a <= multiplicando por -1
+                    coeffs_neg = [-c for c in coeffs]
+                    rhs_neg = -rhs
+                    if rhs_neg < 0:
+                        # Multiplicar de nuevo por -1 para tener RHS positivo
+                        coeffs_neg = [-c for c in coeffs_neg]
+                        rhs_neg = -rhs_neg
+                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '>='})
                 elif op == '=':
                     # Igualdad se trata como <=
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs})
+                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '='})
             except Exception as e:
                 continue
         
@@ -408,6 +413,13 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
         # Construir matrices
         A = [c['coeffs'] for c in constraints]
         b = [c['rhs'] for c in constraints]
+        
+        # Verificar que todos los RHS sean no negativos después de la normalización
+        for i, rhs_val in enumerate(b):
+            if rhs_val < 0:
+                # Si aún hay RHS negativo, multiplicar esa fila por -1
+                A[i] = [-coef for coef in A[i]]
+                b[i] = -rhs_val
         
         # Crear y resolver tableau
         tableau = DualSimplexTableau(obj_coeffs, A, b, opt_type)

@@ -78,17 +78,52 @@ class DualSimplexTableau:
                        entering_var: Optional[int], leaving_var: Optional[int],
                        operation: str, ratios: Optional[List[Tuple[int, float]]] = None):
         """Guarda el estado actual del tableau"""
+        # Verificar factibilidad primal (RHS no negativos)
+        is_feasible = all(self.tableau[i, -1] >= -1e-10 for i in range(self.n_constraints))
+        
+        # Verificar optimalidad (factibilidad dual)
+        z_row = self.tableau[-1, :-1]
+        if self.opt_type == 'min':
+            is_optimal = is_feasible and all(z_row >= -1e-10)
+        else:
+            is_optimal = is_feasible and all(z_row <= 1e-10)
+        
+        # Valor objetivo actual
+        objective_value = -self.tableau[-1, -1] if self.opt_type == 'min' else self.tableau[-1, -1]
+        
+        # Formatear nombres de variables
+        entering_var_name = f'x{entering_var+1}' if entering_var is not None and entering_var < self.n_vars else (f'S{entering_var-self.n_vars+1}' if entering_var is not None else None)
+        leaving_var_name = f'x{leaving_var+1}' if leaving_var is not None and leaving_var < self.n_vars else (f'S{leaving_var-self.n_vars+1}' if leaving_var is not None else None)
+        
         iteration_data = {
             'iteration': self.current_iteration,
+            'description': operation,
             'tableau': self.tableau.copy(),
             'basic_vars': self.basic_vars.copy(),
             'pivot_col': pivot_col,
             'pivot_row': pivot_row,
-            'entering_var': entering_var,
-            'leaving_var': leaving_var,
+            'entering_var': entering_var_name,
+            'leaving_var': leaving_var_name,
             'operation': operation,
-            'z_value': -self.tableau[-1, -1],  # Negar para mostrar el valor correcto
-            'ratios': ratios if ratios else []
+            'objective_value': objective_value,
+            'is_optimal': is_optimal,
+            'is_feasible': is_feasible,
+            'ratios': ratios if ratios else [],
+            'dual_info': {
+                'primal_feasible': is_feasible,
+                'dual_feasible': is_optimal,
+                'status': 'Óptimo' if is_optimal else ('Factible' if is_feasible else 'No factible')
+            },
+            'tableau_info': {
+                'n_rows': self.n_constraints,
+                'n_cols': self.n_vars + self.n_constraints,
+                'basic_vars': [f'x{bv+1}' if bv < self.n_vars else f'S{bv-self.n_vars+1}' for bv in self.basic_vars]
+            },
+            'pivot_info': {
+                'row': pivot_row,
+                'col': pivot_col,
+                'element': float(self.tableau[pivot_row, pivot_col]) if pivot_row is not None and pivot_col is not None else None
+            } if pivot_row is not None and pivot_col is not None else None
         }
         self.iterations.append(iteration_data)
     
@@ -363,12 +398,7 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
     """
     Resuelve un problema de programación lineal usando el método Dual Simplex con tableau
     
-    Args:
-        objective_str: String de la función objetivo
-        constraints_list: Lista de strings con las restricciones
-    
-    Returns:
-        Dict con la solución y todas las iteraciones del tableau
+    NOTA: Para problemas con >= en minimización, se resuelve convirtiendo a forma estándar
     """
     try:
         # Parse objetivo
@@ -385,21 +415,14 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
             try:
                 coeffs, op, rhs = parse_constraint(constraint_str, n_vars)
                 
-                # Normalizar restricciones a forma estándar (<=)
-                if op == '<=':
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '<='})
-                elif op == '>=':
-                    # Para >=, convertir a <= multiplicando por -1
-                    coeffs_neg = [-c for c in coeffs]
-                    rhs_neg = -rhs
-                    if rhs_neg < 0:
-                        # Multiplicar de nuevo por -1 para tener RHS positivo
-                        coeffs_neg = [-c for c in coeffs_neg]
-                        rhs_neg = -rhs_neg
-                    constraints.append({'coeffs': coeffs_neg, 'rhs': rhs_neg, 'type': '>='})
-                elif op == '=':
-                    # Igualdad se trata como <=
-                    constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': '='})
+                # Para Dual Simplex, convertir >= en <= con coeficientes negados
+                # Ejemplo: x1 + 2x2 >= 6  →  -x1 - 2x2 + S1 = -6  (RHS negativo es OK para Dual Simplex)
+                if op == '>=':
+                    # Negar ambos lados: -x1 - 2x2 <= -6
+                    coeffs = [-c for c in coeffs]
+                    rhs = -rhs
+                
+                constraints.append({'coeffs': coeffs, 'rhs': rhs, 'type': op})
             except Exception as e:
                 continue
         
@@ -414,13 +437,6 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
         A = [c['coeffs'] for c in constraints]
         b = [c['rhs'] for c in constraints]
         
-        # Verificar que todos los RHS sean no negativos después de la normalización
-        for i, rhs_val in enumerate(b):
-            if rhs_val < 0:
-                # Si aún hay RHS negativo, multiplicar esa fila por -1
-                A[i] = [-coef for coef in A[i]]
-                b[i] = -rhs_val
-        
         # Crear y resolver tableau
         tableau = DualSimplexTableau(obj_coeffs, A, b, opt_type)
         result = tableau.solve()
@@ -428,8 +444,9 @@ def solve_dual_simplex_tableau(objective_str: str, constraints_list: List[str]) 
         return result
     
     except Exception as e:
+        import traceback
         return {
             'success': False,
             'status': 'error',
-            'error': f'Error al procesar el problema: {str(e)}'
+            'error': f'Error al procesar el problema: {str(e)}\n{traceback.format_exc()}'
         }

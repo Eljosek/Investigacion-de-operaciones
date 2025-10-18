@@ -4,13 +4,14 @@
 
 {% block content %}
 <div class="row method-simplex">
-    <div class="col-lg-10 mx-auto">
+    <div class="col-lg-11 mx-auto">
         <div class="text-center mb-4">
-            <h2 class="text-method-simplex">
-                <i class="fas fa-check-circle text-method-simplex"></i> Resultados del Método Simplex
+            <h2 class="text-success">
+                <i class="fas fa-check-circle"></i> Resultados del Método Simplex
             </h2>
         </div>
 
+        <!-- Problema Ingresado -->
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-success text-white">
                 <h4 class="mb-0"><i class="fas fa-file-alt"></i> Problema Ingresado</h4>
@@ -27,6 +28,7 @@
             </div>
         </div>
 
+        <!-- Solución Óptima -->
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0"><i class="fas fa-trophy"></i> Solución Óptima</h4>
@@ -60,38 +62,38 @@
             </div>
         </div>
 
-        <!-- Sección de Historial de Iteraciones -->
-        {% if iteration_history and iteration_history|length > 0 %}
+        <!-- Sección de Tableau Paso a Paso -->
+        {% if iterations and iterations|length > 0 %}
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-success text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-history"></i> Historial de Iteraciones del Método Simplex
-                    <span class="badge bg-light text-success ms-2">{{ iteration_history|length }} pasos</span>
+                    <i class="fas fa-table"></i> Tableau Paso a Paso
+                    <span class="badge bg-light text-success ms-2">{{ iterations|length }} iteraciones</span>
                 </h4>
             </div>
             <div class="card-body">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Propósito educativo:</strong> Este historial muestra los pasos conceptuales del algoritmo Simplex.
-                    Cada iteración representa una mejora en la función objetivo hasta llegar al óptimo.
+                    <strong>Propósito educativo:</strong> Se muestra cada iteración del método Simplex con su tableau completo.
+                    Las columnas y filas pivote se resaltan para facilitar el aprendizaje.
                 </div>
 
-                <div class="accordion" id="iterationAccordion">
-                    {% for step in iteration_history %}
+                <div class="accordion" id="tableauAccordion">
+                    {% for iter in iterations %}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ step.iteration }}">
+                        <h2 class="accordion-header" id="heading{{ iter.iteration }}">
                             <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
                                     type="button" 
                                     data-bs-toggle="collapse" 
-                                    data-bs-target="#collapse{{ step.iteration }}" 
+                                    data-bs-target="#collapse{{ iter.iteration }}" 
                                     aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" 
-                                    aria-controls="collapse{{ step.iteration }}">
+                                    aria-controls="collapse{{ iter.iteration }}">
                                 
                                 <div class="d-flex align-items-center w-100">
                                     <div class="me-3">
-                                        {% if step.iteration == 0 %}
+                                        {% if iter.iteration == 0 %}
                                             <i class="fas fa-play text-primary"></i>
-                                        {% elif step.is_optimal %}
+                                        {% elif loop.last %}
                                             <i class="fas fa-flag-checkered text-success"></i>
                                         {% else %}
                                             <i class="fas fa-arrow-right text-warning"></i>
@@ -100,128 +102,120 @@
                                     
                                     <div class="flex-grow-1">
                                         <strong>
-                                            {% if step.iteration == 0 %}
-                                                Configuración Inicial
-                                            {% elif step.is_optimal %}
-                                                Solución Óptima Encontrada
+                                            {% if iter.iteration == 0 %}
+                                                Tableau Inicial (Iteración 0)
+                                            {% elif loop.last %}
+                                                Solución Óptima (Iteración {{ iter.iteration }})
                                             {% else %}
-                                                Iteración {{ step.iteration }}
+                                                Iteración {{ iter.iteration }}
                                             {% endif %}
                                         </strong>
                                         
-                                        {% if step.objective_value is defined %}
                                         <span class="badge bg-success ms-2">
-                                            Z = {{ "%.2f"|format(step.objective_value) }}
+                                            Z = {{ "%.4g"|format(iter.z_value) }}
                                         </span>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </button>
                         </h2>
                         
-                        <div id="collapse{{ step.iteration }}" 
+                        <div id="collapse{{ iter.iteration }}" 
                              class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
-                             aria-labelledby="heading{{ step.iteration }}" 
-                             data-bs-parent="#iterationAccordion">
+                             aria-labelledby="heading{{ iter.iteration }}" 
+                             data-bs-parent="#tableauAccordion">
                             <div class="accordion-body">
                                 
-                                <!-- Descripción del paso -->
+                                <!-- Operación realizada -->
+                                {% if iter.operation %}
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle"></i> Operación:</h6>
+                                    <p class="mb-0"><strong>{{ iter.operation }}</strong></p>
+                                </div>
+                                {% endif %}
+
+                                <!-- Variables entrante y saliente -->
+                                {% if iter.entering_var is not none and iter.leaving_var is not none %}
                                 <div class="row mb-3">
-                                    <div class="col-12">
-                                        <h6><i class="fas fa-file-text text-info"></i> Descripción:</h6>
-                                        <p class="text-muted">{{ step.description }}</p>
+                                    <div class="col-md-6">
+                                        <div class="alert alert-success py-2 mb-0">
+                                            <strong><i class="fas fa-sign-in-alt"></i> Variable Entrante:</strong>
+                                            <span class="badge bg-success ms-2">x{{ iter.entering_var + 1 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="alert alert-warning py-2 mb-0">
+                                            <strong><i class="fas fa-sign-out-alt"></i> Variable Saliente:</strong>
+                                            {% if iter.leaving_var < (iter.tableau|length - 1) %}
+                                                <span class="badge bg-warning text-dark ms-2">s{{ iter.leaving_var + 1 - (iter.tableau[0]|length - iter.tableau|length + 1) }}</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark ms-2">x{{ iter.leaving_var + 1 }}</span>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
+                                {% endif %}
 
-                                <!-- Información del tableau -->
-                                {% if step.tableau_info %}
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-table text-success"></i> Información del Tableau:</h6>
-                                        <ul class="list-unstyled">
-                                            <li><strong>Tipo:</strong> {{ step.tableau_info.type|title }}</li>
-                                            {% if step.tableau_info.objective_type %}
-                                            <li><strong>Optimización:</strong> {{ step.tableau_info.objective_type }}</li>
-                                            {% endif %}
-                                            {% if step.tableau_info.operation %}
-                                            <li><strong>Operación:</strong> {{ step.tableau_info.operation|title }}</li>
-                                            {% endif %}
-                                            {% if step.tableau_info.progress %}
-                                            <li><strong>Progreso:</strong> {{ step.tableau_info.progress }}</li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                    
-                                    {% if step.tableau_info.basic_variables %}
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-list text-warning"></i> Variables Básicas:</h6>
-                                        <div class="d-flex flex-wrap">
-                                            {% for var in step.tableau_info.basic_variables %}
-                                            <span class="badge bg-secondary me-1 mb-1">{{ var }}</span>
+                                <!-- Tableau -->
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-bordered table-sm text-center">
+                                        <thead class="table-success">
+                                            <tr>
+                                                <th>Base</th>
+                                                {% for col_idx in range(iter.tableau[0]|length - 1) %}
+                                                    {% if col_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-warning{% endif %}">
+                                                            x{{ col_idx + 1 }}
+                                                        </th>
+                                                    {% else %}
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-warning{% endif %}">
+                                                            s{{ col_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}
+                                                        </th>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <th>RHS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row_idx in range(iter.tableau|length - 1) %}
+                                            <tr class="{% if iter.pivot_row == row_idx %}table-warning{% endif %}">
+                                                <!-- Variable básica -->
+                                                <td class="fw-bold">
+                                                    {% if iter.basic_vars[row_idx] < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                        x{{ iter.basic_vars[row_idx] + 1 }}
+                                                    {% else %}
+                                                        s{{ iter.basic_vars[row_idx] - (iter.tableau[0]|length - iter.tableau|length) + 1 }}
+                                                    {% endif %}
+                                                </td>
+                                                <!-- Coeficientes -->
+                                                {% for col_idx in range(iter.tableau[row_idx]|length) %}
+                                                    <td class="{% if iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-danger text-white fw-bold{% elif iter.pivot_row == row_idx or iter.pivot_col == col_idx %}table-warning{% endif %}">
+                                                        {{ "%.4g"|format(iter.tableau[row_idx][col_idx]) }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
                                             {% endfor %}
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                                            <!-- Fila Z -->
+                                            <tr class="table-primary fw-bold">
+                                                <td>Z</td>
+                                                {% for col_idx in range(iter.tableau[-1]|length) %}
+                                                    <td>{{ "%.4g"|format(iter.tableau[-1][col_idx]) }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                {% endif %}
 
-                                <!-- Variables que entran y salen -->
-                                {% if step.entering_var or step.leaving_var %}
-                                <div class="row mb-3">
-                                    {% if step.entering_var %}
-                                    <div class="col-md-6">
-                                        <div class="alert alert-success py-2">
-                                            <strong><i class="fas fa-arrow-down"></i> Variable que entra:</strong>
-                                            <span class="badge bg-success ms-2">{{ step.entering_var }}</span>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if step.leaving_var %}
-                                    <div class="col-md-6">
-                                        <div class="alert alert-warning py-2">
-                                            <strong><i class="fas fa-arrow-up"></i> Variable que sale:</strong>
-                                            <span class="badge bg-warning text-dark ms-2">{{ step.leaving_var }}</span>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                <!-- Información del pivoteo -->
-                                {% if step.pivot_info %}
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <div class="alert alert-info">
-                                            <h6><i class="fas fa-crosshairs"></i> Información de Pivoteo:</h6>
-                                            <p>{{ step.pivot_info }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                <!-- Estado de la solución -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="alert {% if step.feasible %}alert-success{% else %}alert-danger{% endif %} py-2">
-                                            <strong>Estado:</strong>
-                                            {% if step.feasible %}
-                                                <i class="fas fa-check text-success"></i> Factible
+                                <!-- Variables básicas actuales -->
+                                <div class="alert alert-secondary mt-3">
+                                    <h6><i class="fas fa-list"></i> Variables Básicas Actuales:</h6>
+                                    <div class="d-flex flex-wrap">
+                                        {% for var_idx in iter.basic_vars %}
+                                            {% if var_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
+                                                <span class="badge bg-primary me-2 mb-2">x{{ var_idx + 1 }}</span>
                                             {% else %}
-                                                <i class="fas fa-times text-danger"></i> No factible
+                                                <span class="badge bg-secondary me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
                                             {% endif %}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <div class="alert {% if step.is_optimal %}alert-success{% else %}alert-secondary{% endif %} py-2">
-                                            <strong>Optimalidad:</strong>
-                                            {% if step.is_optimal %}
-                                                <i class="fas fa-trophy text-success"></i> Óptimo alcanzado
-                                            {% else %}
-                                                <i class="fas fa-clock text-secondary"></i> En progreso
-                                            {% endif %}
-                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -231,15 +225,15 @@
                 </div>
 
                 <!-- Resumen final -->
-                <div class="alert alert-success mt-3">
+                <div class="alert alert-success mt-4">
                     <div class="row text-center">
                         <div class="col-md-4">
                             <h6><i class="fas fa-calculator"></i> Total de Iteraciones</h6>
-                            <span class="badge bg-success fs-6">{{ iteration_history|length - 1 }}</span>
+                            <span class="badge bg-success fs-6">{{ iterations|length - 1 }}</span>
                         </div>
                         <div class="col-md-4">
                             <h6><i class="fas fa-trophy"></i> Valor Óptimo</h6>
-                            <span class="badge bg-success fs-6">{{ optimal_value }}</span>
+                            <span class="badge bg-success fs-6">{{ "%.4g"|format(optimal_value) }}</span>
                         </div>
                         <div class="col-md-4">
                             <h6><i class="fas fa-check-circle"></i> Estado Final</h6>

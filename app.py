@@ -12,6 +12,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, jso
 from lp_solver import solve_lp_problem
 import simplex_solver
 import dual_simplex_solver
+import simplex_tableau
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)
@@ -87,7 +88,7 @@ def simplex():
 @app.route('/solve-simplex', methods=['POST'])
 def solve_simplex_route():
     """
-    Procesa el formulario y resuelve el problema usando método Simplex.
+    Procesa el formulario y resuelve el problema usando método Simplex con tableau.
     """
     try:
         objective = request.form.get('objective', '').strip()
@@ -100,7 +101,8 @@ def solve_simplex_route():
         constraints_list = [line.strip() for line in constraints_text.split('\n') 
                            if line.strip()]
         
-        result = simplex_solver.solve_simplex(objective, constraints_list)
+        # Usar el solver con tableau para mostrar iteraciones paso a paso
+        result = simplex_tableau.solve_simplex_tableau(objective, constraints_list)
         
         if not result['success']:
             flash(result['error'], 'error')
@@ -113,7 +115,8 @@ def solve_simplex_route():
                              solution=result.get('solution', {}),
                              optimal_value=result.get('optimal_value', 0),
                              opt_type=result.get('opt_type', 'max'),
-                             status=result.get('status', 'unknown'))
+                             status=result.get('status', 'unknown'),
+                             iterations=result.get('iterations', []))
         
     except Exception as e:
         flash(f'Error inesperado: {str(e)}', 'error')

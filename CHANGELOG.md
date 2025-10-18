@@ -6,7 +6,76 @@
 
 ---
 
-## 📋 FASE 1: LIMPIEZA DEL PROYECTO
+## 📋 FASE 2: VISUALIZACIÓN PASO A PASO MÉTODO SIMPLEX ✅
+
+### ➕ Archivos Creados
+
+#### 1. **simplex_tableau.py**
+   - **Razón:** Implementación manual del algoritmo Simplex con registro de iteraciones
+   - **Características:**
+     - Clase `SimplexTableau` con construcción de tableau desde cero
+     - Registro completo de cada iteración (tableau, variables básicas, pivotes)
+     - Identificación automática de columna y fila pivote
+     - Documentación de operaciones de fila realizadas
+     - Soporte para maximización y minimización
+     - Manejo de casos: óptimo, no acotado, máximo de iteraciones
+   - **Impacto:** Permite mostrar paso a paso el algoritmo para propósitos educativos
+
+#### 2. **test_tableau.py**
+   - **Razón:** Script de prueba para verificar el solver tableau
+   - **Impacto:** Testing temporal (será eliminado después)
+
+### 🔧 Archivos Modificados
+
+#### 1. **app.py**
+   - **Cambios:**
+     - Importado módulo `simplex_tableau`
+     - Ruta `/solve-simplex` ahora usa `simplex_tableau.solve_simplex_tableau()`
+     - Pasando `iterations` al template para mostrar paso a paso
+   - **Líneas modificadas:** 14 (import), 103-119 (ruta simplex)
+
+#### 2. **templates/simplex_results.html**
+   - **Cambios:**
+     - Reescrito completamente el acordeón de iteraciones
+     - Tabla HTML con tableau completo por iteración
+     - Resaltado de columna pivote (amarillo) y fila pivote (amarillo)
+     - Elemento pivote resaltado en rojo
+     - Identificación visual de variable entrante/saliente
+     - Numeración de iteraciones (0, 1, 2, ... hasta óptimo)
+     - Muestra valor de Z en cada iteración
+     - Operaciones de fila documentadas
+     - Variables básicas actuales por iteración
+   - **Características visuales:**
+     - Acordeón Bootstrap para navegación
+     - Íconos para iteración inicial, en progreso y óptimo
+     - Código de colores consistente (verde=success, amarillo=warning, rojo=pivot)
+     - Responsivo y accesible
+
+### 🐛 Correcciones de Bugs
+
+#### 1. **Valor óptimo negativo en maximización**
+   - **Problema:** El solver retornaba -9.0 cuando debía ser 9.0
+   - **Causa:** Doble negación al convertir max→min y al leer el resultado
+   - **Solución:** Simplificado la lógica, manteniendo -c en fila Z para max, leyendo RHS directamente
+   - **Archivos afectados:** `simplex_tableau.py` líneas 28-29, 85, 218-219
+
+### ✅ Pruebas Realizadas
+
+- **Caso de prueba:** max z = 3x1 + 2x2 s.a. x1 + x2 ≤ 4, 2x1 + x2 ≤ 5
+- **Resultado esperado:** Z = 9.0, x1 = 1.0, x2 = 3.0
+- **Resultado obtenido:** ✓ Correcto
+- **Iteraciones:** 3 (inicial + 2 pivotes)
+
+### 📊 Estadísticas
+
+- **Líneas de código añadidas:** ~420 (simplex_tableau.py + template)
+- **Líneas modificadas:** ~30 (app.py + imports)
+- **Complejidad temporal:** O(n×m) por iteración del Simplex
+- **Funcionalidad educativa:** 100% - muestra TODAS las iteraciones con detalle
+
+---
+
+## 📋 FASE 1: LIMPIEZA DEL PROYECTO ✅
 
 ### ❌ Archivos Eliminados
 

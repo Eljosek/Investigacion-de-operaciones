@@ -91,9 +91,9 @@ class DualSimplexTableau:
         # - MAX: Todos los reduced costs deben ser <= 0
         z_row = self.tableau[-1, :-1]
         if self.opt_type == 'min':
-            is_optimal = is_feasible and all(z_row >= -1e-10)
+            is_optimal = is_feasible and np.all(z_row >= -1e-10)
         else:  # MAX
-            is_optimal = is_feasible and all(z_row <= 1e-10)
+            is_optimal = is_feasible and np.all(z_row <= 1e-10)
         
         # Valor objetivo actual
         # El tableau siempre representa: Z + (costos)*x = RHS

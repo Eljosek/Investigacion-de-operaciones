@@ -147,7 +147,7 @@ class SimplexTableau:
         """Guarda el estado actual del tableau"""
         # Verificar optimalidad
         z_row = self.tableau[-1, :-1]
-        is_optimal = all(z_row >= -self.EPS)
+        is_optimal = np.all(z_row >= -self.EPS)
         
         # Valor objetivo actual
         z_value = self.tableau[-1, -1]

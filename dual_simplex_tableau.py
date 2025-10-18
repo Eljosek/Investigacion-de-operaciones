@@ -84,7 +84,9 @@ class DualSimplexTableau:
                        operation: str, ratios: Optional[List[Tuple[int, float]]] = None):
         """Guarda el estado actual del tableau"""
         # Verificar factibilidad primal (RHS no negativos)
-        is_feasible = all(self.tableau[i, -1] >= -1e-10 for i in range(self.n_constraints))
+        # IMPORTANTE: Usar np.all() para evitar error de ambigüedad con arrays
+        rhs_col = self.tableau[:self.n_constraints, -1]
+        is_feasible = np.all(rhs_col >= -1e-10)
         
         # Verificar optimalidad (factibilidad dual)
         # Para Dual Simplex:

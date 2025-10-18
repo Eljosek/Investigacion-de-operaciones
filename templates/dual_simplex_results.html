@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row method-dual">
-    <div class="col-lg-10 mx-auto">
+    <div class="col-lg-11 mx-auto">
         <div class="text-center mb-4">
             <h2 class="text-dual">
                 <i class="fas fa-check-circle"></i> Resultados del Método Dual Simplex
@@ -14,8 +14,9 @@
             </button>
         </div>
 
+        <!-- Problema Ingresado -->
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-info-dual text-white">
+            <div class="card-header bg-info-dual text-white" style="background-color: var(--color-dual) !important;">
                 <h4 class="mb-0"><i class="fas fa-file-alt"></i> Problema Ingresado</h4>
             </div>
             <div class="card-body">
@@ -30,8 +31,9 @@
             </div>
         </div>
 
+        <!-- Solución Óptima -->
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-info-dual text-white">
+            <div class="card-header bg-info-dual text-white" style="background-color: var(--color-dual) !important;">
                 <h4 class="mb-0"><i class="fas fa-trophy"></i> Solución Óptima</h4>
             </div>
             <div class="card-body">
@@ -63,188 +65,120 @@
             </div>
         </div>
 
-        <!-- Sección de Tableau Dual Simplex Paso a Paso -->
+        <!-- Sección de Tableau Paso a Paso -->
         {% if iterations and iterations|length > 0 %}
         <div class="card shadow-lg mb-4">
-            <div class="card-header bg-info-dual text-white">
+            <div class="card-header bg-info-dual text-white" style="background-color: var(--color-dual) !important;">
                 <h4 class="mb-0">
-                    <i class="fas fa-exchange-alt"></i> Tableau Dual Simplex Paso a Paso
+                    <i class="fas fa-table"></i> Tableau Paso a Paso
                     <span class="badge badge-dual ms-2">{{ iterations|length }} iteraciones</span>
                 </h4>
             </div>
             <div class="card-body">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Método Dual Simplex:</strong> Este método comienza con una solución básica dual factible (pero puede ser primal no factible) y mantiene la optimalidad dual mientras busca la factibilidad primal.
-                    Se resaltan las filas con RHS negativo y los cálculos de ratios para la selección del pivote.
+                    <strong>Propósito educativo:</strong> Se muestra cada iteración del método Simplex con su tableau completo.
+                    Las columnas y filas pivote se resaltan para facilitar el aprendizaje.
                 </div>
 
-                <div class="accordion" id="dualTableauAccordion">
+                <div class="accordion" id="tableauAccordion">
                     {% for iter in iterations %}
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="dualHeading{{ iter.iteration }}">
+                        <h2 class="accordion-header" id="heading{{ iter.iteration }}">
                             <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
                                     type="button" 
                                     data-bs-toggle="collapse" 
-                                    data-bs-target="#dualCollapse{{ iter.iteration }}" 
+                                    data-bs-target="#collapse{{ iter.iteration }}" 
                                     aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" 
-                                    aria-controls="dualCollapse{{ iter.iteration }}">
+                                    aria-controls="collapse{{ iter.iteration }}">
                                 
                                 <div class="d-flex align-items-center w-100">
                                     <div class="me-3">
                                         {% if iter.iteration == 0 %}
-                                            <i class="fas fa-play text-warning"></i>
-                                        {% elif iter.is_optimal %}
+                                            <i class="fas fa-play text-primary"></i>
+                                        {% elif loop.last %}
                                             <i class="fas fa-flag-checkered text-success"></i>
                                         {% else %}
-                                            <i class="fas fa-exchange-alt text-warning"></i>
+                                            <i class="fas fa-arrow-right text-warning"></i>
                                         {% endif %}
                                     </div>
                                     
                                     <div class="flex-grow-1">
                                         <strong>
                                             {% if iter.iteration == 0 %}
-                                                Conversión Primal → Dual
-                                            {% elif iter.is_optimal %}
-                                                Solución Dual Óptima
+                                                Tableau Inicial (Iteración 0)
+                                            {% elif loop.last %}
+                                                Solución Óptima (Iteración {{ iter.iteration }})
                                             {% else %}
-                                                Iteración Dual {{ iter.iteration }}
+                                                Iteración {{ iter.iteration }}
                                             {% endif %}
                                         </strong>
                                         
-                                        {% if iter.objective_value is defined %}
-                                        <span class="badge bg-warning text-dark ms-2">
-                                            Z = {{ "%.2f"|format(iter.objective_value) }}
+                                        <span class="badge bg-success ms-2">
+                                            Z = {{ "%.4g"|format(iter.objective_value) }}
                                         </span>
-                                        {% endif %}
                                     </div>
                                 </div>
                             </button>
                         </h2>
                         
-                        <div id="dualCollapse{{ iter.iteration }}" 
+                        <div id="collapse{{ iter.iteration }}" 
                              class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
-                             aria-labelledby="dualHeading{{ iter.iteration }}" 
-                             data-bs-parent="#dualIterationAccordion">
+                             aria-labelledby="heading{{ iter.iteration }}" 
+                             data-bs-parent="#tableauAccordion">
                             <div class="accordion-body">
                                 
-                                <!-- Descripción del paso -->
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <h6><i class="fas fa-file-text text-warning"></i> Descripción:</h6>
-                                        <p class="text-muted">{{ iter.description }}</p>
-                                    </div>
-                                </div>
-
-                                <!-- Información específica del dual -->
-                                {% if iter.dual_info %}
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-balance-scale text-warning"></i> Información Dual:</h6>
-                                        <ul class="list-unstyled">
-                                            {% if iter.dual_info.transformation %}
-                                            <li><strong>Transformación:</strong> {{ iter.dual_info.transformation }}</li>
-                                            {% endif %}
-                                            {% if iter.dual_info.dual_type %}
-                                            <li><strong>Tipo Dual:</strong> {{ iter.dual_info.dual_type }}</li>
-                                            {% endif %}
-                                            {% if iter.dual_info.feasibility_status %}
-                                            <li><strong>Factibilidad:</strong> {{ iter.dual_info.feasibility_status }}</li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                    
-                                    {% if iter.dual_info.dual_variables %}
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-list text-warning"></i> Variables Duales:</h6>
-                                        <div class="d-flex flex-wrap">
-                                            {% for var in iter.dual_info.dual_variables %}
-                                            <span class="badge bg-warning text-dark me-1 mb-1">{{ var }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                                <!-- Operación realizada -->
+                                {% if iter.operation %}
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle"></i> Operación:</h6>
+                                    <p class="mb-0"><strong>{{ iter.operation }}</strong></p>
                                 </div>
                                 {% endif %}
 
-                                <!-- Información del tableau (similar al simplex pero con enfoque dual) -->
-                                {% if iter.tableau_info %}
+                                <!-- Variables entrante y saliente -->
+                                {% if iter.entering_var is not none and iter.leaving_var is not none %}
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <h6><i class="fas fa-table text-warning"></i> Tableau Dual:</h6>
-                                        <ul class="list-unstyled">
-                                            <li><strong>Tipo:</strong> {{ iter.tableau_info.type|title }}</li>
-                                            {% if iter.tableau_info.dual_operation %}
-                                            <li><strong>Operación:</strong> {{ iter.tableau_info.dual_operation|title }}</li>
-                                            {% endif %}
-                                            {% if iter.tableau_info.progress %}
-                                            <li><strong>Progreso:</strong> {{ iter.tableau_info.progress }}</li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                    
-                                    {% if iter.tableau_info.basic_variables %}
-                                    <div class="col-md-6">
-                                        <h6><i class="fas fa-list text-warning"></i> Variables Básicas Duales:</h6>
-                                        <div class="d-flex flex-wrap">
-                                            {% for var in iter.tableau_info.basic_variables %}
-                                            <span class="badge bg-secondary me-1 mb-1">{{ var }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-
-                                <!-- Variables que entran y salen en el contexto dual -->
-                                {% if iter.entering_var or iter.leaving_var %}
-                                <div class="row mb-3">
-                                    {% if iter.entering_var %}
-                                    <div class="col-md-6">
-                                        <div class="alert alert-success py-2">
-                                            <strong><i class="fas fa-arrow-down"></i> Variable dual que entra:</strong>
+                                        <div class="alert alert-success py-2 mb-0">
+                                            <strong><i class="fas fa-sign-in-alt"></i> Variable Entrante:</strong>
                                             <span class="badge bg-success ms-2">{{ iter.entering_var }}</span>
                                         </div>
                                     </div>
-                                    {% endif %}
-                                    
-                                    {% if iter.leaving_var %}
                                     <div class="col-md-6">
-                                        <div class="alert alert-warning py-2">
-                                            <strong><i class="fas fa-arrow-up"></i> Variable dual que sale:</strong>
+                                        <div class="alert alert-warning py-2 mb-0">
+                                            <strong><i class="fas fa-sign-out-alt"></i> Variable Saliente:</strong>
                                             <span class="badge bg-warning text-dark ms-2">{{ iter.leaving_var }}</span>
                                         </div>
                                     </div>
-                                    {% endif %}
                                 </div>
                                 {% endif %}
 
-                                <!-- Información del pivoteo dual -->
+                                <!-- Información del pivote -->
                                 {% if iter.pivot_info %}
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <div class="alert alert-warning">
-                                            <h6><i class="fas fa-exchange-alt"></i> Pivoteo Dual:</h6>
-                                            <p>{{ iter.pivot_info }}</p>
-                                        </div>
-                                    </div>
+                                <div class="alert alert-primary">
+                                    <h6><i class="fas fa-crosshairs"></i> Información del Pivote:</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>Fila:</strong> {{ iter.pivot_info.row + 1 }}</li>
+                                        <li><strong>Columna:</strong> {{ iter.pivot_info.col + 1 }}</li>
+                                        <li><strong>Elemento Pivote:</strong> {{ "%.4g"|format(iter.pivot_info.element) }}</li>
+                                    </ul>
                                 </div>
                                 {% endif %}
 
-                                <!-- Tableau Dual -->
-                                {% if iter.tableau %}
+                                <!-- Tableau -->
                                 <div class="table-responsive mt-3">
                                     <table class="table table-bordered table-sm text-center">
-                                        <thead class="table-warning">
+                                        <thead class="table-success">
                                             <tr>
                                                 <th>Base</th>
                                                 {% for col_idx in range(iter.tableau[0]|length - 1) %}
                                                     {% if col_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
-                                                        <th class="{% if iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-warning{% endif %}">
                                                             x{{ col_idx + 1 }}
                                                         </th>
                                                     {% else %}
-                                                        <th class="{% if iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                        <th class="{% if iter.pivot_col == col_idx %}table-warning{% endif %}">
                                                             s{{ col_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}
                                                         </th>
                                                     {% endif %}
@@ -254,7 +188,7 @@
                                         </thead>
                                         <tbody>
                                             {% for row_idx in range(iter.tableau|length - 1) %}
-                                            <tr class="{% if iter.pivot_row == row_idx %}table-danger{% endif %}">
+                                            <tr class="{% if iter.pivot_row == row_idx %}table-warning{% endif %}">
                                                 <!-- Variable básica -->
                                                 <td class="fw-bold">
                                                     {% if iter.basic_vars[row_idx] < (iter.tableau[0]|length - iter.tableau|length + 1) %}
@@ -265,7 +199,7 @@
                                                 </td>
                                                 <!-- Coeficientes -->
                                                 {% for col_idx in range(iter.tableau[row_idx]|length) %}
-                                                    <td class="{% if iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-danger text-white fw-bold{% elif iter.pivot_row == row_idx or iter.pivot_col == col_idx %}table-danger{% endif %}">
+                                                    <td class="{% if iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-danger text-white fw-bold{% elif iter.pivot_row == row_idx or iter.pivot_col == col_idx %}table-warning{% endif %}">
                                                         {{ "%.4g"|format(iter.tableau[row_idx][col_idx]) }}
                                                     </td>
                                                 {% endfor %}
@@ -288,44 +222,39 @@
                                     <div class="d-flex flex-wrap">
                                         {% if iter.tableau_info and iter.tableau_info.basic_vars %}
                                             {% for var_name in iter.tableau_info.basic_vars %}
-                                                <span class="badge bg-warning me-2 mb-2">{{ var_name }}</span>
+                                                <span class="badge bg-primary me-2 mb-2">{{ var_name }}</span>
                                             {% endfor %}
                                         {% else %}
                                             {% for var_idx in iter.basic_vars %}
                                                 {% if var_idx < (iter.tableau[0]|length - iter.tableau|length + 1) %}
-                                                    <span class="badge bg-warning me-2 mb-2">x{{ var_idx + 1 }}</span>
+                                                    <span class="badge bg-primary me-2 mb-2">x{{ var_idx + 1 }}</span>
                                                 {% else %}
-                                                    <span class="badge bg-warning me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
+                                                    <span class="badge bg-secondary me-2 mb-2">s{{ var_idx - (iter.tableau[0]|length - iter.tableau|length) + 1 }}</span>
                                                 {% endif %}
                                             {% endfor %}
                                         {% endif %}
                                     </div>
                                 </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-                <!-- Resumen final dual -->
-                <div class="alert alert-warning mt-3">
+                <!-- Resumen final -->
+                <div class="alert alert-info mt-4" style="background-color: rgba(155, 89, 182, 0.1); border-color: var(--color-dual);">
                     <div class="row text-center">
-                        <div class="col-md-3">
-                            <h6><i class="fas fa-calculator"></i> Iteraciones Duales</h6>
-                            <span class="badge bg-warning text-dark fs-6">{{ iteration_history|length - 1 }}</span>
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-calculator"></i> Total de Iteraciones</h6>
+                            <span class="badge badge-dual fs-6">{{ iterations|length - 1 }}</span>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <h6><i class="fas fa-trophy"></i> Valor Óptimo</h6>
-                            <span class="badge bg-warning text-dark fs-6">{{ optimal_value }}</span>
+                            <span class="badge badge-dual fs-6">{{ "%.4g"|format(optimal_value) }}</span>
                         </div>
-                        <div class="col-md-3">
-                            <h6><i class="fas fa-balance-scale"></i> Teorema Dualidad</h6>
-                            <span class="badge bg-success fs-6">Verificado ✓</span>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <h6><i class="fas fa-check-circle"></i> Estado Final</h6>
-                            <span class="badge bg-success fs-6">Óptimo</span>
+                            <span class="badge badge-dual fs-6">Óptimo</span>
                         </div>
                     </div>
                 </div>
@@ -334,10 +263,17 @@
         {% endif %}
 
         <div class="text-center no-print">
-            <a href="{{ url_for('dual_simplex') }}" class="btn btn-warning btn-lg text-white">
+            <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg" style="background-color: var(--color-dual) !important; border-color: var(--color-dual) !important;">
                 <i class="fas fa-arrow-left text-white"></i> Resolver Otro Problema
             </a>
         </div>
     </div>
 </div>
+
+<style>
+.badge-dual {
+    background-color: var(--color-dual) !important;
+    color: white !important;
+}
+</style>
 {% endblock %}

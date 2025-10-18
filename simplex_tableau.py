@@ -141,6 +141,12 @@ class SimplexTableau:
         
         return tableau, basic_vars, artificial_vars
     
+    def _clean_small_values(self, value: float, tolerance: float = 1e-10) -> float:
+        """Redondea valores muy pequeños a 0 para evitar notación científica"""
+        if abs(value) < tolerance:
+            return 0.0
+        return value
+    
     def _save_iteration(self, pivot_col: Optional[int], pivot_row: Optional[int],
                        entering_var: Optional[int], leaving_var: Optional[int],
                        operation: str):
@@ -165,10 +171,16 @@ class SimplexTableau:
         entering_var_name = self._format_var_name(entering_var) if entering_var is not None else None
         leaving_var_name = self._format_var_name(leaving_var) if leaving_var is not None else None
         
+        # Limpiar tableau de valores muy pequeños
+        cleaned_tableau = np.zeros_like(self.tableau)
+        for i in range(self.tableau.shape[0]):
+            for j in range(self.tableau.shape[1]):
+                cleaned_tableau[i, j] = self._clean_small_values(float(self.tableau[i, j]))
+        
         iteration_data = {
             'iteration': self.current_iteration,
             'description': operation,
-            'tableau': self.tableau.copy(),
+            'tableau': cleaned_tableau.copy(),
             'basic_vars': self.basic_vars.copy(),
             'pivot_col': pivot_col,
             'pivot_row': pivot_row,
@@ -187,7 +199,7 @@ class SimplexTableau:
             'pivot_info': {
                 'row': pivot_row,
                 'col': pivot_col,
-                'element': round(float(self.tableau[pivot_row, pivot_col]), 4)
+                'element': round(self._clean_small_values(float(self.tableau[pivot_row, pivot_col])), 4)
             } if pivot_row is not None and pivot_col is not None else None
         }
         self.iterations.append(iteration_data)

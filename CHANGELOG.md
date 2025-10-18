@@ -6,6 +6,93 @@
 
 ---
 
+## 📚 FASE 5: REESCRITURA COMPLETA DE SECCIÓN ABOUT ✅
+
+### 🔧 Archivos Modificados
+
+#### 1. **templates/about.html** (Reescritura completa)
+   - **Cambios:**
+     - **Contenido balanceado entre los 3 métodos:**
+       - Eliminado sesgo hacia método gráfico únicamente
+       - Secciones detalladas para Gráfico, Simplex, y Dual Simplex con igual profundidad
+       - Cada método tiene: fundamento teórico, procedimiento paso a paso, ventajas, limitaciones, y casos de uso
+     
+     - **Estructura reorganizada:**
+       - **Introducción a PL:** Componentes (variables, función objetivo, restricciones) y aplicaciones prácticas
+       - **Tarjetas de métodos:** Cards visuales con colores distintivos (azul/verde/púrpura) y botones CTA
+       - **Secciones detalladas por método:**
+         - Método Gráfico: Procedimiento en 5 pasos, teorema fundamental, casos ideales
+         - Método Simplex: Fundamento (vértices del poliedro), 6 fases del algoritmo, ventajas de escalabilidad
+         - Dual Simplex: Concepto de dualidad, procedimiento con ratios zⱼ/aᵢⱼ, aplicaciones especiales
+       - **Tabla comparativa:** Características lado a lado de los 3 métodos
+       - **Características de la app:** Enfoque educativo, implementación técnica, sistema de diseño
+     
+     - **Contenido educativo mejorado:**
+       - Explicación de teorema fundamental de PL (solución en vértices)
+       - Diferencias clave entre Simplex (columna primero) y Dual (fila primero)
+       - Highlighting de visualizaciones pedagógicas (pivotes, RHS negativo)
+       - Casos de uso específicos por método
+     
+     - **Información técnica:**
+       - Stack tecnológico: Python 3.13, Flask 3.1, NumPy, Matplotlib, Bootstrap 5
+       - Algoritmos implementados manualmente (no solo wrappers)
+       - Sistema de colores distintivos y modo oscuro
+     
+     - **Sección académica:**
+       - Universidad Tecnológica de Pereira (UTP)
+       - Profesora Bibiana Patricia Arias Villada
+       - Desarrollador José Miguel Herrera Gutiérrez
+       - Badges de tecnologías utilizadas
+   
+   - **Estadísticas:**
+     - De ~386 líneas a ~450 líneas
+     - 3 secciones detalladas (una por método)
+     - 1 tabla comparativa con 6 características
+     - Contenido académico y profesional balanceado
+   
+   - **Impacto:** 
+     - Transforma la página de "solo gráfico" a "guía completa de 3 métodos"
+     - Proporciona valor educativo para entender cuándo usar cada método
+     - Mejora percepción de completitud y profesionalismo del proyecto
+
+### ✨ Contenido Nuevo Destacado
+
+**Método Gráfico - Detalle:**
+- Procedimiento: graficar restricciones → región factible → vértices → evaluar Z → seleccionar óptimo
+- Teorema: Si existe óptimo finito, está en un vértice
+- Casos ideales: mezcla 2 productos, 2 recursos, enseñanza
+
+**Método Simplex - Detalle:**
+- Fundamento: Movimiento sistemático entre vértices del poliedro convexo
+- 6 fases: forma estándar → tableau inicial → test optimalidad → selección pivote → operaciones fila → iterar
+- Ventajas: escalable (cientos de variables), eficiente en práctica, robusto
+
+**Método Dual Simplex - Detalle:**
+- Concepto: Solución dual factible → factibilidad primal, manteniendo optimalidad dual
+- Procedimiento: fila saliente (RHS más negativo) → columna entrante (ratio zⱼ/aᵢⱼ mínimo) → pivot
+- Diferencia clave: Orden invertido vs Simplex (fila primero, columna después)
+- Aplicaciones: post-optimización, sensibilidad, problemas con ≥, branch & bound
+
+**Tabla Comparativa:**
+| Característica | Gráfico | Simplex | Dual Simplex |
+|---|---|---|---|
+| Variables | 2 | 2 a n | 2 a n |
+| Complejidad visual | Baja | Media | Media-Alta |
+| Aprendizaje | Excelente | Muy bueno | Avanzado |
+| Restricciones ideales | ≤, ≥, = | ≤ (max) | ≥ (min) |
+| Visualización | Gráfica | Tableau | Tableau + ratios |
+
+### 🎯 Resultado
+
+La sección About ahora:
+- **Educa completamente** sobre los 3 métodos con igual profundidad
+- **Guía la selección** del método adecuado según el problema
+- **Demuestra profesionalismo** académico y técnico
+- **Usa colores distintivos** (azul/verde/púrpura) consistentes con el diseño
+- **Proporciona contexto** académico completo (UTP, profesora, estudiante)
+
+---
+
 ## 🎨 FASE 4: TEMATIZACIÓN UI/UX Y MODERNIZACIÓN VISUAL ✅
 
 ### 🎨 Diseño y Paleta de Colores

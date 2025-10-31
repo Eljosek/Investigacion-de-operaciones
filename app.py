@@ -277,12 +277,7 @@ if __name__ == '__main__':
     print("🎓 Investigación de Operaciones - Segundo Parcial")
     print("👨‍💻 Desarrollado por José Miguel Herrera Gutiérrez para UTP")
     print("👩‍🏫 Profesora: Bibiana Patricia Arias Villada")
-    
-    if debug:
-        print("🌐 Abre tu navegador en: http://localhost:5000")
-    else:
-        print(f"🌐 Servidor ejecutándose en puerto: {port}")
-    
+    print(f"🌐 Abre tu navegador en: http://localhost:{port}")
     print("-" * 50)
     
     app.run(debug=debug, host='0.0.0.0', port=port)

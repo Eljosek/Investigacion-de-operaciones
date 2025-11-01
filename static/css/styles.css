@@ -27,6 +27,10 @@
     --color-dual-light: #a855f7;
     --color-dual-dark: #7e22ce;
     
+    --color-two-phase: #f97316;    /* Naranja coral para Dos Fases */
+    --color-two-phase-light: #fb923c;
+    --color-two-phase-dark: #ea580c;
+    
     /* Sombras y efectos */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -214,6 +218,59 @@ h6 { font-size: 1rem; }
     background-color: rgba(147, 51, 234, 0.1);
     border-left: 4px solid var(--color-dual);
     color: var(--text-color);
+}
+
+/* MÃ©todo Simplex Dos Fases - Naranja Coral */
+.method-two-phase .card-header,
+.method-two-phase .btn-two-phase,
+.bg-method-two-phase,
+.bg-two-phase {
+    background: linear-gradient(135deg, var(--color-two-phase) 0%, var(--color-two-phase-light) 100%) !important;
+    border: none;
+    color: white !important;
+}
+
+.method-two-phase h2,
+.method-two-phase .text-method-two-phase,
+.text-two-phase {
+    color: var(--color-two-phase);
+}
+
+.method-two-phase .badge-two-phase {
+    background-color: var(--color-two-phase);
+    color: white;
+}
+
+.method-two-phase .table-warning thead {
+    background-color: var(--color-two-phase) !important;
+    color: white;
+}
+
+.method-two-phase .alert-info {
+    background-color: rgba(249, 115, 22, 0.1);
+    border-left: 4px solid var(--color-two-phase);
+    color: var(--text-color);
+}
+
+.border-two-phase {
+    border-color: var(--color-two-phase) !important;
+}
+
+.btn-two-phase {
+    background: linear-gradient(135deg, var(--color-two-phase) 0%, var(--color-two-phase-light) 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    transition: all var(--transition-base);
+}
+
+.btn-two-phase:hover {
+    background: linear-gradient(135deg, var(--color-two-phase-dark) 0%, var(--color-two-phase) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
 }
 
 /* Cards con efectos mejorados */
@@ -728,10 +785,10 @@ code {
     margin: 0.25rem 0;
 }
 /* ========================================
-   ESTILOS PARA IMPRESIÓN (Print Styles)
+   ESTILOS PARA IMPRESIï¿½N (Print Styles)
    ======================================== */
 @media print {
-    /* Ocultar elementos de navegación y botones */
+    /* Ocultar elementos de navegaciï¿½n y botones */
     .navbar, 
     .no-print, 
     .btn, 
@@ -745,7 +802,7 @@ code {
         display: none !important;
     }
     
-    /* Ajustar el body para impresión */
+    /* Ajustar el body para impresiï¿½n */
     body {
         background-color: white !important;
         color: black !important;
@@ -838,7 +895,7 @@ code {
         print-color-adjust: exact;
     }
     
-    /* Títulos y encabezados */
+    /* Tï¿½tulos y encabezados */
     h1, h2, h3, h4, h5, h6 {
         color: #000 !important;
         page-break-after: avoid;
@@ -850,7 +907,7 @@ code {
         text-decoration: none !important;
     }
     
-    /* Evitar cortes de página molestos */
+    /* Evitar cortes de pï¿½gina molestos */
     h2, h3, h4, h5, h6 {
         page-break-after: avoid;
     }
@@ -859,12 +916,12 @@ code {
         page-break-inside: avoid;
     }
     
-    /* Agregar márgenes de página */
+    /* Agregar mï¿½rgenes de pï¿½gina */
     @page {
         margin: 2cm;
     }
     
-    /* Container full width para impresión */
+    /* Container full width para impresiï¿½n */
     .container, .container-fluid {
         width: 100% !important;
         max-width: 100% !important;
@@ -999,7 +1056,7 @@ code {
     20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-/* Responsive mejoras para móvil */
+/* Responsive mejoras para mï¿½vil */
 @media (max-width: 768px) {
     .card {
         margin-bottom: 1rem;

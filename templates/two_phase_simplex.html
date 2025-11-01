@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Método Simplex Dos Fases - Programación Lineal{% endblock %}
+
+{% block content %}
+<div class="row method-two-phase">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-method-two-phase">
+                <i class="fas fa-layer-group text-method-two-phase"></i> Método Simplex Dos Fases
+            </h1>
+            <p class="lead text-muted">
+                Resuelve problemas con restricciones mixtas (<=, >=, =) usando variables artificiales
+            </p>
+        </div>
+
+        <div class="card shadow-lg border-two-phase">
+            <div class="card-header bg-method-two-phase text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit"></i> Ingresa tu problema
+                </h3>
+            </div>
+            
+            <div class="card-body">
+                <form action="{{ url_for('solve_two_phase_simplex_route') }}" method="POST" id="twoPhaseForm">
+                    <div class="mb-4">
+                        <label for="objective" class="form-label">
+                            <i class="fas fa-bullseye"></i> <strong>Función Objetivo</strong>
+                            <i class="fas fa-question-circle text-muted ms-2" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="right" 
+                               title="Ingresa la función a optimizar. Dos Fases funciona para MAX y MIN"></i>
+                        </label>
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               id="objective" 
+                               name="objective" 
+                               placeholder="Ejemplo: max z = 3x1 + 5x2" 
+                               required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Formatos: "max z = 3x1 + 2x2" o "min z = 5x1 + 4x2 + 3x3"
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="constraints" class="form-label">
+                            <i class="fas fa-list"></i> <strong>Restricciones</strong>
+                            <i class="fas fa-question-circle text-muted ms-2" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-placement="right" 
+                               title="Dos Fases maneja cualquier tipo de restricción: <=, >=, o ="></i>
+                        </label>
+                        <textarea class="form-control" 
+                                  id="constraints" 
+                                  name="constraints" 
+                                  rows="7" 
+                                  placeholder="Una restricción por línea:&#10;4x1 + x2 >= 4&#10;-x1 + 2x2 >= 2&#10;x2 <= 3&#10;x1 >= 0&#10;x2 >= 0" 
+                                  required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> <strong>Ideal para:</strong> Restricciones >=, = o mixtas (requiere variables artificiales)
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>¿Cuándo usar Dos Fases?</strong><br>
+                        <ul class="mb-0 mt-2">
+                            <li>Cuando tienes restricciones <strong>>=</strong> o <strong>=</strong></li>
+                            <li>Cuando el Simplex estándar no puede iniciar (no hay solución básica obvia)</li>
+                            <li>Para problemas con variables artificiales</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-two-phase btn-lg">
+                            <i class="fas fa-calculator"></i> Resolver con Dos Fases
+                        </button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearTwoPhaseForm()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button type="button" class="btn btn-outline-warning" onclick="loadTwoPhaseExample()">
+                                <i class="fas fa-lightbulb"></i> Cargar Ejemplo
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-book"></i> ¿Cómo funciona el Método Dos Fases?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Fase I:</strong> Minimiza la suma de variables artificiales para encontrar una solución básica factible.</p>
+                    <p><strong>Fase II:</strong> Optimiza la función objetivo original usando la solución encontrada en Fase I.</p>
+                    <p class="mb-0">Si Fase I termina con W=0, el problema es <strong>factible</strong> y continúa a Fase II. Si W>0, el problema es <strong>infactible</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function clearTwoPhaseForm() {
+    document.getElementById('twoPhaseForm').reset();
+}
+
+function loadTwoPhaseExample() {
+    document.getElementById('objective').value = 'max z = 3x1 + 5x2';
+    document.getElementById('constraints').value = '4x1 + x2 >= 4\n-x1 + 2x2 >= 2\nx2 <= 3\nx1 >= 0\nx2 >= 0';
+}
+
+// Activar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}

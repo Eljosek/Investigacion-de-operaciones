@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados - Método Simplex Dos Fases{% endblock %}
+
+{% block content %}
+<div class="row method-two-phase">
+    <div class="col-lg-11 mx-auto">
+        <div class="text-center mb-4">
+            <h2 class="text-two-phase">
+                <i class="fas fa-check-circle"></i> Resultados del Método Simplex Dos Fases
+            </h2>
+            <button onclick="window.print()" class="btn btn-two-phase mt-3 no-print">
+                <i class="fas fa-print"></i> Imprimir Resultados
+            </button>
+        </div>
+
+        <!-- Problema Ingresado -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-two-phase text-white">
+                <h4 class="mb-0"><i class="fas fa-file-alt"></i> Problema Ingresado</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Función Objetivo:</strong> {{ objective }}</p>
+                <p><strong>Tipo:</strong> {% if opt_type == 'max' %}Maximización{% else %}Minimización{% endif %}</p>
+                <p><strong>Restricciones:</strong></p>
+                <ul>
+                    {% for constraint in constraints %}
+                    <li>{{ constraint }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Resumen de las Dos Fases -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-two-phase text-white">
+                <h4 class="mb-0"><i class="fas fa-layer-group"></i> Resumen de Ejecución</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">Fase I</h5>
+                                <p class="display-6">{{ iterations_phase1|length }} iteraciones</p>
+                                <p class="text-muted">Búsqueda de factibilidad</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title text-success">Fase II</h5>
+                                <p class="display-6">{{ iterations_phase2|length }} iteraciones</p>
+                                <p class="text-muted">Optimización</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title text-warning">Total</h5>
+                                <p class="display-6">{{ total_iterations }} iteraciones</p>
+                                <p class="text-muted">Ambas fases</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solución Óptima -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-two-phase text-white">
+                <h4 class="mb-0"><i class="fas fa-trophy"></i> Solución Óptima</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h3 class="text-center">
+                        <strong>{% if opt_type == 'min' %}Z mínimo{% else %}Z máximo{% endif %} = {{ optimal_value|smart_number }}</strong>
+                    </h3>
+                </div>
+                
+                <h5><i class="fas fa-calculator"></i> Valores de las Variables de Decisión:</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-warning">
+                            <tr>
+                                <th>Variable</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for var, val in solution.items() %}
+                            <tr>
+                                <td><strong>{{ var }}</strong></td>
+                                <td>{{ val|smart_number }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if result.is_degenerate %}
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Solución Degenerada:</strong> Al menos una variable básica tiene valor cero.
+                </div>
+                {% endif %}
+
+                {% if result.has_multiple_solutions %}
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Posibles Soluciones Múltiples:</strong> Existe al menos una variable no básica con coeficiente cero en la fila Z.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- FASE I - Iteraciones -->
+        {% if iterations_phase1 and iterations_phase1|length > 0 %}
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-search"></i> FASE I: Búsqueda de Factibilidad
+                    <span class="badge bg-light text-dark ms-2">{{ iterations_phase1|length }} iteraciones</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Objetivo de Fase I:</strong> Minimizar W = suma de variables artificiales para encontrar una solución básica factible.
+                    Si W = 0, el problema es factible y se continúa a Fase II.
+                </p>
+
+                <div class="accordion" id="accordionPhase1">
+                    {% for iter in iterations_phase1 %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPhase1_{{ iter.iteration }}">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapsePhase1_{{ iter.iteration }}" 
+                                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}">
+                                <div class="d-flex align-items-center w-100">
+                                    <div class="me-3">
+                                        {% if iter.iteration == 0 %}
+                                            <i class="fas fa-play text-primary"></i>
+                                        {% elif iter.status == 'optimal' %}
+                                            <i class="fas fa-flag-checkered text-success"></i>
+                                        {% else %}
+                                            <i class="fas fa-forward text-info"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <strong>Iteración {{ iter.iteration }}</strong>
+                                        <span class="mx-2">|</span>
+                                        <span class="text-muted">W = {{ iter.w_value|smart_number }}</span>
+                                        {% if iter.entering_var %}
+                                            <span class="mx-2">|</span>
+                                            <small>
+                                                Entra: <span class="badge bg-success">{{ iter.entering_var }}</span>
+                                                Sale: <span class="badge bg-danger">{{ iter.leaving_var }}</span>
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapsePhase1_{{ iter.iteration }}" 
+                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                             data-bs-parent="#accordionPhase1">
+                            <div class="accordion-body">
+                                <!-- Información de la iteración -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="alert alert-light">
+                                            <strong>W:</strong> {{ iter.w_value|smart_number }}<br>
+                                            <strong>Base:</strong> {{ iter.basic_var_names|join(', ') }}
+                                        </div>
+                                    </div>
+                                    {% if iter.entering_var %}
+                                    <div class="col-md-6">
+                                        <div class="alert alert-light">
+                                            <strong><i class="fas fa-sign-in-alt"></i> Variable Entrante:</strong>
+                                            <span class="badge bg-success ms-2">{{ iter.entering_var }}</span><br>
+                                            <strong><i class="fas fa-sign-out-alt"></i> Variable Saliente:</strong>
+                                            <span class="badge bg-danger ms-2">{{ iter.leaving_var }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Tableau -->
+                                <h6><i class="fas fa-table"></i> Tableau:</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm text-center">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>Base</th>
+                                                {% for col_idx in range(iter.tableau[0]|length - 1) %}
+                                                    <th class="{% if iter.pivot_col is defined and iter.pivot_col == col_idx %}table-warning{% endif %}">
+                                                        Col {{ col_idx }}
+                                                    </th>
+                                                {% endfor %}
+                                                <th>RHS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row_idx in range(iter.tableau|length - 1) %}
+                                            <tr class="{% if iter.pivot_row is defined and iter.pivot_row == row_idx %}table-warning{% endif %}">
+                                                <td class="fw-bold">{{ iter.basic_var_names[row_idx] }}</td>
+                                                {% for col_idx in range(iter.tableau[0]|length) %}
+                                                    <td class="{% if iter.pivot_row is defined and iter.pivot_col is defined and iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-warning fw-bold{% endif %}">
+                                                        {{ iter.tableau[row_idx][col_idx]|smart_number }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                            <!-- Fila W -->
+                                            <tr class="table-primary fw-bold">
+                                                <td>W</td>
+                                                {% for col_idx in range(iter.tableau[0]|length) %}
+                                                    <td>{{ iter.tableau[iter.tableau|length - 1][col_idx]|smart_number }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {% if iter.status == 'optimal' %}
+                                <div class="alert alert-success mt-3">
+                                    <i class="fas fa-check-circle"></i> <strong>Fase I completada:</strong> W = 0, problema FACTIBLE.
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- FASE II - Iteraciones -->
+        {% if iterations_phase2 and iterations_phase2|length > 0 %}
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-line"></i> FASE II: Optimización
+                    <span class="badge bg-light text-dark ms-2">{{ iterations_phase2|length }} iteraciones</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="alert alert-success">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Objetivo de Fase II:</strong> Optimizar la función objetivo original usando la solución básica factible encontrada en Fase I.
+                </p>
+
+                <div class="accordion" id="accordionPhase2">
+                    {% for iter in iterations_phase2 %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPhase2_{{ iter.iteration }}">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapsePhase2_{{ iter.iteration }}" 
+                                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}">
+                                <div class="d-flex align-items-center w-100">
+                                    <div class="me-3">
+                                        {% if iter.iteration == 0 %}
+                                            <i class="fas fa-play text-success"></i>
+                                        {% elif iter.status == 'optimal' %}
+                                            <i class="fas fa-trophy text-warning"></i>
+                                        {% else %}
+                                            <i class="fas fa-forward text-info"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <strong>Iteración {{ iter.iteration }}</strong>
+                                        <span class="mx-2">|</span>
+                                        <span class="text-muted">Z = {{ iter.z_value|smart_number }}</span>
+                                        {% if iter.entering_var %}
+                                            <span class="mx-2">|</span>
+                                            <small>
+                                                Entra: <span class="badge bg-success">{{ iter.entering_var }}</span>
+                                                Sale: <span class="badge bg-danger">{{ iter.leaving_var }}</span>
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapsePhase2_{{ iter.iteration }}" 
+                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                             data-bs-parent="#accordionPhase2">
+                            <div class="accordion-body">
+                                <!-- Información de la iteración -->
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="alert alert-light">
+                                            <strong>Z:</strong> {{ iter.z_value|smart_number }}<br>
+                                            <strong>Base:</strong> {{ iter.basic_var_names|join(', ') }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="alert alert-light">
+                                            <strong>Solución Actual:</strong><br>
+                                            {% for var, val in iter.solution.items() %}
+                                                {{ var }} = {{ val|smart_number }}{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% if iter.entering_var %}
+                                    <div class="col-md-4">
+                                        <div class="alert alert-light">
+                                            <strong><i class="fas fa-sign-in-alt"></i> Variable Entrante:</strong>
+                                            <span class="badge bg-success ms-2">{{ iter.entering_var }}</span><br>
+                                            <strong><i class="fas fa-sign-out-alt"></i> Variable Saliente:</strong>
+                                            <span class="badge bg-danger ms-2">{{ iter.leaving_var }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Tableau -->
+                                <h6><i class="fas fa-table"></i> Tableau:</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm text-center">
+                                        <thead class="table-success">
+                                            <tr>
+                                                <th>Base</th>
+                                                {% for col_idx in range(iter.tableau[0]|length - 1) %}
+                                                    <th class="{% if iter.pivot_col is defined and iter.pivot_col == col_idx %}table-warning{% endif %}">
+                                                        Col {{ col_idx }}
+                                                    </th>
+                                                {% endfor %}
+                                                <th>RHS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row_idx in range(iter.tableau|length - 1) %}
+                                            <tr class="{% if iter.pivot_row is defined and iter.pivot_row == row_idx %}table-warning{% endif %}">
+                                                <td class="fw-bold">{{ iter.basic_var_names[row_idx] }}</td>
+                                                {% for col_idx in range(iter.tableau[0]|length) %}
+                                                    <td class="{% if iter.pivot_row is defined and iter.pivot_col is defined and iter.pivot_row == row_idx and iter.pivot_col == col_idx %}bg-warning fw-bold{% endif %}">
+                                                        {{ iter.tableau[row_idx][col_idx]|smart_number }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                            <!-- Fila Z -->
+                                            <tr class="table-success fw-bold">
+                                                <td>Z</td>
+                                                {% for col_idx in range(iter.tableau[0]|length) %}
+                                                    <td>{{ iter.tableau[iter.tableau|length - 1][col_idx]|smart_number }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {% if iter.status == 'optimal' %}
+                                <div class="alert alert-success mt-3">
+                                    <i class="fas fa-trophy"></i> <strong>Solución Óptima Alcanzada:</strong> Z* = {{ "%.4f"|format(iter.z_value) }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Botones de Acción -->
+        <div class="text-center mb-5 no-print">
+            <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase btn-lg">
+                <i class="fas fa-redo"></i> Resolver Otro Problema
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home"></i> Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: white !important;
+        }
+    }
+</style>
+{% endblock %}

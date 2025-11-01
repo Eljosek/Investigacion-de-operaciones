@@ -14,15 +14,44 @@ from flask import Flask, render_template, request, flash, redirect, url_for, jso
 from lp_solver import solve_lp_problem
 import simplex_tableau
 import dual_simplex_tableau
+import two_phase_simplex
 
 # Recargar módulos en cada petición (útil en desarrollo)
 if 'WERKZEUG_RUN_MAIN' in os.environ or not os.environ.get('FLASK_ENV'):
     importlib.reload(simplex_tableau)
     importlib.reload(dual_simplex_tableau)
+    importlib.reload(two_phase_simplex)
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'utp-investigacion-operaciones-jose-herrera-2025')
+
+# Filtro personalizado para formatear números de manera inteligente
+@app.template_filter('smart_number')
+def smart_number_filter(value):
+    """
+    Formatea números de manera inteligente:
+    - Enteros se muestran sin decimales
+    - Decimales se muestran con máximo 2-4 decimales significativos
+    """
+    try:
+        num = float(value)
+        # Si es muy cercano a cero, mostrar como 0
+        if abs(num) < 1e-10:
+            return "0"
+        # Si es un entero (o muy cercano), mostrar sin decimales
+        if abs(num - round(num)) < 1e-10:
+            return str(int(round(num)))
+        # Si tiene decimales, mostrar con 2 decimales
+        if abs(num) >= 0.01:
+            formatted = f"{num:.2f}"
+            # Eliminar ceros innecesarios al final
+            formatted = formatted.rstrip('0').rstrip('.')
+            return formatted
+        # Para números muy pequeños, usar notación científica
+        return f"{num:.2e}"
+    except (ValueError, TypeError):
+        return str(value)
 
 @app.route('/')
 def index():
@@ -179,6 +208,52 @@ def solve_dual_simplex_route():
         flash(f'Error inesperado: {str(e)}', 'error')
         return redirect(url_for('dual_simplex'))
 
+@app.route('/two-phase-simplex')
+def two_phase_simplex_route():
+    """
+    Página para resolver problemas usando el método Simplex Dos Fases.
+    """
+    return render_template('two_phase_simplex.html')
+
+@app.route('/solve-two-phase-simplex', methods=['POST'])
+def solve_two_phase_simplex_route():
+    """
+    Procesa el formulario y resuelve el problema usando método Simplex Dos Fases.
+    """
+    try:
+        objective = request.form.get('objective', '').strip()
+        constraints_text = request.form.get('constraints', '').strip()
+        
+        if not objective or not constraints_text:
+            flash('Por favor completa todos los campos.', 'error')
+            return redirect(url_for('two_phase_simplex_route'))
+        
+        constraints_list = [line.strip() for line in constraints_text.split('\n') 
+                           if line.strip()]
+        
+        # Usar el solver Dos Fases
+        result = two_phase_simplex.solve_two_phase_simplex(objective, constraints_list)
+        
+        if not result['success']:
+            flash(result.get('error', 'Error desconocido'), 'error')
+            return redirect(url_for('two_phase_simplex_route'))
+        
+        return render_template('two_phase_simplex_results.html', 
+                             objective=objective,
+                             constraints=constraints_list,
+                             result=result,
+                             solution=result.get('solution', {}),
+                             optimal_value=result.get('optimal_value', 0),
+                             opt_type=result.get('opt_type', 'max'),
+                             status=result.get('status', 'unknown'),
+                             iterations_phase1=result.get('iterations_phase1', []),
+                             iterations_phase2=result.get('iterations_phase2', []),
+                             total_iterations=result.get('total_iterations', 0))
+        
+    except Exception as e:
+        flash(f'Error inesperado: {str(e)}', 'error')
+        return redirect(url_for('two_phase_simplex_route'))
+
 @app.route('/about')
 def about():
     """
@@ -249,6 +324,26 @@ def examples():
             'description': 'Problema de minimización de costos con múltiples restricciones >=.',
             'icon': 'exchange-alt',
             'color': 'info'
+        },
+        
+        # Ejemplos para Método Simplex Dos Fases
+        {
+            'title': 'Dos Fases - Restricciones Mayor o Igual',
+            'method': 'two-phase',
+            'objective': 'maximizar z = 3x1 + 5x2',
+            'constraints': '4x1 + x2 >= 4\n-x1 + 2x2 >= 2\nx2 <= 3\nx1 >= 0\nx2 >= 0',
+            'description': 'Problema con restricciones >= que requiere variables artificiales.',
+            'icon': 'layer-group',
+            'color': 'two-phase'
+        },
+        {
+            'title': 'Dos Fases - Restricciones Mixtas',
+            'method': 'two-phase',
+            'objective': 'minimizar z = 2x1 + 3x2 + x3',
+            'constraints': 'x1 + 2x2 + x3 >= 10\nx1 + x2 = 5\n2x1 + x3 <= 8\nx1 >= 0\nx2 >= 0\nx3 >= 0',
+            'description': 'Problema con mezcla de restricciones <=, >=, y =.',
+            'icon': 'layer-group',
+            'color': 'two-phase'
         }
     ]
     
@@ -273,7 +368,7 @@ if __name__ == '__main__':
     debug = os.environ.get('DEBUG', 'True').lower() == 'true'
     
     print("🚀 Iniciando aplicación de Programación Lineal...")
-    print("📊 Métodos: Gráfico, Simplex y Dual Simplex")
+    print("📊 Métodos: Gráfico, Simplex, Dual Simplex y Dos Fases")
     print("🎓 Investigación de Operaciones - Segundo Parcial")
     print("👨‍💻 Desarrollado por José Miguel Herrera Gutiérrez para UTP")
     print("👩‍🏫 Profesora: Bibiana Patricia Arias Villada")

@@ -417,10 +417,260 @@
             </div>
         </div>
 
+        <!-- Descripción Detallada: Método Simplex Dos Fases -->
+        <div class="card mb-5 shadow-lg border-0" style="overflow: hidden;">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); padding: 2rem;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-2">
+                            <i class="fas fa-layer-group me-2"></i>
+                            Método Simplex Dos Fases
+                        </h2>
+                        <p class="mb-0 opacity-75">Solución especializada para restricciones complejas</p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="fas fa-layer-group" style="font-size: 4rem; opacity: 0.2;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <!-- Introducción con diseño mejorado -->
+                <div class="alert" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-left: 4px solid #f97316; border-radius: 8px;">
+                    <h5 class="mb-3" style="color: #ea580c;">
+                        <i class="fas fa-info-circle me-2"></i>¿Qué es el Método Dos Fases?
+                    </h5>
+                    <p class="mb-0">
+                        Una técnica <strong>avanzada</strong> del Simplex diseñada para problemas con restricciones 
+                        <span class="badge bg-danger mx-1">≥</span> o <span class="badge bg-primary mx-1">=</span>, 
+                        donde no existe una solución básica factible inicial obvia.
+                    </p>
+                </div>
+                </div>
+
+                <!-- Cuándo usar -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ea580c;">
+                            <i class="fas fa-question-circle me-2"></i>¿Cuándo usar este método?
+                        </h5>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0 shadow-sm" style="border-left: 3px solid #dc2626 !important;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="badge bg-danger rounded-circle p-2 me-2">
+                                        <i class="fas fa-greater-than-equal"></i>
+                                    </div>
+                                    <h6 class="mb-0">Restricciones ≥</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Cuando tienes restricciones de tipo "mayor o igual"</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0 shadow-sm" style="border-left: 3px solid #2563eb !important;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="badge bg-primary rounded-circle p-2 me-2">
+                                        <i class="fas fa-equals"></i>
+                                    </div>
+                                    <h6 class="mb-0">Restricciones =</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Cuando existen restricciones de igualdad exacta</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0 shadow-sm" style="border-left: 3px solid #f97316 !important;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="badge rounded-circle p-2 me-2" style="background-color: #f97316;">
+                                        <i class="fas fa-random"></i>
+                                    </div>
+                                    <h6 class="mb-0">Restricciones Mixtas</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Combinación de ≤, ≥ y = en el mismo problema</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Las dos fases explicadas -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ea580c;">
+                            <i class="fas fa-route me-2"></i>Las Dos Fases del Algoritmo
+                        </h5>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-0" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="badge bg-primary rounded-circle me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                        1
+                                    </div>
+                                    <h4 class="mb-0 text-primary">FASE I</h4>
+                                </div>
+                                <h6 class="text-primary mb-2">Búsqueda de Factibilidad</h6>
+                                <ul class="small mb-0">
+                                    <li><strong>Objetivo:</strong> Encontrar solución básica factible</li>
+                                    <li><strong>Minimizar:</strong> W = Σ(artificiales)</li>
+                                    <li><strong>Éxito:</strong> W = 0</li>
+                                    <li><strong>Fracaso:</strong> W > 0 (infactible)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-0" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="badge bg-success rounded-circle me-3" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                                        2
+                                    </div>
+                                    <h4 class="mb-0 text-success">FASE II</h4>
+                                </div>
+                                <h6 class="text-success mb-2">Optimización del Objetivo</h6>
+                                <ul class="small mb-0">
+                                    <li><strong>Objetivo:</strong> Optimizar función original</li>
+                                    <li><strong>Optimizar:</strong> Z (MAX o MIN)</li>
+                                    <li><strong>Base inicial:</strong> Solución de Fase I</li>
+                                    <li><strong>Resultado:</strong> Solución óptima</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ejemplo visual -->
+                <div class="mt-4">
+                    <h5 class="mb-3" style="color: #ea580c;">
+                        <i class="fas fa-lightbulb me-2"></i>Ejemplo Práctico
+                    </h5>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body" style="background-color: #fafafa;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="fas fa-bullseye me-2"></i>Problema Original
+                                    </h6>
+                                    <div class="bg-white p-3 rounded mb-3" style="border-left: 3px solid #f97316;">
+                                        <pre class="mb-0" style="font-size: 0.9rem;">Maximizar: Z = 3x₁ + 5x₂
+
+Sujeto a:
+  4x₁ + x₂ ≥ 4
+  -x₁ + 2x₂ ≥ 2
+  x₂ ≤ 3
+  x₁, x₂ ≥ 0</pre>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success mb-3">
+                                        <i class="fas fa-check-circle me-2"></i>Solución Encontrada
+                                    </h6>
+                                    <div class="alert alert-success mb-2">
+                                        <strong>Fase I:</strong> W = 0 ✓ (Factible)
+                                    </div>
+                                    <div class="alert alert-info mb-0">
+                                        <strong>Fase II:</strong> x₁ = 4, x₂ = 3
+                                        <br><strong>Valor óptimo:</strong> Z = 27
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ventajas vs Big M -->
+                <div class="mt-4">
+                    <h5 class="mb-3" style="color: #ea580c;">
+                        <i class="fas fa-balance-scale me-2"></i>¿Por qué Dos Fases y no Big M?
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <i class="fas fa-check-circle me-2"></i>Ventajas del Método Dos Fases
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0 small">
+                                        <li>Mayor <strong>precisión numérica</strong></li>
+                                        <li>No depende de elegir M correctamente</li>
+                                        <li>Detección <strong>clara</strong> de infactibilidad</li>
+                                        <li>Ideal para <strong>implementación computacional</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-warning">
+                                <div class="card-header bg-warning">
+                                    <i class="fas fa-star me-2"></i>Método Big M
+                                </div>
+                                <div class="card-body">
+                                    <ul class="mb-0 small">
+                                        <li>Una sola fase (más simple conceptualmente)</li>
+                                        <li>Requiere elegir M suficientemente grande</li>
+                                        <li>Puede tener problemas de precisión</li>
+                                        <li>Mejor para <strong>resolución manual</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Casos especiales -->
+                <div class="mt-4">
+                    <h5 class="mb-3" style="color: #ea580c;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Situaciones Especiales
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-danger border-0 shadow-sm">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-times-circle me-2"></i>Problema Infactible
+                                </h6>
+                                <p class="small mb-0">
+                                    Si al finalizar Fase I resulta <strong>W > 0</strong>, el problema no tiene solución. 
+                                    Las restricciones son inconsistentes entre sí.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="alert alert-warning border-0 shadow-sm">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-infinity me-2"></i>Problema No Acotado
+                                </h6>
+                                <p class="small mb-0">
+                                    Se detecta en Fase II cuando no existen ratios positivos para la columna entrante. 
+                                    La función objetivo puede crecer indefinidamente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Call to Action -->
         <div class="text-center mb-5">
             <h3 class="mb-4">¿Listo para resolver tu problema de PL?</h3>
-            <div class="btn-group" role="group">
+            <div class="btn-group-vertical btn-group-lg d-md-none" role="group">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-chart-area"></i> Método Gráfico
+                </a>
+                <a href="{{ url_for('simplex') }}" class="btn btn-success">
+                    <i class="fas fa-table"></i> Método Simplex
+                </a>
+                <a href="{{ url_for('dual_simplex') }}" class="btn btn-info">
+                    <i class="fas fa-exchange-alt"></i> Dual Simplex
+                </a>
+                <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase">
+                    <i class="fas fa-layer-group"></i> Simplex Dos Fases
+                </a>
+            </div>
+            <div class="btn-group d-none d-md-inline-flex" role="group">
                 <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
                     <i class="fas fa-chart-area"></i> Método Gráfico
                 </a>
@@ -429,6 +679,9 @@
                 </a>
                 <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg">
                     <i class="fas fa-exchange-alt"></i> Dual Simplex
+                </a>
+                <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase btn-lg">
+                    <i class="fas fa-layer-group"></i> Simplex Dos Fases
                 </a>
             </div>
         </div>
@@ -489,6 +742,7 @@
                             <li><i class="fas fa-check text-success"></i> Método Gráfico con Matplotlib</li>
                             <li><i class="fas fa-check text-success"></i> Simplex Manual con Tableau</li>
                             <li><i class="fas fa-check text-success"></i> Dual Simplex con Ratios</li>
+                            <li><i class="fas fa-check text-success"></i> Simplex Dos Fases con Artificiales</li>
                         </ul>
                     </div>
                 </div>

@@ -171,25 +171,84 @@
                 {% endif %}
             {% endfor %}
         </div>
+
+        <!-- Ejemplos del Método Simplex Dos Fases -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-two-phase mb-3">
+                    <i class="fas fa-layer-group"></i>
+                    Método Simplex Dos Fases
+                </h2>
+            </div>
+            {% for example in examples %}
+                {% if example.method == 'two-phase' %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow border-{{ example.color }}">
+                        <div class="card-header bg-{{ example.color }} text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-{{ example.icon }}"></i>
+                                {{ example.title }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">{{ example.description }}</p>
+                            
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <h6><strong>Función Objetivo:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        <code>{{ example.objective }}</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 mb-3">
+                                    <h6><strong>Restricciones:</strong></h6>
+                                    <div class="bg-light p-2 rounded">
+                                        {% for constraint in example.constraints.split('\n') %}
+                                        <code class="d-block">{{ constraint }}</code>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-outline-{{ example.color }}" 
+                                            onclick="useExample('{{ example.objective }}', `{{ example.constraints }}`, 'two-phase')">
+                                        <i class="fas fa-copy"></i>
+                                        Usar en Simplex Dos Fases
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
         
         <div class="text-center mt-4">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ url_for('index') }}" class="btn btn-success btn-lg mb-2">
                         <i class="fas fa-chart-area"></i>
                         Método Gráfico
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ url_for('simplex') }}" class="btn btn-warning btn-lg mb-2">
                         <i class="fas fa-table"></i>
                         Método Simplex
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg mb-2">
                         <i class="fas fa-exchange-alt"></i>
                         Dual Simplex
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase btn-lg mb-2">
+                        <i class="fas fa-layer-group"></i>
+                        Simplex Dos Fases
                     </a>
                 </div>
             </div>
@@ -205,25 +264,31 @@ function useExample(objective, constraints, method) {
     
     // Determinar la URL de destino según el método
     let targetUrl;
+    let methodName;
     switch(method) {
         case 'grafico':
             targetUrl = "{{ url_for('index') }}";
+            methodName = 'método gráfico';
             break;
         case 'simplex':
             targetUrl = "{{ url_for('simplex') }}";
+            methodName = 'método simplex';
             break;
         case 'dual':
             targetUrl = "{{ url_for('dual_simplex') }}";
+            methodName = 'método dual simplex';
+            break;
+        case 'two-phase':
+            targetUrl = "{{ url_for('two_phase_simplex_route') }}";
+            methodName = 'método simplex dos fases';
             break;
         default:
             targetUrl = "{{ url_for('index') }}";
+            methodName = 'método gráfico';
     }
     
     // Mostrar mensaje de confirmación
-    alert('Ejemplo copiado. Serás redirigido al formulario del ' + 
-          (method === 'grafico' ? 'método gráfico' : 
-           method === 'simplex' ? 'método simplex' : 
-           'método dual simplex') + '.');
+    alert('Ejemplo copiado. Serás redirigido al formulario del ' + methodName + '.');
     
     // Redirigir a la página correspondiente
     window.location.href = targetUrl;

@@ -2,7 +2,7 @@
 
 
 
-<div align="center">**Investigación de Operaciones - Segundo Parcial**  
+<div align="center">**Investigación de Operaciones - Proyecto**  
 
 **Universidad Tecnológica de Pereira (UTP)**
 

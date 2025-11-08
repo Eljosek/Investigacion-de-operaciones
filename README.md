@@ -2,7 +2,7 @@
 
 
 
-<div align="center">**Investigación de Operaciones - Segundo Parcial**  
+<div align="center">**Investigación de Operaciones - Proyecto**  
 
 **Universidad Tecnológica de Pereira (UTP)**
 
@@ -756,7 +756,9 @@ Este proyecto es de uso educativo para la Universidad Tecnológica de Pereira (U
 
     return value
 
-## 📧 Contacto```
+## 📧 Contacto
+@eljosek instagram
++57 3122843719      
 
 
 

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**Investigación de Operaciones - Proyecto**  
+**Investigación de Operaciones - Segundo Parcial**  
 **Universidad Tecnológica de Pereira (UTP)**
 
 ![Python](https://img.shields.io/badge/Python-3.13.7-blue?logo=python&logoColor=white)
@@ -13,7 +13,7 @@
 
 **Desarrollado por:** José Miguel Herrera Gutiérrez  
 **Profesora:** Bibiana Patricia Arias Villada  
-**Versión:** 4.0  
+**Versión:** 5.0 (Final)  
 **Fecha:** Noviembre 2025
 
 </div>
@@ -22,7 +22,7 @@
 
 ## 📋 Descripción
 
-Aplicación web educativa completa para resolver problemas de **Programación Lineal** con **5 métodos diferentes**, cada uno con visualización paso a paso de iteraciones y tableaux completos.
+Aplicación web educativa completa para resolver problemas de **Programación Lineal** con **5 métodos diferentes**, cada uno con visualización paso a paso de iteraciones y tableaux completos. Proyecto final del segundo parcial de Investigación de Operaciones.
 
 ## ✨ Características Principales
 
@@ -32,16 +32,17 @@ Aplicación web educativa completa para resolver problemas de **Programación Li
 |--------|-----------|---------------|-----------------|
 | 🟢 **Método Gráfico** | 2 | ≤, ≥ | Visualización con Matplotlib, región factible |
 | 🟡 **Simplex Estándar** | 2+ | ≤ | Tableau manual, variables de holgura |
-| 🔵 **Dual Simplex** | 2+ | ≥ | Ratios duales, minimización/maximización |
+| 🟣 **Dual Simplex** | 2+ | ≥ | Ratios duales, minimización/maximización |
 | 🟠 **Simplex Dos Fases** | 2+ | ≤, ≥, = | Variables artificiales, Fase I y II |
-| 🟣 **Modelo de Transporte** | n×m | Balance | Esquina Noroeste, Costo Mínimo, Vogel (VAM) |
+| 🔴 **Modelo de Transporte** | n×m | Balance | Esquina Noroeste, Costo Mínimo, Vogel (VAM) |
 
 ### 🎨 Interfaz Moderna
 
 - ✅ **Diseño responsivo** con Bootstrap 5 y CSS personalizado
-- ✅ **Colores distintivos** por método (Verde, Amarillo, Azul, Naranja, Morado)
+- ✅ **Colores distintivos** por método (Verde, Amarillo, Morado, Naranja, Rojo)
 - ✅ **Animaciones suaves** y transiciones fluidas
 - ✅ **Iconos Font Awesome** para mejor UX
+- ✅ **Modo oscuro** disponible en toda la aplicación
 
 ### 📊 Visualización Educativa
 
@@ -550,10 +551,14 @@ Ingeniería de Sistemas y Computación
 ### Versión 4.0 (Noviembre 2025) - ACTUAL
 - ✅ **Modelo de Transporte** con 3 métodos (Esquina Noroeste, Costo Mínimo, Vogel)
 - ✅ Modo comparación para ejecutar los 3 métodos simultáneamente
-- ✅ Tabla dinámica de entrada con validación de balance
+- ✅ Interfaz simplificada con entrada de texto para matriz, ofertas y demandas
 - ✅ Visualización detallada de iteraciones por método
-- ✅ Color morado (#9333ea) para identificación visual
-- ✅ 2 ejemplos de transporte agregados
+- ✅ Color rojo (#dc2626) para identificación visual del Modelo de Transporte
+- ✅ Color morado (#9333ea) para Dual Simplex consistente en toda la aplicación
+- ✅ 3 ejemplos de transporte agregados (2×3, 3×3, 4×4)
+- ✅ Corrección completa de UX y colores
+- ✅ Menú de navegación actualizado con todos los métodos
+- ✅ README completo y actualizado
 
 ### Versión 3.0 (Octubre 2025)
 - ✅ Corrección de notación científica (e-16 → 0)

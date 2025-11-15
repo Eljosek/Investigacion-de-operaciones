@@ -307,10 +307,6 @@ h6 { font-size: 1rem; }
     color: white;
 }
 
-.method-transport {
-    border-left: 5px solid var(--color-transport);
-}
-
 .method-transport .btn-transport,
 .method-transport .card-body {
     border-color: var(--color-transport);

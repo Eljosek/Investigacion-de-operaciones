@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados - Modelo de Transporte{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --transport-primary: #9333ea;
+        --transport-secondary: #a855f7;
+        --transport-light: #f3e8ff;
+        --transport-dark: #6b21a8;
+    }
+    
+    .transport-theme {
+        background: linear-gradient(135deg, var(--transport-primary) 0%, var(--transport-secondary) 100%);
+    }
+    
+    .badge-transport {
+        background: var(--transport-primary);
+        color: white;
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: var(--transport-light);
+        color: var(--transport-dark);
+    }
+    
+    .accordion-button:focus {
+        border-color: var(--transport-primary);
+        box-shadow: 0 0 0 0.25rem rgba(147, 51, 234, 0.25);
+    }
+    
+    .allocation-table {
+        font-size: 0.9rem;
+    }
+    
+    .allocation-table th {
+        background: var(--transport-light);
+        color: var(--transport-dark);
+        font-weight: 600;
+    }
+    
+    .cell-assigned {
+        background-color: #fef3c7 !important;
+        border: 2px solid #f59e0b !important;
+        font-weight: bold;
+    }
+    
+    .cell-allocated {
+        background-color: #dcfce7 !important;
+        color: #166534;
+        font-weight: 600;
+    }
+    
+    .best-method {
+        border: 3px solid #10b981;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    .comparison-table td, .comparison-table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .total-row {
+        background: var(--transport-light);
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .method-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .print-btn {
+        background: var(--transport-primary);
+        color: white;
+        border: none;
+    }
+    
+    .print-btn:hover {
+        background: var(--transport-dark);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="transport-theme text-white py-4 mb-4">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-2">
+            <i class="fas fa-check-circle me-3"></i>Resultados del Modelo de Transporte
+        </h1>
+        <p class="lead mb-0">Solución óptima encontrada</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    {% if result.success %}
+        
+        {% if result.method == 'Comparación de los 3 métodos' %}
+            <!-- MODO COMPARACIÓN -->
+            <div class="alert alert-info mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Comparación de Métodos:</strong> Se muestran los resultados de los tres métodos de solución.
+                El método con menor costo está resaltado.
+            </div>
+            
+            <!-- Tabla Comparativa -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0"><i class="fas fa-chart-bar me-2 text-purple"></i>Tabla Comparativa de Soluciones</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Variable de Decisión</th>
+                                    <th>Esquina Noroeste</th>
+                                    <th>Costo Mínimo</th>
+                                    <th>Vogel (VAM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in range(result.comparison.variables|length) %}
+                                <tr>
+                                    <td class="fw-bold">{{ result.comparison.variables[i] }}</td>
+                                    <td>{{ result.comparison.northwest[i] }}</td>
+                                    <td>{{ result.comparison.minimum_cost[i] }}</td>
+                                    <td>{{ result.comparison.vogel[i] }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="total-row">
+                                    <td>COSTO TOTAL</td>
+                                    <td>{{ result.comparison.totals.northwest }}</td>
+                                    <td>{{ result.comparison.totals.minimum_cost }}</td>
+                                    <td>{{ result.comparison.totals.vogel }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-trophy me-2"></i>
+                        <strong>Mejor Método:</strong> {{ result.comparison.best_method }} 
+                        (Costo: {{ [result.comparison.totals.northwest, result.comparison.totals.minimum_cost, result.comparison.totals.vogel]|min }})
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detalles de Cada Método -->
+            <div class="accordion" id="methodsAccordion">
+                {% for method_key, method_name in [('northwest', 'Esquina Noroeste'), ('minimum_cost', 'Costo Mínimo'), ('vogel', 'Vogel (VAM)')] %}
+                {% set method_result = result.results[method_key] %}
+                <div class="accordion-item {% if result.comparison.best_method == method_name %}best-method{% endif %}">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {% if loop.index > 1 %}collapsed{% endif %}" type="button" 
+                                data-bs-toggle="collapse" data-bs-target="#method{{ loop.index }}">
+                            <i class="fas fa-route me-2"></i>
+                            <strong>{{ method_name }}</strong> - Costo Total: {{ method_result.total_cost }}
+                            {% if result.comparison.best_method == method_name %}
+                                <span class="badge bg-success ms-2">MEJOR</span>
+                            {% endif %}
+                        </button>
+                    </h2>
+                    <div id="method{{ loop.index }}" class="accordion-collapse collapse {% if loop.index == 1 %}show{% endif %}" 
+                         data-bs-parent="#methodsAccordion">
+                        <div class="accordion-body">
+                            {% include 'transportation_method_details.html' %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+        {% else %}
+            <!-- MODO ÚNICO MÉTODO -->
+            <div class="alert alert-success mb-4">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Método:</strong> {{ result.method }} | 
+                <strong>Costo Total:</strong> {{ result.total_cost }}
+            </div>
+            
+            {% set method_result = result %}
+            {% include 'transportation_method_details.html' %}
+            
+        {% endif %}
+        
+    {% else %}
+        <!-- Error -->
+        <div class="alert alert-danger">
+            <h4><i class="fas fa-exclamation-triangle me-2"></i>Error</h4>
+            <p class="mb-0">{{ result.error }}</p>
+            {% if result.total_supply %}
+                <hr>
+                <p class="mb-0">
+                    <strong>Oferta Total:</strong> {{ result.total_supply }}<br>
+                    <strong>Demanda Total:</strong> {{ result.total_demand }}
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <!-- Botones de Acción -->
+    <div class="text-center mt-4">
+        <button onclick="window.print()" class="btn print-btn btn-lg px-4">
+            <i class="fas fa-print me-2"></i>Imprimir Resultados
+        </button>
+        <a href="{{ url_for('transportation_method') }}" class="btn btn-outline-secondary btn-lg px-4 ms-2">
+            <i class="fas fa-redo me-2"></i>Resolver Otro Problema
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg px-4 ms-2">
+            <i class="fas fa-home me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+
+{% endblock %}

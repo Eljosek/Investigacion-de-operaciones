@@ -31,6 +31,10 @@
     --color-two-phase-light: #fb923c;
     --color-two-phase-dark: #ea580c;
     
+    --color-transport: #9333ea;    /* Morado para Transporte */
+    --color-transport-light: #a855f7;
+    --color-transport-dark: #7e22ce;
+    
     /* Sombras y efectos */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -271,6 +275,50 @@ h6 { font-size: 1rem; }
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     color: white;
+}
+
+/* Estilos para Modelo de Transporte */
+.text-method-transport {
+    color: var(--color-transport) !important;
+}
+
+.bg-method-transport {
+    background-color: var(--color-transport) !important;
+}
+
+.border-transport {
+    border-color: var(--color-transport) !important;
+}
+
+.btn-transport {
+    background: linear-gradient(135deg, var(--color-transport) 0%, var(--color-transport-light) 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    transition: all var(--transition-base);
+}
+
+.btn-transport:hover {
+    background: linear-gradient(135deg, var(--color-transport-dark) 0%, var(--color-transport) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.method-transport {
+    border-left: 5px solid var(--color-transport);
+}
+
+.method-transport .btn-transport,
+.method-transport .card-body {
+    border-color: var(--color-transport);
+}
+
+.method-transport:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(147, 51, 234, 0.2);
 }
 
 /* Cards con efectos mejorados */

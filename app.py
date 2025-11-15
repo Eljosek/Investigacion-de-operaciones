@@ -10,17 +10,20 @@ Fecha: 2025
 import os
 import sys
 import importlib
+import json
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from lp_solver import solve_lp_problem
 import simplex_tableau
 import dual_simplex_tableau
 import two_phase_simplex
+import transportation_model
 
 # Recargar módulos en cada petición (útil en desarrollo)
 if 'WERKZEUG_RUN_MAIN' in os.environ or not os.environ.get('FLASK_ENV'):
     importlib.reload(simplex_tableau)
     importlib.reload(dual_simplex_tableau)
     importlib.reload(two_phase_simplex)
+    importlib.reload(transportation_model)
 
 # Crear instancia de la aplicación Flask
 app = Flask(__name__)
@@ -344,10 +347,82 @@ def examples():
             'description': 'Problema con mezcla de restricciones <=, >=, y =.',
             'icon': 'layer-group',
             'color': 'two-phase'
+        },
+        
+        # Ejemplos para Modelo de Transporte
+        {
+            'title': 'Transporte - Distribución de Energía (4×4)',
+            'method': 'transporte',
+            'description': 'Problema de distribución de energía eléctrica desde 4 plantas a 4 ciudades minimizando costos de transporte.',
+            'dimensions': '4 Orígenes (Plantas) × 4 Destinos (Ciudades)',
+            'total_supply': '215 millones de KW',
+            'total_demand': '215 millones de KW',
+            'icon': 'bolt',
+            'data': {
+                'costs': [[5, 2, 7, 3], [3, 6, 6, 1], [6, 1, 2, 4], [4, 3, 6, 6]],
+                'supply': [80, 30, 60, 45],
+                'demand': [70, 40, 70, 35]
+            }
+        },
+        {
+            'title': 'Transporte - Distribución Simple (3×3)',
+            'method': 'transporte',
+            'description': 'Problema básico de transporte con 3 almacenes distribuyendo a 3 tiendas.',
+            'dimensions': '3 Orígenes (Almacenes) × 3 Destinos (Tiendas)',
+            'total_supply': '300 unidades',
+            'total_demand': '300 unidades',
+            'icon': 'warehouse',
+            'data': {
+                'costs': [[8, 6, 10], [9, 12, 13], [14, 9, 16]],
+                'supply': [150, 80, 70],
+                'demand': [100, 120, 80]
+            }
         }
     ]
     
     return render_template('examples.html', examples=examples_data)
+
+
+@app.route('/transportation', methods=['GET', 'POST'])
+def transportation_method():
+    """Ruta para el modelo de transporte"""
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            costs_json = request.form.get('costs_data')
+            supply_json = request.form.get('supply_data')
+            demand_json = request.form.get('demand_data')
+            method = request.form.get('method', 'northwest')
+            
+            if not costs_json or not supply_json or not demand_json:
+                flash('Error: Datos incompletos. Por favor complete todos los campos.', 'error')
+                return redirect(url_for('transportation_method'))
+            
+            # Parsear JSON
+            costs = json.loads(costs_json)
+            supply = json.loads(supply_json)
+            demand = json.loads(demand_json)
+            
+            # Resolver problema
+            result = transportation_model.solve_transportation_problem(
+                costs=costs,
+                supply=supply,
+                demand=demand,
+                method=method
+            )
+            
+            return render_template('transportation_results.html', result=result)
+            
+        except json.JSONDecodeError as e:
+            flash(f'Error al procesar los datos: {str(e)}', 'error')
+            return redirect(url_for('transportation_method'))
+        except Exception as e:
+            flash(f'Error inesperado: {str(e)}', 'error')
+            return redirect(url_for('transportation_method'))
+    
+    # GET request - mostrar formulario
+    return render_template('transportation.html')
+
 
 # Manejo de errores
 @app.errorhandler(404)
@@ -368,7 +443,7 @@ if __name__ == '__main__':
     debug = os.environ.get('DEBUG', 'True').lower() == 'true'
     
     print("🚀 Iniciando aplicación de Programación Lineal...")
-    print("📊 Métodos: Gráfico, Simplex, Dual Simplex y Dos Fases")
+    print("📊 Métodos: Gráfico, Simplex, Dual Simplex, Dos Fases y Transporte")
     print("🎓 Investigación de Operaciones - Segundo Parcial")
     print("👨‍💻 Desarrollado por José Miguel Herrera Gutiérrez para UTP")
     print("👩‍🏫 Profesora: Bibiana Patricia Arias Villada")

@@ -307,7 +307,248 @@
             </div>
         </div>
 
-        <!-- Comparación de Métodos -->
+                            </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Descripción Detallada: Modelo de Transporte -->
+        <div class="card mb-5 shadow-lg" style="border-left: 5px solid #9333ea;">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);">
+                <div class="row align-items-center">
+                    <div class="col-md-9">
+                        <h3 class="mb-1">
+                            <i class="fas fa-truck-moving me-2"></i>
+                            Modelo de Transporte
+                        </h3>
+                        <p class="mb-0 small opacity-75">Distribución óptima desde orígenes a destinos</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <i class="fas fa-route" style="font-size: 48px; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="lead text-muted mb-4">
+                    El <strong>Modelo de Transporte</strong> es un caso especial de programación lineal que optimiza la distribución 
+                    de un producto homogéneo desde múltiples orígenes (plantas, almacenes) a múltiples destinos (tiendas, ciudades), 
+                    minimizando el costo total de transporte.
+                </p>
+                
+                <!-- Cuándo usar cada método -->
+                <div class="mb-4">
+                    <h5 class="mb-3" style="color: #9333ea;">
+                        <i class="fas fa-question-circle me-2"></i>¿Cuándo usar cada método?
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="border-left: 4px solid #10b981 !important;">
+                                <div class="card-body">
+                                    <h6 class="card-title text-success">
+                                        <i class="fas fa-compass me-2"></i>Esquina Noroeste
+                                    </h6>
+                                    <ul class="small mb-0">
+                                        <li>Solución <strong>rápida inicial</strong></li>
+                                        <li>Fácil de entender y aplicar</li>
+                                        <li>No siempre es óptima</li>
+                                        <li>Buena para empezar otros métodos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="border-left: 4px solid #3b82f6 !important;">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">
+                                        <i class="fas fa-dollar-sign me-2"></i>Costo Mínimo
+                                    </h6>
+                                    <ul class="small mb-0">
+                                        <li>Prioriza <strong>costos bajos</strong></li>
+                                        <li>Mejor solución que Noroeste</li>
+                                        <li>Lógica intuitiva: lo más barato primero</li>
+                                        <li>Rápido y eficiente</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm" style="border-left: 4px solid #f59e0b !important;">
+                                <div class="card-body">
+                                    <h6 class="card-title text-warning">
+                                        <i class="fas fa-trophy me-2"></i>Vogel (VAM)
+                                    </h6>
+                                    <ul class="small mb-0">
+                                        <li><strong>Mejor aproximación</strong> a óptimo</li>
+                                        <li>Usa penalizaciones inteligentes</li>
+                                        <li>Más complejo pero más preciso</li>
+                                        <li>Recomendado para <strong>uso profesional</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ejemplo Visual del Problema -->
+                <div class="mb-4">
+                    <h5 class="mb-3" style="color: #9333ea;">
+                        <i class="fas fa-project-diagram me-2"></i>Estructura del Problema
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="text-center mb-3" style="color: #9333ea;">Formulación Matemática</h6>
+                                    <div class="text-center small">
+                                        <p class="mb-2"><strong>Minimizar:</strong></p>
+                                        <code class="d-block mb-3">Z = Σᵢ Σⱼ cᵢⱼ × xᵢⱼ</code>
+                                        
+                                        <p class="mb-2"><strong>Sujeto a:</strong></p>
+                                        <code class="d-block mb-1">Σⱼ xᵢⱼ = sᵢ  (oferta del origen i)</code>
+                                        <code class="d-block mb-1">Σᵢ xᵢⱼ = dⱼ  (demanda del destino j)</code>
+                                        <code class="d-block">xᵢⱼ ≥ 0</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="text-center mb-3" style="color: #9333ea;">Variables del Modelo</h6>
+                                    <ul class="small">
+                                        <li><strong>xᵢⱼ</strong>: Cantidad transportada del origen i al destino j</li>
+                                        <li><strong>cᵢⱼ</strong>: Costo unitario de transporte de i a j</li>
+                                        <li><strong>sᵢ</strong>: Oferta disponible en el origen i</li>
+                                        <li><strong>dⱼ</strong>: Demanda requerida en el destino j</li>
+                                        <li><strong>m</strong>: Número de orígenes</li>
+                                        <li><strong>n</strong>: Número de destinos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparación de Métodos -->
+                <div class="mb-4">
+                    <h5 class="mb-3" style="color: #9333ea;">
+                        <i class="fas fa-balance-scale me-2"></i>Comparación de los 3 Métodos
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Característica</th>
+                                    <th class="text-center">Esquina Noroeste</th>
+                                    <th class="text-center">Costo Mínimo</th>
+                                    <th class="text-center">Vogel (VAM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Complejidad</strong></td>
+                                    <td class="text-center">⭐ Baja</td>
+                                    <td class="text-center">⭐⭐ Media</td>
+                                    <td class="text-center">⭐⭐⭐ Alta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Calidad de Solución</strong></td>
+                                    <td class="text-center">Básica</td>
+                                    <td class="text-center">Buena</td>
+                                    <td class="text-center">Excelente</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tiempo de Cálculo</strong></td>
+                                    <td class="text-center">Muy rápido</td>
+                                    <td class="text-center">Rápido</td>
+                                    <td class="text-center">Moderado</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Uso Recomendado</strong></td>
+                                    <td class="text-center">Aprendizaje inicial</td>
+                                    <td class="text-center">Problemas simples</td>
+                                    <td class="text-center">Uso profesional</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Ejemplo Práctico -->
+                <div class="mb-4">
+                    <h5 class="mb-3" style="color: #9333ea;">
+                        <i class="fas fa-lightbulb me-2"></i>Ejemplo Práctico: Distribución de Energía
+                    </h5>
+                    <div class="alert alert-light border">
+                        <p class="mb-2">
+                            <strong>Problema:</strong> Una empresa energética tiene 4 plantas generadoras que deben abastecer 
+                            la demanda eléctrica de 4 ciudades. Cada planta tiene capacidad limitada y cada ciudad tiene 
+                            necesidades específicas. El costo de transporte por millón de KW varía según la ruta.
+                        </p>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <small><strong>Ofertas (Plantas):</strong></small>
+                                <ul class="small">
+                                    <li>Planta 1: 80 millones KW</li>
+                                    <li>Planta 2: 30 millones KW</li>
+                                    <li>Planta 3: 60 millones KW</li>
+                                    <li>Planta 4: 45 millones KW</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <small><strong>Demandas (Ciudades):</strong></small>
+                                <ul class="small">
+                                    <li>Cali: 70 millones KW</li>
+                                    <li>Bogotá: 40 millones KW</li>
+                                    <li>Medellín: 70 millones KW</li>
+                                    <li>Barranquilla: 35 millones KW</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="mb-0 mt-2">
+                            <i class="fas fa-calculator me-2"></i>
+                            <strong>Objetivo:</strong> Determinar cuánta energía debe enviar cada planta a cada ciudad 
+                            para minimizar el costo total de distribución.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Ventajas del Modelo -->
+                <div>
+                    <h5 class="mb-3" style="color: #9333ea;">
+                        <i class="fas fa-check-circle me-2"></i>Ventajas del Modelo de Transporte
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-bolt text-warning me-2 mt-1"></i>
+                                <small><strong>Eficiente:</strong> Aprovecha la estructura especial del problema</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-chart-line text-success me-2 mt-1"></i>
+                                <small><strong>Escalable:</strong> Funciona bien con muchos orígenes/destinos</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-brain text-info me-2 mt-1"></i>
+                                <small><strong>Intuitivo:</strong> Fácil de entender y explicar</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-industry text-primary me-2 mt-1"></i>
+                                <small><strong>Aplicable:</strong> Usado en logística, manufactura, energía</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparación Métodos de Resolución -->
         <div class="card mb-4 shadow">
             <div class="card-header" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
                 <h3 class="mb-0 text-white">
@@ -743,6 +984,7 @@ Sujeto a:
                             <li><i class="fas fa-check text-success"></i> Simplex Manual con Tableau</li>
                             <li><i class="fas fa-check text-success"></i> Dual Simplex con Ratios</li>
                             <li><i class="fas fa-check text-success"></i> Simplex Dos Fases con Artificiales</li>
+                            <li><i class="fas fa-check text-success"></i> Modelo de Transporte (3 métodos)</li>
                         </ul>
                     </div>
                 </div>

@@ -31,9 +31,9 @@
     --color-two-phase-light: #fb923c;
     --color-two-phase-dark: #ea580c;
     
-    --color-transport: #9333ea;    /* Morado para Transporte */
-    --color-transport-light: #a855f7;
-    --color-transport-dark: #7e22ce;
+    --color-transport: #dc2626;    /* Rojo coral para Transporte */
+    --color-transport-light: #ef4444;
+    --color-transport-dark: #b91c1c;
     
     /* Sombras y efectos */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

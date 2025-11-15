@@ -313,8 +313,8 @@
         </div>
         
         <!-- Descripción Detallada: Modelo de Transporte -->
-        <div class="card mb-5 shadow-lg" style="border-left: 5px solid #9333ea;">
-            <div class="card-header text-white" style="background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);">
+        <div class="card mb-5 shadow-lg" style="border-left: 5px solid #dc2626;">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
                 <div class="row align-items-center">
                     <div class="col-md-9">
                         <h3 class="mb-1">
@@ -337,7 +337,7 @@
                 
                 <!-- Cuándo usar cada método -->
                 <div class="mb-4">
-                    <h5 class="mb-3" style="color: #9333ea;">
+                    <h5 class="mb-3" style="color: #dc2626;">
                         <i class="fas fa-question-circle me-2"></i>¿Cuándo usar cada método?
                     </h5>
                     <div class="row">
@@ -391,14 +391,14 @@
 
                 <!-- Ejemplo Visual del Problema -->
                 <div class="mb-4">
-                    <h5 class="mb-3" style="color: #9333ea;">
+                    <h5 class="mb-3" style="color: #dc2626;">
                         <i class="fas fa-project-diagram me-2"></i>Estructura del Problema
                     </h5>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card bg-light border-0">
                                 <div class="card-body">
-                                    <h6 class="text-center mb-3" style="color: #9333ea;">Formulación Matemática</h6>
+                                    <h6 class="text-center mb-3" style="color: #dc2626;">Formulación Matemática</h6>
                                     <div class="text-center small">
                                         <p class="mb-2"><strong>Minimizar:</strong></p>
                                         <code class="d-block mb-3">Z = Σᵢ Σⱼ cᵢⱼ × xᵢⱼ</code>
@@ -414,7 +414,7 @@
                         <div class="col-md-6">
                             <div class="card bg-light border-0">
                                 <div class="card-body">
-                                    <h6 class="text-center mb-3" style="color: #9333ea;">Variables del Modelo</h6>
+                                    <h6 class="text-center mb-3" style="color: #dc2626;">Variables del Modelo</h6>
                                     <ul class="small">
                                         <li><strong>xᵢⱼ</strong>: Cantidad transportada del origen i al destino j</li>
                                         <li><strong>cᵢⱼ</strong>: Costo unitario de transporte de i a j</li>
@@ -431,7 +431,7 @@
 
                 <!-- Comparación de Métodos -->
                 <div class="mb-4">
-                    <h5 class="mb-3" style="color: #9333ea;">
+                    <h5 class="mb-3" style="color: #dc2626;">
                         <i class="fas fa-balance-scale me-2"></i>Comparación de los 3 Métodos
                     </h5>
                     <div class="table-responsive">
@@ -476,7 +476,7 @@
 
                 <!-- Ejemplo Práctico -->
                 <div class="mb-4">
-                    <h5 class="mb-3" style="color: #9333ea;">
+                    <h5 class="mb-3" style="color: #dc2626;">
                         <i class="fas fa-lightbulb me-2"></i>Ejemplo Práctico: Distribución de Energía
                     </h5>
                     <div class="alert alert-light border">
@@ -515,7 +515,7 @@
 
                 <!-- Ventajas del Modelo -->
                 <div>
-                    <h5 class="mb-3" style="color: #9333ea;">
+                    <h5 class="mb-3" style="color: #dc2626;">
                         <i class="fas fa-check-circle me-2"></i>Ventajas del Modelo de Transporte
                     </h5>
                     <div class="row">
@@ -904,11 +904,14 @@ Sujeto a:
                 <a href="{{ url_for('simplex') }}" class="btn btn-success">
                     <i class="fas fa-table"></i> Método Simplex
                 </a>
-                <a href="{{ url_for('dual_simplex') }}" class="btn btn-info">
+                <a href="{{ url_for('dual_simplex') }}" class="btn" style="background: #9333ea; color: white;">
                     <i class="fas fa-exchange-alt"></i> Dual Simplex
                 </a>
                 <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase">
                     <i class="fas fa-layer-group"></i> Simplex Dos Fases
+                </a>
+                <a href="{{ url_for('transportation_method') }}" class="btn" style="background: #dc2626; color: white;">
+                    <i class="fas fa-truck-moving"></i> Modelo de Transporte
                 </a>
             </div>
             <div class="btn-group d-none d-md-inline-flex" role="group">
@@ -918,11 +921,14 @@ Sujeto a:
                 <a href="{{ url_for('simplex') }}" class="btn btn-success btn-lg">
                     <i class="fas fa-table"></i> Método Simplex
                 </a>
-                <a href="{{ url_for('dual_simplex') }}" class="btn btn-info btn-lg">
+                <a href="{{ url_for('dual_simplex') }}" class="btn btn-lg" style="background: #9333ea; color: white;">
                     <i class="fas fa-exchange-alt"></i> Dual Simplex
                 </a>
                 <a href="{{ url_for('two_phase_simplex_route') }}" class="btn btn-two-phase btn-lg">
                     <i class="fas fa-layer-group"></i> Simplex Dos Fases
+                </a>
+                <a href="{{ url_for('transportation_method') }}" class="btn btn-lg" style="background: #dc2626; color: white;">
+                    <i class="fas fa-truck-moving"></i> Modelo de Transporte
                 </a>
             </div>
         </div>

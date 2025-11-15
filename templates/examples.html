@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="text-center mb-5">
-            <h1 class="display-5 text-info">
+            <h1 class="display-5" style="color: #17a2b8;">
                 <i class="fas fa-lightbulb"></i>
                 Ejemplos de Problemas
             </h1>
@@ -122,7 +122,7 @@
         <!-- Ejemplos del Método Dual Simplex -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="text-info mb-3">
+                <h2 class="mb-3" style="color: #9333ea;">
                     <i class="fas fa-exchange-alt"></i>
                     Método Dual Simplex
                 </h2>
@@ -228,7 +228,7 @@
         <!-- Ejemplos del Modelo de Transporte -->
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="mb-3" style="color: #9333ea;">
+                <h2 class="mb-3" style="color: #dc2626;">
                     <i class="fas fa-truck-moving"></i>
                     Modelo de Transporte
                 </h2>
@@ -236,8 +236,8 @@
             {% for example in examples %}
                 {% if example.method == 'transporte' %}
                 <div class="col-md-6 mb-4">
-                    <div class="card h-100 shadow" style="border-left: 4px solid #9333ea;">
-                        <div class="card-header text-white" style="background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);">
+                    <div class="card h-100 shadow" style="border-left: 4px solid #dc2626;">
+                        <div class="card-header text-white" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
                             <h5 class="mb-0">
                                 <i class="fas fa-{{ example.icon }}"></i>
                                 {{ example.title }}
@@ -260,10 +260,10 @@
                                 </div>
                                 
                                 <div class="col-12 text-center">
-                                    <a href="{{ url_for('transportation_method') }}" class="btn btn-transport">
+                                    <button onclick="loadTransportExample({{ example.data.costs | tojson }}, {{ example.data.supply | tojson }}, {{ example.data.demand | tojson }})" class="btn btn-transport">
                                         <i class="fas fa-play"></i>
                                         Resolver en Transporte
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -350,6 +350,16 @@ function useExample(objective, constraints, method) {
     
     // Redirigir a la página correspondiente
     window.location.href = targetUrl;
+}
+
+function loadTransportExample(costs, supply, demand) {
+    // Guardar en localStorage
+    localStorage.setItem('example_costs', JSON.stringify(costs));
+    localStorage.setItem('example_supply', JSON.stringify(supply));
+    localStorage.setItem('example_demand', JSON.stringify(demand));
+    
+    // Redirigir
+    window.location.href = "{{ url_for('transportation_method') }}";
 }
 </script>
 {% endblock %}

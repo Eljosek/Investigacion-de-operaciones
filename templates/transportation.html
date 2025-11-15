@@ -1,500 +1,160 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
-{% block title %}Modelo de Transporte{% endblock %}
-
-{% block extra_css %}
-<style>
-    :root {
-        --transport-primary: #9333ea;
-        --transport-secondary: #a855f7;
-        --transport-light: #f3e8ff;
-        --transport-dark: #6b21a8;
-    }
-    
-    .transport-theme {
-        background: linear-gradient(135deg, var(--transport-primary) 0%, var(--transport-secondary) 100%);
-    }
-    
-    .transport-card {
-        border-left: 4px solid var(--transport-primary);
-    }
-    
-    .btn-transport {
-        background: var(--transport-primary);
-        border: none;
-        color: white;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-transport:hover {
-        background: var(--transport-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
-    }
-    
-    .table-input {
-        width: 70px;
-        text-align: center;
-        border: 2px solid #e5e7eb;
-        border-radius: 4px;
-        padding: 4px;
-    }
-    
-    .table-input:focus {
-        border-color: var(--transport-primary);
-        outline: none;
-    }
-    
-    .dynamic-table {
-        overflow-x: auto;
-        margin-top: 20px;
-    }
-    
-    .dynamic-table table {
-        min-width: 100%;
-    }
-    
-    .dynamic-table th {
-        background: var(--transport-light);
-        color: var(--transport-dark);
-        font-weight: 600;
-    }
-    
-    .nav-tabs .nav-link {
-        color: #6b7280;
-    }
-    
-    .nav-tabs .nav-link.active {
-        color: var(--transport-primary);
-        border-bottom: 3px solid var(--transport-primary);
-    }
-    
-    .example-btn {
-        background: var(--transport-light);
-        color: var(--transport-dark);
-        border: 1px solid var(--transport-secondary);
-    }
-    
-    .example-btn:hover {
-        background: var(--transport-secondary);
-        color: white;
-    }
-</style>
-{% endblock %}
+{% block title %}Modelo de Transporte - Programación Lineal{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="transport-theme text-white py-5 mb-4">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="display-4 fw-bold mb-3">
-                    <i class="fas fa-truck-moving me-3"></i>Modelo de Transporte
-                </h1>
-                <p class="lead mb-0">
-                    Optimiza la distribución de recursos desde orígenes a destinos minimizando costos.
-                    Tres métodos disponibles: Esquina Noroeste, Costo Mínimo y Vogel (VAM).
-                </p>
-            </div>
-            <div class="col-md-4 text-center">
-                <i class="fas fa-route" style="font-size: 80px; opacity: 0.3;"></i>
-            </div>
+<div class="row method-transport">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-method-transport">
+                <i class="fas fa-truck-moving text-method-transport"></i> Modelo de Transporte
+            </h1>
+            <p class="lead text-muted">
+                Optimiza la distribución de recursos desde orígenes a destinos minimizando costos
+            </p>
         </div>
-    </div>
-</div>
 
-<div class="container mb-5">
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="card shadow-lg">
+            <div class="card-header bg-method-transport text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit"></i> Ingresa tu problema de transporte
+                </h3>
             </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    
-    <!-- Método de Entrada -->
-    <div class="card transport-card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h4 class="mb-0"><i class="fas fa-keyboard me-2 text-purple"></i>Método de Entrada</h4>
-        </div>
-        <div class="card-body">
-            <ul class="nav nav-tabs mb-4" id="inputMethodTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="table-tab" data-bs-toggle="tab" 
-                            data-bs-target="#table-input" type="button" role="tab">
-                        <i class="fas fa-table me-2"></i>Tabla Dinámica
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="text-tab" data-bs-toggle="tab" 
-                            data-bs-target="#text-input" type="button" role="tab">
-                        <i class="fas fa-file-alt me-2"></i>Entrada de Texto
-                    </button>
-                </li>
-            </ul>
             
-            <div class="tab-content" id="inputMethodTabsContent">
-                <!-- Tabla Dinámica -->
-                <div class="tab-pane fade show active" id="table-input" role="tabpanel">
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Número de Orígenes (Filas)</label>
-                            <input type="number" class="form-control" id="numOrigins" min="2" max="10" value="4">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-bold">Número de Destinos (Columnas)</label>
-                            <input type="number" class="form-control" id="numDestinations" min="2" max="10" value="4">
-                        </div>
-                        <div class="col-md-3 d-flex align-items-end">
-                            <button type="button" class="btn btn-transport w-100" onclick="generateTable()">
-                                <i class="fas fa-sync-alt me-2"></i>Generar Tabla
-                            </button>
-                        </div>
-                        <div class="col-md-3 d-flex align-items-end">
-                            <button type="button" class="btn example-btn w-100" onclick="loadExample1()">
-                                <i class="fas fa-lightbulb me-2"></i>Cargar Ejemplo
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="dynamicTableContainer" class="dynamic-table">
-                        <!-- La tabla se generará aquí dinámicamente -->
-                    </div>
-                </div>
-                
-                <!-- Entrada de Texto -->
-                <div class="tab-pane fade" id="text-input" role="tabpanel">
+            <div class="card-body">
+                <form action="{{ url_for('transportation_method') }}" method="POST" id="transportForm">
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Formato:</strong> Ingrese la matriz de costos separada por espacios/comas, 
-                        luego las ofertas y demandas en líneas separadas.
+                        <strong>Formato:</strong> Ingrese la matriz de costos (una fila por línea, valores separados por espacios),
+                        luego las ofertas y demandas separadas por espacios.
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Matriz de Costos</label>
-                        <textarea class="form-control font-monospace" id="costsText" rows="5" 
-                                  placeholder="5 2 7 3&#10;3 6 6 1&#10;6 1 2 4&#10;4 3 6 6"></textarea>
-                        <small class="text-muted">Cada fila en una línea, valores separados por espacios o comas</small>
+                    <div class="mb-4">
+                        <label for="costsText" class="form-label">
+                            <i class="fas fa-table"></i> <strong>Matriz de Costos</strong>
+                        </label>
+                        <textarea class="form-control form-control-lg font-monospace" 
+                                  id="costsText" 
+                                  name="costs_text" 
+                                  rows="6" 
+                                  placeholder="Ejemplo 44:&#10;5 2 7 3&#10;3 6 6 1&#10;6 1 2 4&#10;4 3 6 6"
+                                  required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i> Cada fila en una línea, valores separados por espacios
+                        </div>
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Ofertas (Orígenes)</label>
-                            <input type="text" class="form-control" id="supplyText" 
-                                   placeholder="80 30 60 45">
-                            <small class="text-muted">Valores separados por espacios o comas</small>
+                        <div class="col-md-6 mb-4">
+                            <label for="supplyText" class="form-label">
+                                <i class="fas fa-industry"></i> <strong>Ofertas (Orígenes)</strong>
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg font-monospace" 
+                                   id="supplyText"
+                                   name="supply_text"
+                                   placeholder="Ejemplo: 80 30 60 45"
+                                   required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Valores separados por espacios
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Demandas (Destinos)</label>
-                            <input type="text" class="form-control" id="demandText" 
-                                   placeholder="70 40 70 35">
-                            <small class="text-muted">Valores separados por espacios o comas</small>
+                        <div class="col-md-6 mb-4">
+                            <label for="demandText" class="form-label">
+                                <i class="fas fa-store"></i> <strong>Demandas (Destinos)</strong>
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg font-monospace" 
+                                   id="demandText"
+                                   name="demand_text"
+                                   placeholder="Ejemplo: 70 40 70 35"
+                                   required>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Valores separados por espacios
+                            </div>
                         </div>
                     </div>
                     
-                    <button type="button" class="btn example-btn" onclick="loadExampleText()">
-                        <i class="fas fa-lightbulb me-2"></i>Cargar Ejemplo en Texto
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Formulario de Solución -->
-    <form method="POST" action="{{ url_for('transportation_method') }}" id="transportForm">
-        <input type="hidden" name="costs_data" id="costs_data">
-        <input type="hidden" name="supply_data" id="supply_data">
-        <input type="hidden" name="demand_data" id="demand_data">
-        
-        <div class="card transport-card shadow-sm mb-4">
-            <div class="card-header bg-white">
-                <h4 class="mb-0"><i class="fas fa-cogs me-2 text-purple"></i>Configuración del Método</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Método de Solución</label>
-                        <select class="form-select" name="method" id="methodSelect">
+                    <div class="mb-4">
+                        <label for="method" class="form-label">
+                            <i class="fas fa-cogs"></i> <strong>Método de Solución</strong>
+                        </label>
+                        <select class="form-select" name="method" id="method">
                             <option value="northwest">Esquina Noroeste (Northwest Corner)</option>
                             <option value="minimum_cost">Costo Mínimo (Minimum Cost)</option>
                             <option value="vogel">Aproximación de Vogel (VAM)</option>
+                            <option value="all">Comparar los 3 métodos</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">&nbsp;</label>
-                        <div class="form-check form-switch" style="padding-top: 8px;">
-                            <input class="form-check-input" type="checkbox" id="compareAll" name="compare_all">
-                            <label class="form-check-label fw-bold" for="compareAll">
-                                <i class="fas fa-chart-bar me-2"></i>Comparar los 3 métodos
-                            </label>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-calculator"></i> Resolver con Modelo de Transporte
+                        </button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearTransportForm()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                            <button type="button" class="btn btn-outline-info" onclick="loadTransportExample()">
+                                <i class="fas fa-lightbulb"></i> Cargar Ejemplo
+                            </button>
                         </div>
                     </div>
-                </div>
-                
-                <div class="alert alert-warning" id="balanceWarning" style="display: none;">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Advertencia:</strong> La oferta total debe ser igual a la demanda total para resolver el problema.
-                </div>
+                </form>
             </div>
         </div>
-        
-        <div class="text-center">
-            <button type="submit" class="btn btn-transport btn-lg px-5">
-                <i class="fas fa-calculator me-2"></i>Resolver Problema
-            </button>
-            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg px-5 ms-3">
-                <i class="fas fa-home me-2"></i>Volver al Inicio
-            </a>
+
+        <div class="alert alert-info mt-4 shadow-sm">
+            <h5><i class="fas fa-info-circle"></i> Ayuda Rápida</h5>
+            <ul class="mb-0 small">
+                <li><strong>Matriz de costos:</strong> Una fila por línea, costos separados por espacios</li>
+                <li><strong>Ofertas:</strong> Cantidades disponibles en cada origen (separadas por espacios)</li>
+                <li><strong>Demandas:</strong> Cantidades requeridas en cada destino (separadas por espacios)</li>
+                <li><strong>Balance:</strong> La suma de ofertas debe igualar la suma de demandas</li>
+            </ul>
         </div>
-    </form>
+    </div>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
 <script>
-let currentTable = null;
-
-// Generar tabla dinámica
-function generateTable() {
-    const origins = parseInt(document.getElementById('numOrigins').value);
-    const destinations = parseInt(document.getElementById('numDestinations').value);
-    
-    if (origins < 2 || destinations < 2 || origins > 10 || destinations > 10) {
-        alert('Por favor ingrese valores entre 2 y 10 para orígenes y destinos.');
-        return;
-    }
-    
-    let html = '<table class="table table-bordered table-hover">';
-    html += '<thead><tr><th></th>';
-    
-    // Encabezados de columnas (Destinos)
-    for (let j = 1; j <= destinations; j++) {
-        html += `<th class="text-center">Destino ${j}</th>`;
-    }
-    html += '<th class="text-center bg-light">Oferta</th></tr></thead><tbody>';
-    
-    // Filas de costos
-    for (let i = 1; i <= origins; i++) {
-        html += `<tr><th>Origen ${i}</th>`;
-        for (let j = 1; j <= destinations; j++) {
-            html += `<td><input type="number" class="table-input cost-cell" 
-                            id="cost_${i}_${j}" min="0" step="0.01" value="0"></td>`;
-        }
-        html += `<td class="bg-light"><input type="number" class="table-input supply-cell" 
-                        id="supply_${i}" min="0" step="0.01" value="0"></td>`;
-        html += '</tr>';
-    }
-    
-    // Fila de demandas
-    html += '<tr><th class="bg-light">Demanda</th>';
-    for (let j = 1; j <= destinations; j++) {
-        html += `<td class="bg-light"><input type="number" class="table-input demand-cell" 
-                        id="demand_${j}" min="0" step="0.01" value="0"></td>`;
-    }
-    html += '<td></td></tr>';
-    
-    html += '</tbody></table>';
-    
-    document.getElementById('dynamicTableContainer').innerHTML = html;
-    currentTable = { origins, destinations };
-    
-    // Agregar listener para validar balance
-    document.querySelectorAll('.supply-cell, .demand-cell').forEach(input => {
-        input.addEventListener('input', checkBalance);
-    });
+function clearTransportForm() {
+    document.getElementById('transportForm').reset();
 }
 
-// Verificar balance oferta-demanda
-function checkBalance() {
-    if (!currentTable) return;
-    
-    let totalSupply = 0;
-    let totalDemand = 0;
-    
-    for (let i = 1; i <= currentTable.origins; i++) {
-        totalSupply += parseFloat(document.getElementById(`supply_${i}`).value) || 0;
-    }
-    
-    for (let j = 1; j <= currentTable.destinations; j++) {
-        totalDemand += parseFloat(document.getElementById(`demand_${j}`).value) || 0;
-    }
-    
-    const warning = document.getElementById('balanceWarning');
-    if (Math.abs(totalSupply - totalDemand) > 0.01) {
-        warning.style.display = 'block';
-        warning.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Desbalanceado:</strong> Oferta total = ${totalSupply.toFixed(2)}, 
-            Demanda total = ${totalDemand.toFixed(2)}. Diferencia = ${Math.abs(totalSupply - totalDemand).toFixed(2)}`;
-    } else {
-        warning.style.display = 'none';
-    }
-}
-
-// Cargar ejemplo 1 (del problema de las imágenes)
-function loadExample1() {
-    document.getElementById('numOrigins').value = 4;
-    document.getElementById('numDestinations').value = 4;
-    generateTable();
-    
-    // Costos
-    const costs = [
-        [5, 2, 7, 3],
-        [3, 6, 6, 1],
-        [6, 1, 2, 4],
-        [4, 3, 6, 6]
-    ];
-    
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-            document.getElementById(`cost_${i+1}_${j+1}`).value = costs[i][j];
-        }
-    }
-    
-    // Ofertas
-    const supply = [80, 30, 60, 45];
-    for (let i = 0; i < 4; i++) {
-        document.getElementById(`supply_${i+1}`).value = supply[i];
-    }
-    
-    // Demandas
-    const demand = [70, 40, 70, 35];
-    for (let j = 0; j < 4; j++) {
-        document.getElementById(`demand_${j+1}`).value = demand[j];
-    }
-    
-    checkBalance();
-}
-
-// Cargar ejemplo en formato texto
-function loadExampleText() {
-    document.getElementById('costsText').value = `5 2 7 3
-3 6 6 1
-6 1 2 4
-4 3 6 6`;
+function loadTransportExample() {
+    document.getElementById('costsText').value = '5 2 7 3\n3 6 6 1\n6 1 2 4\n4 3 6 6';
     document.getElementById('supplyText').value = '80 30 60 45';
     document.getElementById('demandText').value = '70 40 70 35';
+    
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show mt-3';
+    alert.innerHTML = '<i class="fas fa-check-circle"></i> <strong>Ejemplo cargado!</strong> <button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+    document.querySelector('.card-body').insertBefore(alert, document.getElementById('transportForm'));
+    setTimeout(() => alert.remove(), 3000);
 }
 
-// Procesar formulario
-document.getElementById('transportForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const activeTab = document.querySelector('#inputMethodTabs .nav-link.active').id;
-    let costs = [];
-    let supply = [];
-    let demand = [];
-    
-    if (activeTab === 'table-tab') {
-        // Leer desde tabla dinámica
-        if (!currentTable) {
-            alert('Por favor genere la tabla primero.');
-            return;
-        }
-        
-        // Leer costos
-        for (let i = 1; i <= currentTable.origins; i++) {
-            let row = [];
-            for (let j = 1; j <= currentTable.destinations; j++) {
-                const value = parseFloat(document.getElementById(`cost_${i}_${j}`).value) || 0;
-                row.push(value);
-            }
-            costs.push(row);
-        }
-        
-        // Leer ofertas
-        for (let i = 1; i <= currentTable.origins; i++) {
-            const value = parseFloat(document.getElementById(`supply_${i}`).value) || 0;
-            supply.push(value);
-        }
-        
-        // Leer demandas
-        for (let j = 1; j <= currentTable.destinations; j++) {
-            const value = parseFloat(document.getElementById(`demand_${j}`).value) || 0;
-            demand.push(value);
-        }
-        
-    } else {
-        // Leer desde texto
-        const costsText = document.getElementById('costsText').value.trim();
-        const supplyText = document.getElementById('supplyText').value.trim();
-        const demandText = document.getElementById('demandText').value.trim();
-        
-        if (!costsText || !supplyText || !demandText) {
-            alert('Por favor complete todos los campos de texto.');
-            return;
-        }
-        
-        // Parsear costos
-        const costLines = costsText.split('\n');
-        for (let line of costLines) {
-            const row = line.trim().split(/[\s,]+/).map(x => parseFloat(x));
-            if (row.some(isNaN)) {
-                alert('Error en el formato de costos. Use solo números.');
-                return;
-            }
-            costs.push(row);
-        }
-        
-        // Parsear ofertas
-        supply = supplyText.split(/[\s,]+/).map(x => parseFloat(x));
-        if (supply.some(isNaN)) {
-            alert('Error en el formato de ofertas. Use solo números.');
-            return;
-        }
-        
-        // Parsear demandas
-        demand = demandText.split(/[\s,]+/).map(x => parseFloat(x));
-        if (demand.some(isNaN)) {
-            alert('Error en el formato de demandas. Use solo números.');
-            return;
-        }
-    }
-    
-    // Validar datos
-    if (costs.length === 0 || supply.length === 0 || demand.length === 0) {
-        alert('Por favor ingrese datos válidos.');
-        return;
-    }
-    
-    // Verificar consistencia
-    if (costs.length !== supply.length) {
-        alert(`Inconsistencia: ${costs.length} filas de costos pero ${supply.length} valores de oferta.`);
-        return;
-    }
-    
-    if (costs[0].length !== demand.length) {
-        alert(`Inconsistencia: ${costs[0].length} columnas de costos pero ${demand.length} valores de demanda.`);
-        return;
-    }
-    
-    // Guardar en campos ocultos
-    document.getElementById('costs_data').value = JSON.stringify(costs);
-    document.getElementById('supply_data').value = JSON.stringify(supply);
-    document.getElementById('demand_data').value = JSON.stringify(demand);
-    
-    // Si "comparar todos" está marcado, cambiar el método
-    if (document.getElementById('compareAll').checked) {
-        document.getElementById('methodSelect').value = 'all';
-        const hiddenMethod = document.createElement('input');
-        hiddenMethod.type = 'hidden';
-        hiddenMethod.name = 'method';
-        hiddenMethod.value = 'all';
-        this.appendChild(hiddenMethod);
-    }
-    
-    // Enviar formulario
-    this.submit();
-});
-
-// Generar tabla inicial al cargar
 window.addEventListener('load', function() {
-    generateTable();
+    const exampleCosts = localStorage.getItem('example_costs');
+    const exampleSupply = localStorage.getItem('example_supply');
+    const exampleDemand = localStorage.getItem('example_demand');
+    
+    if (exampleCosts && exampleSupply && exampleDemand) {
+        try {
+            const costs = JSON.parse(exampleCosts);
+            const supply = JSON.parse(exampleSupply);
+            const demand = JSON.parse(exampleDemand);
+            
+            document.getElementById('costsText').value = costs.map(row => row.join(' ')).join('\n');
+            document.getElementById('supplyText').value = supply.join(' ');
+            document.getElementById('demandText').value = demand.join(' ');
+            
+            localStorage.removeItem('example_costs');
+            localStorage.removeItem('example_supply');
+            localStorage.removeItem('example_demand');
+        } catch (e) {
+            console.error('Error:', e);
+        }
+    }
 });
 </script>
 {% endblock %}

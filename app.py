@@ -351,24 +351,10 @@ def examples():
         
         # Ejemplos para Modelo de Transporte
         {
-            'title': 'Transporte - Distribución de Energía (4×4)',
+            'title': 'Transporte - Problema Básico (3×3)',
             'method': 'transporte',
-            'description': 'Problema de distribución de energía eléctrica desde 4 plantas a 4 ciudades minimizando costos de transporte.',
-            'dimensions': '4 Orígenes (Plantas) × 4 Destinos (Ciudades)',
-            'total_supply': '215 millones de KW',
-            'total_demand': '215 millones de KW',
-            'icon': 'bolt',
-            'data': {
-                'costs': [[5, 2, 7, 3], [3, 6, 6, 1], [6, 1, 2, 4], [4, 3, 6, 6]],
-                'supply': [80, 30, 60, 45],
-                'demand': [70, 40, 70, 35]
-            }
-        },
-        {
-            'title': 'Transporte - Distribución Simple (3×3)',
-            'method': 'transporte',
-            'description': 'Problema básico de transporte con 3 almacenes distribuyendo a 3 tiendas.',
-            'dimensions': '3 Orígenes (Almacenes) × 3 Destinos (Tiendas)',
+            'description': 'Distribución de productos desde 3 fábricas a 3 tiendas. Problema balanceado ideal para aprender.',
+            'dimensions': '3 Orígenes × 3 Destinos',
             'total_supply': '300 unidades',
             'total_demand': '300 unidades',
             'icon': 'warehouse',
@@ -376,6 +362,34 @@ def examples():
                 'costs': [[8, 6, 10], [9, 12, 13], [14, 9, 16]],
                 'supply': [150, 80, 70],
                 'demand': [100, 120, 80]
+            }
+        },
+        {
+            'title': 'Transporte - Distribución Regional (4×4)',
+            'method': 'transporte',
+            'description': 'Envío de mercancía desde 4 centros de distribución a 4 ciudades. Problema balanceado.',
+            'dimensions': '4 Orígenes × 4 Destinos',
+            'total_supply': '215 unidades',
+            'total_demand': '215 unidades',
+            'icon': 'truck-moving',
+            'data': {
+                'costs': [[5, 2, 7, 3], [3, 6, 6, 1], [6, 1, 2, 4], [4, 3, 6, 6]],
+                'supply': [80, 30, 60, 45],
+                'demand': [70, 40, 70, 35]
+            }
+        },
+        {
+            'title': 'Transporte - Problema Pequeño (2×3)',
+            'method': 'transporte',
+            'description': 'Distribución simple desde 2 almacenes a 3 puntos de venta.',
+            'dimensions': '2 Orígenes × 3 Destinos',
+            'total_supply': '250 unidades',
+            'total_demand': '250 unidades',
+            'icon': 'boxes',
+            'data': {
+                'costs': [[4, 8, 8], [16, 24, 16]],
+                'supply': [120, 130],
+                'demand': [80, 90, 80]
             }
         }
     ]
@@ -388,20 +402,57 @@ def transportation_method():
     """Ruta para el modelo de transporte"""
     if request.method == 'POST':
         try:
-            # Obtener datos del formulario
-            costs_json = request.form.get('costs_data')
-            supply_json = request.form.get('supply_data')
-            demand_json = request.form.get('demand_data')
+            # Obtener datos del formulario como texto
+            costs_text = request.form.get('costs_text', '').strip()
+            supply_text = request.form.get('supply_text', '').strip()
+            demand_text = request.form.get('demand_text', '').strip()
             method = request.form.get('method', 'northwest')
             
-            if not costs_json or not supply_json or not demand_json:
+            # Validar que se ingresaron datos
+            if not costs_text or not supply_text or not demand_text:
                 flash('Error: Datos incompletos. Por favor complete todos los campos.', 'error')
                 return redirect(url_for('transportation_method'))
             
-            # Parsear JSON
-            costs = json.loads(costs_json)
-            supply = json.loads(supply_json)
-            demand = json.loads(demand_json)
+            # Parsear matriz de costos
+            costs = []
+            for line in costs_text.split('\n'):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    row = [float(x) for x in line.split()]
+                    if row:
+                        costs.append(row)
+                except ValueError:
+                    flash('Error: La matriz de costos contiene valores no numéricos.', 'error')
+                    return redirect(url_for('transportation_method'))
+            
+            # Parsear ofertas
+            try:
+                supply = [float(x) for x in supply_text.split()]
+            except ValueError:
+                flash('Error: Las ofertas contienen valores no numéricos.', 'error')
+                return redirect(url_for('transportation_method'))
+            
+            # Parsear demandas
+            try:
+                demand = [float(x) for x in demand_text.split()]
+            except ValueError:
+                flash('Error: Las demandas contienen valores no numéricos.', 'error')
+                return redirect(url_for('transportation_method'))
+            
+            # Validar dimensiones
+            if not costs:
+                flash('Error: La matriz de costos está vacía.', 'error')
+                return redirect(url_for('transportation_method'))
+            
+            if len(costs) != len(supply):
+                flash(f'Error: La matriz tiene {len(costs)} filas pero se proporcionaron {len(supply)} ofertas.', 'error')
+                return redirect(url_for('transportation_method'))
+            
+            if len(costs[0]) != len(demand):
+                flash(f'Error: La matriz tiene {len(costs[0])} columnas pero se proporcionaron {len(demand)} demandas.', 'error')
+                return redirect(url_for('transportation_method'))
             
             # Resolver problema
             result = transportation_model.solve_transportation_problem(
@@ -413,9 +464,6 @@ def transportation_method():
             
             return render_template('transportation_results.html', result=result)
             
-        except json.JSONDecodeError as e:
-            flash(f'Error al procesar los datos: {str(e)}', 'error')
-            return redirect(url_for('transportation_method'))
         except Exception as e:
             flash(f'Error inesperado: {str(e)}', 'error')
             return redirect(url_for('transportation_method'))
